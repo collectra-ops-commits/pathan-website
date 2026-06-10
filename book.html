@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>বুক করুন — পাঠান Pathan</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --soil:      #2C1A0E;
+    --bark:      #4A2E1A;
+    --moss:      #3D5A2A;
+    --leaf:      #5C8C3A;
+    --sage:      #8FAF6A;
+    --mist:      #C8D9B0;
+    --parchment: #F5F0E8;
+    --cream:     #FAF7F2;
+    --gold:      #C8A84B;
+    --rust:      #B85A2A;
+    --orange:    #D4621A;
+    --ink:       #1A1208;
+    --error:     #C0392B;
+    --success:   #2E7D32;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--soil);
+    padding: 0 40px;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    border-bottom: 2px solid var(--moss);
+  }
+  .nav-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 54px;
+  }
+  .nav-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--cream);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--orange); font-style: italic; }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-links::-webkit-scrollbar { display: none; }
+  .nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(200,217,176,0.55);
+    text-decoration: none;
+    padding: 0 14px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .nav-links a:hover { color: var(--cream); border-bottom-color: var(--sage); }
+  .nav-links a.active { color: var(--cream); border-bottom-color: var(--orange); }
+  .nav-cta {
+    background: var(--orange) !important;
+    color: var(--cream) !important;
+    padding: 8px 18px !important;
+    height: auto !important;
+    border-radius: 3px !important;
+    border-bottom: none !important;
+    margin-left: 8px;
+    font-weight: 500 !important;
+  }
+  .nav-cta:hover { background: var(--rust) !important; }
+
+  /* ── PAGE HERO ── */
+  .page-hero {
+    background: var(--bark);
+    padding: 60px 40px 52px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(143,175,106,0.15);
+  }
+  .page-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 55% 60% at 90% 50%, rgba(212,98,26,0.15) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .page-hero::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 45% 70% at 5% 50%, rgba(61,90,42,0.2) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .page-hero-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: rgba(200,217,176,0.35);
+    margin-bottom: 22px;
+  }
+  .breadcrumb a { color: rgba(200,217,176,0.45); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--mist); }
+  .ph-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--orange);
+    border: 1px solid rgba(212,98,26,0.3);
+    padding: 6px 14px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+  .ph-eyebrow::before { content: ''; width: 18px; height: 1px; background: var(--orange); }
+  .page-hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(30px, 4.5vw, 52px);
+    color: var(--cream);
+    line-height: 1.05;
+    margin-bottom: 12px;
+  }
+  .page-hero h1 em { color: var(--orange); font-style: italic; }
+  .page-hero p {
+    font-size: 14px;
+    color: rgba(250,247,242,0.52);
+    max-width: 520px;
+    line-height: 1.7;
+  }
+
+  /* ── RUN STATUS BAR ── */
+  .run-bar {
+    background: var(--moss);
+    padding: 14px 40px;
+    border-bottom: 1px solid rgba(143,175,106,0.2);
+  }
+  .run-bar-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .run-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .run-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #7ADB8A;
+    animation: blink 1.8s ease-in-out infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .run-status-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--mist);
+  }
+  .run-status-text strong { color: var(--cream); }
+  .run-bar-right {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: rgba(200,217,176,0.6);
+    letter-spacing: 0.5px;
+  }
+  .run-bar-right strong { color: var(--cream); }
+
+  /* ── MAIN LAYOUT ── */
+  .main-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 52px 40px 80px;
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 48px;
+    align-items: start;
+  }
+
+  /* ── FORM ── */
+  .form-section { }
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(212,98,26,0.2);
+  }
+
+  .form-group {
+    margin-bottom: 22px;
+  }
+  .form-label {
+    display: block;
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--soil);
+    margin-bottom: 5px;
+  }
+  .form-label .bn {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--rust);
+    margin-left: 6px;
+  }
+  .form-label .req { color: var(--orange); margin-left: 2px; }
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: var(--parchment);
+    border: 1.5px solid rgba(61,90,42,0.2);
+    border-radius: 4px;
+    padding: 11px 14px;
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    appearance: none;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 3px rgba(212,98,26,0.1);
+  }
+  .form-input.error, .form-select.error, .form-textarea.error {
+    border-color: var(--error);
+    box-shadow: 0 0 0 3px rgba(192,57,43,0.08);
+  }
+  .form-textarea { resize: vertical; min-height: 80px; }
+  .form-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23B85A2A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+  .form-hint {
+    font-size: 11px;
+    color: rgba(44,26,14,0.45);
+    margin-top: 5px;
+    line-height: 1.5;
+  }
+  .form-hint .bn { color: var(--rust); }
+  .field-error {
+    font-size: 11px;
+    color: var(--error);
+    margin-top: 4px;
+    display: none;
+  }
+  .field-error.show { display: block; }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  /* Route toggle */
+  .route-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1.5px solid rgba(61,90,42,0.2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .route-btn {
+    padding: 11px 14px;
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(44,26,14,0.5);
+    background: var(--parchment);
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.2s, color 0.2s;
+    border: none;
+    border-right: 1px solid rgba(61,90,42,0.15);
+  }
+  .route-btn:last-child { border-right: none; }
+  .route-btn.active {
+    background: var(--orange);
+    color: var(--cream);
+    font-weight: 600;
+  }
+  .route-btn .bn { display: block; font-size: 10px; opacity: 0.75; margin-top: 1px; }
+
+  /* Tier cards */
+  .tier-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .tier-card {
+    border: 1.5px solid rgba(61,90,42,0.18);
+    border-radius: 5px;
+    padding: 14px 14px;
+    cursor: pointer;
+    background: var(--parchment);
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+  }
+  .tier-card:hover { border-color: var(--orange); }
+  .tier-card.selected {
+    border-color: var(--orange);
+    background: rgba(212,98,26,0.05);
+  }
+  .tier-card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0; height: 0;
+  }
+  .tier-card-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 14px;
+    color: var(--soil);
+    margin-bottom: 2px;
+  }
+  .tier-card-bn {
+    font-size: 10px;
+    color: var(--rust);
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .tier-card-price {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--orange);
+    font-weight: 500;
+  }
+  .tier-check {
+    position: absolute;
+    top: 10px; right: 10px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid rgba(61,90,42,0.2);
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    transition: all 0.2s;
+  }
+  .tier-card.selected .tier-check {
+    background: var(--orange);
+    border-color: var(--orange);
+    color: white;
+  }
+
+  /* Weight calc */
+  .weight-calc {
+    background: rgba(61,90,42,0.06);
+    border: 1px solid rgba(61,90,42,0.15);
+    border-radius: 4px;
+    padding: 14px 16px;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .wc-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: rgba(44,26,14,0.5);
+  }
+  .wc-amount {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--soil);
+  }
+  .wc-amount span {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--orange);
+  }
+
+  /* Divider */
+  .form-divider {
+    border: none;
+    border-top: 1px solid rgba(61,90,42,0.12);
+    margin: 32px 0;
+  }
+
+  /* Submit */
+  .submit-btn {
+    width: 100%;
+    background: var(--orange);
+    color: var(--cream);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 16px 24px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .submit-btn:hover { background: var(--rust); }
+  .submit-btn .wa-icon { font-size: 18px; }
+  .submit-note {
+    font-size: 11px;
+    color: rgba(44,26,14,0.4);
+    text-align: center;
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+  .submit-note .bn { color: var(--rust); }
+
+  /* ── SIDEBAR ── */
+  .sidebar { display: flex; flex-direction: column; gap: 20px; }
+
+  .side-card {
+    background: var(--bark);
+    border: 1px solid rgba(143,175,106,0.18);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .side-card-header {
+    background: var(--moss);
+    padding: 14px 18px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--mist);
+  }
+  .side-card-body { padding: 18px; }
+
+  /* Payment card */
+  .payment-method {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(143,175,106,0.1);
+  }
+  .payment-method:last-child { border-bottom: none; padding-bottom: 0; }
+  .pm-icon {
+    width: 40px; height: 40px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .pm-bkash  { background: rgba(220,0,80,0.15);  border: 1px solid rgba(220,0,80,0.25); }
+  .pm-nagad  { background: rgba(240,100,0,0.15); border: 1px solid rgba(240,100,0,0.25); }
+  .pm-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(200,217,176,0.45);
+    margin-bottom: 3px;
+  }
+  .pm-number {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    color: var(--cream);
+    letter-spacing: 0.5px;
+  }
+  .pm-note {
+    font-size: 11px;
+    color: rgba(200,217,176,0.45);
+    margin-top: 2px;
+  }
+  .payment-rule {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: rgba(200,168,75,0.08);
+    border: 1px solid rgba(200,168,75,0.2);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 3px 3px 0;
+    font-size: 11px;
+    color: rgba(200,217,176,0.65);
+    line-height: 1.55;
+  }
+  .payment-rule .bn {
+    display: block;
+    color: var(--mist);
+    font-weight: 500;
+    margin-bottom: 3px;
+    font-size: 12px;
+  }
+
+  /* Checklist card */
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .checklist li {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 12px;
+    color: rgba(200,217,176,0.65);
+    line-height: 1.5;
+  }
+  .checklist li .ck-icon {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    background: rgba(212,98,26,0.15);
+    border: 1px solid rgba(212,98,26,0.25);
+    color: var(--orange);
+  }
+  .checklist li.ok .ck-icon {
+    background: rgba(61,90,42,0.2);
+    border-color: rgba(92,140,58,0.3);
+    color: var(--sage);
+  }
+  .checklist li strong { color: var(--cream); }
+
+  /* Help card */
+  .help-card {
+    background: var(--parchment);
+    border: 1px solid rgba(61,90,42,0.15);
+    border-radius: 8px;
+    padding: 20px 18px;
+    text-align: center;
+  }
+  .help-icon { font-size: 28px; margin-bottom: 10px; display: block; }
+  .help-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 16px;
+    color: var(--soil);
+    margin-bottom: 6px;
+  }
+  .help-body {
+    font-size: 12px;
+    color: rgba(44,26,14,0.55);
+    margin-bottom: 14px;
+    line-height: 1.55;
+  }
+  .help-btn {
+    display: block;
+    background: #25D366;
+    color: white;
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 11px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .help-btn:hover { background: #1DA851; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--soil);
+    border-top: 2px solid var(--moss);
+    padding: 40px 40px;
+  }
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .footer-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--cream);
+    text-decoration: none;
+  }
+  .footer-logo span { color: var(--orange); font-style: italic; }
+  .footer-logo small {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(200,217,176,0.3);
+    margin-top: 4px;
+  }
+  .footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
+  .footer-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(200,217,176,0.4);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--cream); }
+  .footer-copy {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: rgba(200,217,176,0.2);
+  }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(16px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  .fade { animation: fadeUp 0.5s ease both; }
+
+  @media (max-width: 900px) {
+    nav, footer { padding-left: 20px; padding-right: 20px; }
+    .page-hero  { padding: 48px 20px 40px; }
+    .run-bar    { padding: 12px 20px; }
+    .main-wrap  { grid-template-columns: 1fr; padding: 36px 20px 60px; gap: 32px; }
+    .tier-grid  { grid-template-columns: 1fr; }
+    .form-row   { grid-template-columns: 1fr; }
+    .footer-inner { flex-direction: column; text-align: center; }
+    .footer-links { justify-content: center; }
+  }
+  @media (max-width: 480px) {
+    .route-toggle { grid-template-columns: 1fr; }
+    .route-btn { border-right: none; border-bottom: 1px solid rgba(61,90,42,0.15); }
+    .route-btn:last-child { border-bottom: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">পাঠান <span>Pathan</span></a>
+    <div class="nav-links">
+      <a href="how-it-works.html">How it works</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="merchants.html">Merchants</a>
+      <a href="index.html#contact">Contact</a>
+      <a href="book.html" class="nav-cta active">এই সপ্তাহে বুক করুন →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ PAGE HERO ══ -->
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span>/</span>
+      <span>Book a slot</span>
+    </div>
+    <div class="ph-eyebrow">বুকিং — Book a Slot</div>
+    <h1>Send আম্মুর রান্না<br/><em>this Friday.</em></h1>
+    <p>Fill in the form below. Once submitted, you'll be redirected to WhatsApp with your booking details pre-filled — we'll confirm your slot and send the deposit instructions from there.</p>
+  </div>
+</section>
+
+<!-- ══ RUN STATUS BAR ══ -->
+<div class="run-bar">
+  <div class="run-bar-inner">
+    <div class="run-status">
+      <div class="run-dot"></div>
+      <div class="run-status-text">
+        This week's run: <strong id="runStatusText">Run Confirmed ✓</strong> &nbsp;·&nbsp; <strong id="runKg">36 / 60 kg</strong> booked
+      </div>
+    </div>
+    <div class="run-bar-right">Booking closes <strong>Thursday 10:00 PM</strong> &nbsp;·&nbsp; Countdown: <strong id="runCountdown">--:--:--</strong></div>
+  </div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div class="main-wrap fade">
+
+  <!-- ══ FORM ══ -->
+  <div class="form-section">
+
+    <!-- Section 1: Route -->
+    <div class="section-label">০১ — রুট নির্বাচন করুন · Select Route</div>
+    <div class="form-group">
+      <label class="form-label">Delivery Direction <span class="req">*</span></label>
+      <div class="route-toggle">
+        <button type="button" class="route-btn active" onclick="setRoute(this,'dhaka-sylhet')">
+          ঢাকা → সিলেট
+          <span class="bn">Dhaka to Sylhet</span>
+        </button>
+        <button type="button" class="route-btn" onclick="setRoute(this,'sylhet-dhaka')">
+          সিলেট → ঢাকা
+          <span class="bn">Sylhet to Dhaka</span>
+        </button>
+      </div>
+      <input type="hidden" id="routeValue" value="Dhaka → Sylhet"/>
+    </div>
+
+    <!-- Section 2: Sender -->
+    <hr class="form-divider"/>
+    <div class="section-label">০২ — প্রেরকের তথ্য · Sender Details</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label" for="senderName">Full Name <span class="bn">পুরো নাম</span> <span class="req">*</span></label>
+        <input type="text" id="senderName" class="form-input" placeholder="e.g. Rashed Ahmed"/>
+        <div class="field-error" id="err-senderName">Please enter your name</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="senderPhone">Phone Number <span class="bn">ফোন নম্বর</span> <span class="req">*</span></label>
+        <input type="tel" id="senderPhone" class="form-input" placeholder="01XXXXXXXXX"/>
+        <div class="field-error" id="err-senderPhone">Please enter a valid BD number</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="senderAddress">Pickup Address <span class="bn">কোথা থেকে সংগ্রহ করব</span> <span class="req">*</span></label>
+      <input type="text" id="senderAddress" class="form-input" placeholder="House, Road, Area — e.g. House 5, Road 3, Dhanmondi, Dhaka"/>
+      <div class="form-hint">Be specific — our rider needs to find you easily. <span class="bn">যত বিস্তারিত হবে তত ভালো।</span></div>
+      <div class="field-error" id="err-senderAddress">Please enter your pickup address</div>
+    </div>
+
+    <!-- Section 3: Recipient -->
+    <hr class="form-divider"/>
+    <div class="section-label">০৩ — প্রাপকের তথ্য · Recipient Details</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label" for="recipientName">Recipient Name <span class="bn">প্রাপকের নাম</span> <span class="req">*</span></label>
+        <input type="text" id="recipientName" class="form-input" placeholder="e.g. Farida Begum"/>
+        <div class="field-error" id="err-recipientName">Please enter recipient's name</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="recipientPhone">Recipient Phone <span class="bn">প্রাপকের ফোন</span> <span class="req">*</span></label>
+        <input type="tel" id="recipientPhone" class="form-input" placeholder="01XXXXXXXXX"/>
+        <div class="field-error" id="err-recipientPhone">Please enter a valid BD number</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="recipientAddress">Delivery Address <span class="bn">কোথায় পৌঁছে দেব</span> <span class="req">*</span></label>
+      <input type="text" id="recipientAddress" class="form-input" placeholder="House, Road, Area — e.g. Mirboxtola, Sylhet"/>
+      <div class="field-error" id="err-recipientAddress">Please enter delivery address</div>
+    </div>
+
+    <!-- Section 4: Food & Weight -->
+    <hr class="form-divider"/>
+    <div class="section-label">০৪ — খাবারের বিবরণ · Food Details</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label" for="foodCategory">Food Category <span class="bn">খাবারের ধরন</span> <span class="req">*</span></label>
+        <select id="foodCategory" class="form-select" onchange="updateCalc()">
+          <option value="">— Select category —</option>
+          <option value="Curry / Torkari">Curry / তরকারি</option>
+          <option value="Fish / Mach">Fish / মাছ</option>
+          <option value="Meat (Beef/Mutton/Chicken)">Meat / গোশত</option>
+          <option value="Pitha / Mishti">Pitha / পিঠা-মিষ্টি</option>
+          <option value="Rice / Biryani">Rice / Biryani</option>
+          <option value="Sylheti Specialty (Satkara etc)">Sylheti Specialty / সাতকড়া</option>
+          <option value="Mixed / Assorted">Mixed / মিশ্রিত</option>
+          <option value="Other">Other / অন্যান্য</option>
+        </select>
+        <div class="field-error" id="err-foodCategory">Please select a food category</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="weight">Estimated Weight (kg) <span class="bn">আনুমানিক ওজন</span> <span class="req">*</span></label>
+        <input type="number" id="weight" class="form-input" placeholder="e.g. 3" min="1" max="20" step="0.5" oninput="updateCalc()"/>
+        <div class="form-hint">Min 1 kg · Max 20 kg per booking</div>
+        <div class="field-error" id="err-weight">Please enter weight between 1–20 kg</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="foodNotes">Additional Notes <span class="bn">বিশেষ নির্দেশনা</span></label>
+      <textarea id="foodNotes" class="form-textarea" placeholder="e.g. 2 containers of beef curry + 1 bag of frozen pithas. Already frozen for 2 days.&#10;যেকোনো বিশেষ তথ্য এখানে লিখুন।"></textarea>
+      <div class="form-hint">Describe your items, packaging, or anything we should know. <span class="bn">প্যাকেজিং ও বিশেষ কোনো তথ্য লিখুন।</span></div>
+    </div>
+
+    <!-- Estimated price -->
+    <div class="weight-calc" id="priceCalc" style="display:none;">
+      <div>
+        <div class="wc-label">Estimated deposit (On-Demand rate)</div>
+        <div style="font-size:11px;color:rgba(44,26,14,0.4);margin-top:2px;">Final amount confirmed on WhatsApp</div>
+      </div>
+      <div class="wc-amount" id="calcAmount">৳ —</div>
+    </div>
+
+    <!-- Section 5: Tier -->
+    <hr class="form-divider"/>
+    <div class="section-label">০৫ — সেবার ধরন · Service Tier</div>
+    <div class="form-group">
+      <label class="form-label">Booking Type <span class="req">*</span></label>
+      <div class="tier-grid">
+        <div class="tier-card" onclick="selectTier(this,'On-Demand · ৳160/kg')">
+          <input type="radio" name="tier" value="On-Demand"/>
+          <div class="tier-check">✓</div>
+          <div class="tier-card-name">On-Demand</div>
+          <div class="tier-card-bn">সরাসরি বুকিং</div>
+          <div class="tier-card-price">৳160 / kg</div>
+        </div>
+        <div class="tier-card" onclick="selectTier(this,'Campus Box · ৳120/kg')">
+          <input type="radio" name="tier" value="Campus Box"/>
+          <div class="tier-check">✓</div>
+          <div class="tier-card-name">Campus Box</div>
+          <div class="tier-card-bn">ক্যাম্পাস সাবস্ক্রিপশন</div>
+          <div class="tier-card-price">৳120 / kg</div>
+        </div>
+        <div class="tier-card" onclick="selectTier(this,'B2B Merchant · ৳90/kg')">
+          <input type="radio" name="tier" value="B2B Merchant"/>
+          <div class="tier-check">✓</div>
+          <div class="tier-card-name">B2B Merchant</div>
+          <div class="tier-card-bn">মার্চেন্ট চুক্তি</div>
+          <div class="tier-card-price">৳90 / kg</div>
+        </div>
+      </div>
+      <div class="field-error" id="err-tier">Please select a booking type</div>
+    </div>
+
+    <!-- Submit -->
+    <hr class="form-divider"/>
+    <button type="button" class="submit-btn" onclick="submitForm()">
+      <span class="wa-icon">💬</span>
+      বুকিং WhatsApp-এ পাঠান →
+    </button>
+    <p class="submit-note">
+      <span class="bn">ফর্ম জমা দিলে WhatsApp খুলবে — আপনার সব তথ্য আগে থেকেই লেখা থাকবে।</span><br/>
+      Submitting opens WhatsApp with your booking pre-filled. We confirm your slot and send deposit instructions within a few minutes.
+    </p>
+
+  </div>
+
+  <!-- ══ SIDEBAR ══ -->
+  <div class="sidebar">
+
+    <!-- Payment card -->
+    <div class="side-card">
+      <div class="side-card-header">💳 &nbsp; ডিপোজিট পাঠান — Send Deposit</div>
+      <div class="side-card-body">
+        <div class="payment-method">
+          <div class="pm-icon pm-bkash">🩷</div>
+          <div>
+            <div class="pm-label">bKash (Send Money)</div>
+            <div class="pm-number">01859 929 858</div>
+            <div class="pm-note">Personal · Send Money only</div>
+          </div>
+        </div>
+        <div class="payment-method">
+          <div class="pm-icon pm-nagad">🟠</div>
+          <div>
+            <div class="pm-label">Nagad (Send Money)</div>
+            <div class="pm-number">01859 929 858</div>
+            <div class="pm-note">Personal · Send Money only</div>
+          </div>
+        </div>
+        <div class="payment-rule">
+          <span class="bn">রান কনফার্ম হলে ডিপোজিট চার্জ হবে। না হলে সম্পূর্ণ ফেরত।</span>
+          <strong>Do not send payment yet.</strong> Wait for our WhatsApp confirmation first. Deposit is only requested once your slot is confirmed.
+        </div>
+      </div>
+    </div>
+
+    <!-- Checklist -->
+    <div class="side-card">
+      <div class="side-card-header">✅ &nbsp; বুকিংয়ের আগে নিশ্চিত করুন</div>
+      <div class="side-card-body">
+        <ul class="checklist">
+          <li class="ok">
+            <span class="ck-icon">✓</span>
+            <span><strong>Food is completely frozen</strong> — rock solid, no soft spots before Friday pickup</span>
+          </li>
+          <li class="ok">
+            <span class="ck-icon">✓</span>
+            <span><strong>Packaging is sealed</strong> — zip-lock, sealed container, or wrapped tightly</span>
+          </li>
+          <li class="ok">
+            <span class="ck-icon">✓</span>
+            <span><strong>Booking before Thursday 10 PM</strong> — late bookings cannot be accepted</span>
+          </li>
+          <li>
+            <span class="ck-icon">!</span>
+            <span><strong>Label your package</strong> — write sender & recipient name + phone on the package</span>
+          </li>
+          <li>
+            <span class="ck-icon">!</span>
+            <span><strong>Be home during pickup window</strong> — our rider will call 30 min before arrival</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Help -->
+    <div class="help-card">
+      <span class="help-icon">💬</span>
+      <div class="help-title">Need help booking?</div>
+      <p class="help-body">কোনো প্রশ্ন থাকলে সরাসরি WhatsApp করুন — আমরা দ্রুত উত্তর দিই।<br/>Just message us and we'll book for you.</p>
+      <a href="https://wa.me/8801859929858" target="_blank" class="help-btn">💬 &nbsp; WhatsApp করুন</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-inner">
+    <a href="index.html" class="footer-logo">
+      পাঠান <span>Pathan</span>
+      <small>Sub-Zero Frozen Courier · Dhaka ↔ Sylhet</small>
+    </a>
+    <div class="footer-links">
+      <a href="how-it-works.html">How it works</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="merchants.html">Merchants</a>
+      <a href="index.html#contact">Contact</a>
+      <a href="pathan-booking-tracker.html">This week's run</a>
+    </div>
+    <div class="footer-copy">© 2025 Pathan Logistics · All rights reserved</div>
+  </div>
+</footer>
+
+<script>
+  /* ── Route toggle ── */
+  let selectedRoute = 'Dhaka → Sylhet';
+  function setRoute(btn, val) {
+    document.querySelectorAll('.route-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedRoute = val === 'dhaka-sylhet' ? 'Dhaka → Sylhet' : 'Sylhet → Dhaka';
+    document.getElementById('routeValue').value = selectedRoute;
+  }
+
+  /* ── Tier selection ── */
+  let selectedTier = '';
+  const tierRates = { 'On-Demand · ৳160/kg': 160, 'Campus Box · ৳120/kg': 120, 'B2B Merchant · ৳90/kg': 90 };
+  function selectTier(card, val) {
+    document.querySelectorAll('.tier-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    selectedTier = val;
+    updateCalc();
+  }
+
+  /* ── Price calc ── */
+  function updateCalc() {
+    const w = parseFloat(document.getElementById('weight').value);
+    const rate = tierRates[selectedTier] || 160;
+    const calc = document.getElementById('priceCalc');
+    const amt  = document.getElementById('calcAmount');
+    if (w && w >= 1) {
+      calc.style.display = 'flex';
+      amt.innerHTML = '৳ ' + (w * rate).toLocaleString() + ' <span>est.</span>';
+    } else {
+      calc.style.display = 'none';
+    }
+  }
+
+  /* ── Countdown ── */
+  function pad(n) { return String(n).padStart(2,'0'); }
+  function nextThursday10PM() {
+    const now = new Date();
+    let d = (4 - now.getDay() + 7) % 7;
+    if (d === 0 && now.getHours() >= 22) d = 7;
+    const t = new Date(now);
+    t.setDate(now.getDate() + d);
+    t.setHours(22,0,0,0);
+    return t;
+  }
+  function tick() {
+    let diff = Math.max(0, nextThursday10PM() - new Date());
+    const h = Math.floor(diff/3600000); diff -= h*3600000;
+    const m = Math.floor(diff/60000);   diff -= m*60000;
+    const s = Math.floor(diff/1000);
+    document.getElementById('runCountdown').textContent = pad(h)+':'+pad(m)+':'+pad(s);
+  }
+  tick(); setInterval(tick, 1000);
+
+  /* ── Form validation & WhatsApp redirect ── */
+  function validate() {
+    let valid = true;
+    const fields = [
+      { id:'senderName',       err:'err-senderName',       check: v => v.trim().length > 1 },
+      { id:'senderPhone',      err:'err-senderPhone',      check: v => /^01[3-9]\d{8}$/.test(v.trim()) },
+      { id:'senderAddress',    err:'err-senderAddress',    check: v => v.trim().length > 5 },
+      { id:'recipientName',    err:'err-recipientName',    check: v => v.trim().length > 1 },
+      { id:'recipientPhone',   err:'err-recipientPhone',   check: v => /^01[3-9]\d{8}$/.test(v.trim()) },
+      { id:'recipientAddress', err:'err-recipientAddress', check: v => v.trim().length > 5 },
+      { id:'foodCategory',     err:'err-foodCategory',     check: v => v !== '' },
+      { id:'weight',           err:'err-weight',           check: v => parseFloat(v) >= 1 && parseFloat(v) <= 20 },
+    ];
+    fields.forEach(f => {
+      const el  = document.getElementById(f.id);
+      const err = document.getElementById(f.err);
+      if (!f.check(el.value)) {
+        el.classList.add('error');
+        err.classList.add('show');
+        valid = false;
+      } else {
+        el.classList.remove('error');
+        err.classList.remove('show');
+      }
+    });
+    if (!selectedTier) {
+      document.getElementById('err-tier').classList.add('show');
+      valid = false;
+    } else {
+      document.getElementById('err-tier').classList.remove('show');
+    }
+    return valid;
+  }
+
+  function submitForm() {
+    if (!validate()) {
+      document.querySelector('.form-input.error, .form-select.error')?.scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
+    }
+    const sName    = document.getElementById('senderName').value.trim();
+    const sPhone   = document.getElementById('senderPhone').value.trim();
+    const sAddr    = document.getElementById('senderAddress').value.trim();
+    const rName    = document.getElementById('recipientName').value.trim();
+    const rPhone   = document.getElementById('recipientPhone').value.trim();
+    const rAddr    = document.getElementById('recipientAddress').value.trim();
+    const food     = document.getElementById('foodCategory').value;
+    const weight   = document.getElementById('weight').value;
+    const notes    = document.getElementById('foodNotes').value.trim();
+    const tier     = selectedTier.split(' · ')[0];
+    const rate     = tierRates[selectedTier] || 160;
+    const estCost  = '৳' + (parseFloat(weight) * rate).toLocaleString();
+
+    const msg =
+`🧊 *PATHAN BOOKING REQUEST*
+
+*Route:* ${selectedRoute}
+*Service:* ${tier}
+
+👤 *SENDER*
+Name: ${sName}
+Phone: ${sPhone}
+Pickup: ${sAddr}
+
+📦 *RECIPIENT*
+Name: ${rName}
+Phone: ${rPhone}
+Delivery: ${rAddr}
+
+🍱 *FOOD DETAILS*
+Category: ${food}
+Weight: ${weight} kg
+Est. cost: ${estCost}
+${notes ? 'Notes: ' + notes : ''}
+
+Please confirm my slot. Thank you! 🙏`;
+
+    const url = 'https://wa.me/8801859929858?text=' + encodeURIComponent(msg);
+    window.open(url, '_blank');
+  }
+</script>
+</body>
+</html>
