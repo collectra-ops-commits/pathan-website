@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Pathan — এই সপ্তাহের রান</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --soil:      #1E1208;
+    --bark:      #3A2010;
+    --moss:      #2E4A1E;
+    --leaf:      #4A7A2A;
+    --sage:      #7A9C52;
+    --mist:      #B8CC96;
+    --parchment: #F2EDE0;
+    --cream:     #FAF7F0;
+    --gold:      #C49A30;
+    --rust:      #B84A18;
+    --orange:    #D4621A;
+    --ink:       #160E04;
+    --red:       #8A1818;
+    --confirmed: #2A6A3A;
+    --conf-bg:   rgba(42,106,58,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--soil);
+    color: var(--cream);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--bark);
+    border-bottom: 2px solid var(--moss);
+    padding: 0 40px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--cream);
+    letter-spacing: 0.5px;
+  }
+  .logo span { color: var(--orange); font-style: italic; }
+  .header-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sage);
+    border: 1px solid rgba(122,156,82,0.3);
+    padding: 4px 10px;
+    border-radius: 2px;
+  }
+
+  /* ── HERO BANNER ── */
+  .hero {
+    background: var(--bark);
+    padding: 52px 40px 44px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(122,156,82,0.15);
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 70% at 80% 50%, rgba(212,98,26,0.12) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 50% 80% at 10% 50%, rgba(46,74,30,0.2) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 40px;
+    align-items: center;
+  }
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 1px;
+    background: var(--orange);
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(28px, 4vw, 46px);
+    color: var(--cream);
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+  .hero h1 em { color: var(--sage); font-style: italic; }
+  .hero-sub {
+    font-size: 13px;
+    color: rgba(250,247,240,0.55);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.5px;
+  }
+  .route-pill {
+    background: rgba(122,156,82,0.1);
+    border: 1px solid rgba(122,156,82,0.3);
+    color: var(--mist);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 8px 16px;
+    border-radius: 3px;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .route-pill .arrow {
+    display: block;
+    font-size: 18px;
+    color: var(--orange);
+    margin: 4px 0;
+  }
+
+  /* ── MAIN ── */
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 40px 80px;
+  }
+
+  /* ── STATUS BADGE ── */
+  .status-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+  }
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border-radius: 3px;
+    font-weight: 500;
+  }
+  .status-badge .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.5; transform: scale(0.85); }
+  }
+  .status-filling {
+    background: rgba(196,154,48,0.12);
+    border: 1px solid rgba(196,154,48,0.3);
+    color: var(--gold);
+  }
+  .status-filling .dot { background: var(--gold); }
+  .status-confirmed {
+    background: rgba(42,106,58,0.15);
+    border: 1px solid rgba(42,106,58,0.4);
+    color: #5ABF72;
+  }
+  .status-confirmed .dot { background: #5ABF72; }
+  .status-closed {
+    background: rgba(138,24,24,0.12);
+    border: 1px solid rgba(138,24,24,0.35);
+    color: #C05050;
+  }
+  .status-closed .dot { background: #C05050; animation: none; }
+
+  .week-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(250,247,240,0.35);
+  }
+
+  /* ── TRACKER CARD ── */
+  .tracker-card {
+    background: var(--bark);
+    border: 1px solid rgba(122,156,82,0.2);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+  .tracker-header {
+    background: var(--moss);
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .tracker-header-left h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--cream);
+    margin-bottom: 3px;
+  }
+  .tracker-header-left p {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: rgba(184,204,150,0.65);
+    letter-spacing: 1px;
+  }
+  .capacity-nums {
+    text-align: right;
+  }
+  .capacity-big {
+    font-family: 'DM Serif Display', serif;
+    font-size: 34px;
+    color: var(--cream);
+    line-height: 1;
+  }
+  .capacity-big span { color: var(--orange); }
+  .capacity-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(184,204,150,0.55);
+    margin-top: 3px;
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid rgba(122,156,82,0.1);
+  }
+  .progress-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: rgba(250,247,240,0.4);
+    letter-spacing: 1px;
+  }
+  .progress-outer {
+    width: 100%;
+    height: 14px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+  .progress-inner {
+    height: 100%;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--leaf), var(--sage));
+    transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+  }
+  .progress-inner::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 0 2px 2px 0;
+  }
+  /* Threshold marker at 60% */
+  .progress-threshold {
+    position: absolute;
+    left: 60%;
+    top: -4px;
+    bottom: -4px;
+    width: 2px;
+    background: var(--gold);
+    opacity: 0.7;
+  }
+  .progress-threshold-label {
+    position: absolute;
+    left: 60%;
+    top: -22px;
+    transform: translateX(-50%);
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--gold);
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+  .progress-container {
+    position: relative;
+    margin-bottom: 6px;
+  }
+  .progress-pct {
+    text-align: right;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--sage);
+    margin-top: 8px;
+  }
+
+  /* ── BANGLA RULE BOX ── */
+  .rule-box {
+    margin: 0 28px 0;
+    padding: 16px 20px;
+    background: rgba(196,154,48,0.07);
+    border: 1px solid rgba(196,154,48,0.22);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 3px 3px 0;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .rule-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: var(--gold);
+  }
+  .rule-text-en {
+    font-size: 12px;
+    color: rgba(250,247,240,0.7);
+    line-height: 1.55;
+  }
+  .rule-text-bn {
+    font-size: 13px;
+    color: var(--mist);
+    font-weight: 500;
+    margin-bottom: 4px;
+    line-height: 1.55;
+  }
+
+  /* ── COUNTDOWN ── */
+  .countdown-section {
+    padding: 20px 28px 24px;
+  }
+  .countdown-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(250,247,240,0.35);
+    margin-bottom: 14px;
+  }
+  .countdown-grid {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+  }
+  .countdown-unit {
+    text-align: center;
+    flex: 1;
+    max-width: 80px;
+  }
+  .countdown-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px;
+    color: var(--cream);
+    line-height: 1;
+    display: block;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px;
+    padding: 10px 0;
+    margin-bottom: 6px;
+    min-width: 64px;
+  }
+  .countdown-unit-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(250,247,240,0.35);
+  }
+  .countdown-sep {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: rgba(250,247,240,0.2);
+    padding-bottom: 20px;
+    align-self: center;
+  }
+  .deadline-note {
+    margin-top: 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: rgba(250,247,240,0.35);
+    letter-spacing: 0.5px;
+  }
+  .deadline-note strong { color: var(--orange); }
+
+  /* ── SLOTS BREAKDOWN ── */
+  .slots-section {
+    background: var(--bark);
+    border: 1px solid rgba(122,156,82,0.15);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+  .slots-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid rgba(122,156,82,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .slots-header h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 17px;
+    color: var(--cream);
+  }
+  .slots-header span {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--sage);
+    letter-spacing: 1px;
+  }
+  .slots-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+  .slot-item {
+    padding: 20px 24px;
+    border-right: 1px solid rgba(122,156,82,0.1);
+    border-bottom: 1px solid rgba(122,156,82,0.1);
+  }
+  .slot-item:nth-child(3n) { border-right: none; }
+  .slot-item:nth-last-child(-n+3) { border-bottom: none; }
+  .slot-tier {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(250,247,240,0.35);
+    margin-bottom: 8px;
+  }
+  .slot-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    color: var(--cream);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .slot-num span { color: var(--sage); font-size: 16px; }
+  .slot-bar {
+    height: 3px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 1px;
+    margin-top: 10px;
+    overflow: hidden;
+  }
+  .slot-bar-inner {
+    height: 100%;
+    border-radius: 1px;
+    background: var(--sage);
+  }
+  .slot-bn {
+    font-size: 11px;
+    color: rgba(250,247,240,0.45);
+    margin-top: 2px;
+  }
+
+  /* ── NOTICE BOX ── */
+  .notice-box {
+    background: rgba(26,18,8,0.6);
+    border: 1px solid rgba(212,98,26,0.25);
+    border-left: 3px solid var(--orange);
+    border-radius: 0 4px 4px 0;
+    padding: 18px 22px;
+    margin-bottom: 28px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .notice-box .icon { color: var(--orange); font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+  .notice-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 5px;
+  }
+  .notice-body { font-size: 13px; color: rgba(250,247,240,0.65); line-height: 1.6; }
+  .notice-body strong { color: var(--cream); }
+  .notice-body .bn { color: var(--mist); font-weight: 500; }
+
+  /* ── HOW IT WORKS ── */
+  .how-section {
+    margin-bottom: 28px;
+  }
+  .how-header {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(250,247,240,0.3);
+    margin-bottom: 16px;
+  }
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  .step-card {
+    background: var(--bark);
+    border: 1px solid rgba(122,156,82,0.15);
+    border-radius: 5px;
+    padding: 18px 16px;
+  }
+  .step-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--sage);
+    background: rgba(122,156,82,0.1);
+    border: 1px solid rgba(122,156,82,0.2);
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 2px;
+    margin-bottom: 10px;
+  }
+  .step-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 15px;
+    color: var(--cream);
+    margin-bottom: 5px;
+    line-height: 1.2;
+  }
+  .step-title-bn {
+    font-size: 12px;
+    color: var(--mist);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .step-body {
+    font-size: 11px;
+    color: rgba(250,247,240,0.45);
+    line-height: 1.55;
+  }
+
+  /* ── FOOTER RULE ── */
+  .footer-rule {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(122,156,82,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .footer-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    color: rgba(250,247,240,0.4);
+  }
+  .footer-logo span { color: var(--orange); font-style: italic; }
+  .footer-tagline {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: rgba(250,247,240,0.25);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .tracker-card, .slots-section, .notice-box, .how-section {
+    animation: fadeUp 0.5s ease both;
+  }
+  .slots-section  { animation-delay: 0.1s; }
+  .notice-box     { animation-delay: 0.2s; }
+  .how-section    { animation-delay: 0.3s; }
+
+  @media (max-width: 640px) {
+    .header { padding: 0 20px; }
+    .hero { padding: 36px 20px 32px; }
+    .hero-inner { grid-template-columns: 1fr; gap: 20px; }
+    .page { padding: 32px 20px 60px; }
+    .slots-grid { grid-template-columns: repeat(2, 1fr); }
+    .steps-grid { grid-template-columns: repeat(2, 1fr); }
+    .tracker-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .capacity-nums { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="header">
+  <div class="logo">পাঠান <span>Pathan</span></div>
+  <div class="header-tag">Dhaka ⇄ Sylhet · Sub-Zero Courier</div>
+</header>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">এই সপ্তাহের রান — Live Run Status</div>
+      <h1>আম্মুর হাতের রান্না,<br/><em>Frozen. Delivered.</em></h1>
+      <p class="hero-sub">Friday Night Batch · 22 June 2025 · 10:00 PM Departure</p>
+    </div>
+    <div class="route-pill">
+      ঢাকা<br/>
+      <span class="arrow">↕</span>
+      সিলেট
+    </div>
+  </div>
+</section>
+
+<!-- ── MAIN ── -->
+<main class="page">
+
+  <!-- Status Row -->
+  <div class="status-row">
+    <div class="status-badge status-filling" id="statusBadge">
+      <span class="dot"></span>
+      <span id="statusText">Filling Up</span>
+    </div>
+    <div class="week-label">Week of 22 Jun — Run #07</div>
+  </div>
+
+  <!-- Tracker Card -->
+  <div class="tracker-card">
+    <div class="tracker-header">
+      <div class="tracker-header-left">
+        <h2>Cargo Capacity Tracker</h2>
+        <p>কার্গো ধারণক্ষমতা · Updated live · Closes Thu 10 PM</p>
+      </div>
+      <div class="capacity-nums">
+        <div class="capacity-big"><span id="bookedKg">36</span> / 60 <span style="font-size:16px;color:var(--sage);">kg</span></div>
+        <div class="capacity-label">Booked / Total Capacity</div>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-wrap">
+      <div class="progress-labels">
+        <span>0 kg</span>
+        <span>30 kg</span>
+        <span>60 kg</span>
+      </div>
+      <div class="progress-container">
+        <div class="progress-threshold-label">Min. threshold</div>
+        <div class="progress-outer">
+          <div class="progress-threshold"></div>
+          <div class="progress-inner" id="progressBar" style="width: 60%;"></div>
+        </div>
+      </div>
+      <div class="progress-pct" id="progressPct">60% filled — Run threshold reached ✓</div>
+    </div>
+
+    <!-- Rule Box -->
+    <div style="padding: 16px 28px;">
+      <div class="rule-box">
+        <div class="rule-icon">⚡</div>
+        <div>
+          <div class="rule-text-bn">রান নিশ্চিত হয় ৬০% ক্যাপাসিটি পূর্ণ হলে। বুকিং কনফার্ম না হওয়া পর্যন্ত কোনো চার্জ নেওয়া হবে না।</div>
+          <div class="rule-text-en">The run is confirmed once 60% capacity is booked. <strong style="color:var(--cream);">You will not be charged until the run is confirmed.</strong> If the run doesn't proceed, your deposit is fully refunded.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Countdown -->
+    <div class="countdown-section">
+      <div class="countdown-label">Booking window closes in</div>
+      <div class="countdown-grid">
+        <div class="countdown-unit">
+          <span class="countdown-num" id="cdDays">02</span>
+          <div class="countdown-unit-label">Days</div>
+        </div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit">
+          <span class="countdown-num" id="cdHours">14</span>
+          <div class="countdown-unit-label">Hours</div>
+        </div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit">
+          <span class="countdown-num" id="cdMins">37</span>
+          <div class="countdown-unit-label">Minutes</div>
+        </div>
+        <div class="countdown-sep">:</div>
+        <div class="countdown-unit">
+          <span class="countdown-num" id="cdSecs">08</span>
+          <div class="countdown-unit-label">Seconds</div>
+        </div>
+      </div>
+      <div class="deadline-note">Booking deadline: <strong>Thursday, 19 June · 10:00 PM</strong> · Van departs Friday 22 June at 10 PM</div>
+    </div>
+  </div>
+
+  <!-- Slots Breakdown -->
+  <div class="slots-section">
+    <div class="slots-header">
+      <h3>Bookings by Tier</h3>
+      <span>টায়ার অনুযায়ী বুকিং</span>
+    </div>
+    <div class="slots-grid">
+      <div class="slot-item">
+        <div class="slot-tier">Campus Box</div>
+        <div class="slot-num">18 <span>kg</span></div>
+        <div class="slot-bn">ক্যাম্পাস সাবস্ক্রিপশন</div>
+        <div class="slot-bar"><div class="slot-bar-inner" style="width:60%;background:var(--sage);"></div></div>
+      </div>
+      <div class="slot-item">
+        <div class="slot-tier">B2B Merchant</div>
+        <div class="slot-num">12 <span>kg</span></div>
+        <div class="slot-bn">মার্চেন্ট চুক্তি</div>
+        <div class="slot-bar"><div class="slot-bar-inner" style="width:40%;background:var(--orange);"></div></div>
+      </div>
+      <div class="slot-item">
+        <div class="slot-tier">On-Demand</div>
+        <div class="slot-num">6 <span>kg</span></div>
+        <div class="slot-bn">সরাসরি বুকিং</div>
+        <div class="slot-bar"><div class="slot-bar-inner" style="width:20%;background:var(--gold);"></div></div>
+      </div>
+      <div class="slot-item">
+        <div class="slot-tier">Dhaka → Sylhet</div>
+        <div class="slot-num">28 <span>kg</span></div>
+        <div class="slot-bn">ঢাকা থেকে সিলেট</div>
+        <div class="slot-bar"><div class="slot-bar-inner" style="width:70%;"></div></div>
+      </div>
+      <div class="slot-item">
+        <div class="slot-tier">Sylhet → Dhaka</div>
+        <div class="slot-num">8 <span>kg</span></div>
+        <div class="slot-bn">সিলেট থেকে ঢাকা</div>
+        <div class="slot-bar"><div class="slot-bar-inner" style="width:27%;"></div></div>
+      </div>
+      <div class="slot-item">
+        <div class="slot-tier">Remaining Capacity</div>
+        <div class="slot-num" style="color:var(--orange);">24 <span>kg</span></div>
+        <div class="slot-bn">খালি আছে</div>
+        <div class="slot-bar"><div class="slot-bar-inner" style="width:40%;background:rgba(212,98,26,0.5);"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notice Box -->
+  <div class="notice-box">
+    <div class="icon">❄</div>
+    <div>
+      <div class="notice-title">Cold Chain Rule — গুরুত্বপূর্ণ নিয়ম</div>
+      <div class="notice-body">
+        <span class="bn">সব খাবার অবশ্যই সম্পূর্ণ জমাট অবস্থায় (rock-solid frozen) হস্তান্তর করতে হবে।</span><br/>
+        <strong>All food must be handed over completely frozen (rock-solid) at pickup.</strong> Pathan maintains the cold chain — we do not blast-freeze. Partially thawed items will be refused by our rider at the door. No exceptions.
+      </div>
+    </div>
+  </div>
+
+  <!-- How It Works -->
+  <div class="how-section">
+    <div class="how-header">How this run works — এই রান কীভাবে কাজ করে</div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">01 — Thu</div>
+        <div class="step-title">Book & Deposit</div>
+        <div class="step-title-bn">বুকিং ও ডিপোজিট</div>
+        <div class="step-body">WhatsApp বা Facebook-এ বুক করুন বৃহস্পতিবার রাত ১০টার আগে। Deposit held — not charged until run confirms.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02 — Fri AM</div>
+        <div class="step-title">Doorstep Pickup</div>
+        <div class="step-title-bn">দরজা থেকে সংগ্রহ</div>
+        <div class="step-body">Our rider comes to you. Food must be rock-solid frozen. Van collects across Dhaka zones 9 AM – 6 PM.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03 — Fri Night</div>
+        <div class="step-title">Highway Sprint</div>
+        <div class="step-title-bn">রাতের যাত্রা</div>
+        <div class="step-body">Van departs Dhaka at 10 PM. Overnight highway run at -18°C. Arrives Sylhet by 4–5 AM.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">04 — Sat AM</div>
+        <div class="step-title">Delivered ✓</div>
+        <div class="step-title-bn">ডেলিভারি সম্পন্ন</div>
+        <div class="step-body">Sylhet last-mile riders deliver zone by zone. আম্মুর রান্না পৌঁছে যাবে সকালেই।</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer-rule">
+    <div class="footer-logo">পাঠান <span>Pathan</span></div>
+    <div class="footer-tagline">আম্মুর হাতের রান্না · Fresh & Frozen · Delivered in 24 Hours</div>
+  </div>
+
+</main>
+
+<script>
+  // ── LIVE COUNTDOWN to next Thursday 10 PM ──
+  function getNextThursday10PM() {
+    const now = new Date();
+    const day = now.getDay(); // 0=Sun ... 4=Thu
+    let daysUntilThu = (4 - day + 7) % 7;
+    if (daysUntilThu === 0 && now.getHours() >= 22) daysUntilThu = 7;
+    const target = new Date(now);
+    target.setDate(now.getDate() + daysUntilThu);
+    target.setHours(22, 0, 0, 0);
+    return target;
+  }
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function updateCountdown() {
+    const now = new Date();
+    const target = getNextThursday10PM();
+    let diff = Math.max(0, target - now);
+
+    const days  = Math.floor(diff / 86400000); diff -= days  * 86400000;
+    const hours = Math.floor(diff / 3600000);  diff -= hours * 3600000;
+    const mins  = Math.floor(diff / 60000);    diff -= mins  * 60000;
+    const secs  = Math.floor(diff / 1000);
+
+    document.getElementById('cdDays').textContent  = pad(days);
+    document.getElementById('cdHours').textContent = pad(hours);
+    document.getElementById('cdMins').textContent  = pad(mins);
+    document.getElementById('cdSecs').textContent  = pad(secs);
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // ── DYNAMIC STATUS based on fill % ──
+  const booked = 36;
+  const total  = 60;
+  const pct    = Math.round((booked / total) * 100);
+  const bar    = document.getElementById('progressBar');
+  const pctEl  = document.getElementById('progressPct');
+  const badge  = document.getElementById('statusBadge');
+  const badgeTxt = document.getElementById('statusText');
+  const bookedEl = document.getElementById('bookedKg');
+
+  bookedEl.textContent = booked;
+  bar.style.width = pct + '%';
+
+  if (pct >= 100) {
+    badge.className = 'status-badge status-closed';
+    badgeTxt.textContent = 'Fully Booked';
+    pctEl.textContent = '100% — Fully booked!';
+  } else if (pct >= 60) {
+    badge.className = 'status-badge status-confirmed';
+    badgeTxt.textContent = 'Run Confirmed ✓';
+    pctEl.textContent = pct + '% filled — Run threshold reached ✓';
+    bar.style.background = 'linear-gradient(90deg, #2A6A3A, #5ABF72)';
+  } else {
+    badge.className = 'status-badge status-filling';
+    badgeTxt.textContent = 'Filling Up';
+    pctEl.textContent = pct + '% filled — ' + (60 - pct) + '% more needed to confirm run';
+  }
+</script>
+</body>
+</html>
