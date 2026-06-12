@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Track Your Order — পাঠান Pathan</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --soil:#2C1A0E;--bark:#4A2E1A;--moss:#3D5A2A;--leaf:#5C8C3A;
+    --sage:#8FAF6A;--mist:#C8D9B0;--parchment:#F5F0E8;--cream:#FAF7F2;
+    --gold:#C8A84B;--rust:#B85A2A;--orange:#D4621A;--ink:#1A1208;
+    --error:#C0392B;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--cream);color:var(--ink);font-family:'Instrument Sans',sans-serif;font-size:14px;line-height:1.65;overflow-x:hidden;}
+
+  nav{background:var(--soil);padding:0 40px;position:sticky;top:0;z-index:200;border-bottom:2px solid var(--moss);}
+  .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:54px;}
+  .nav-logo{font-family:'DM Serif Display',serif;font-size:20px;color:var(--cream);text-decoration:none;}
+  .nav-logo span{color:var(--orange);font-style:italic;}
+  .nav-links{display:flex;align-items:center;gap:0;overflow-x:auto;scrollbar-width:none;}
+  .nav-links::-webkit-scrollbar{display:none;}
+  .nav-links a{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(200,217,176,0.55);text-decoration:none;padding:0 14px;height:54px;display:flex;align-items:center;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .2s,border-color .2s;}
+  .nav-links a:hover{color:var(--cream);border-bottom-color:var(--sage);}
+  .nav-links a.active{color:var(--cream);border-bottom-color:var(--orange);}
+  .nav-cta{background:var(--orange)!important;color:var(--cream)!important;padding:8px 18px!important;height:auto!important;border-radius:3px!important;border-bottom:none!important;margin-left:8px;font-weight:500!important;}
+  .nav-cta:hover{background:var(--rust)!important;}
+
+  /* HERO */
+  .page-hero{background:var(--bark);padding:60px 40px 52px;position:relative;overflow:hidden;border-bottom:1px solid rgba(143,175,106,0.15);}
+  .page-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 60% at 90% 50%,rgba(212,98,26,0.15) 0%,transparent 65%);pointer-events:none;}
+  .page-hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 45% 70% at 5% 50%,rgba(61,90,42,0.2) 0%,transparent 60%);pointer-events:none;}
+  .page-hero-inner{max-width:680px;margin:0 auto;position:relative;z-index:1;text-align:center;}
+  .breadcrumb{display:flex;align-items:center;justify-content:center;gap:8px;font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.35);margin-bottom:22px;}
+  .breadcrumb a{color:rgba(200,217,176,0.45);text-decoration:none;}
+  .breadcrumb a:hover{color:var(--mist);}
+  .ph-eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);border:1px solid rgba(212,98,26,0.3);padding:6px 14px;border-radius:2px;margin-bottom:20px;}
+  .ph-eyebrow::before{content:'';width:18px;height:1px;background:var(--orange);}
+  .page-hero h1{font-family:'DM Serif Display',serif;font-size:clamp(28px,4vw,48px);color:var(--cream);line-height:1.05;margin-bottom:12px;}
+  .page-hero h1 em{color:var(--orange);font-style:italic;}
+  .page-hero p{font-size:14px;color:rgba(250,247,242,0.52);line-height:1.7;}
+
+  /* SEARCH BOX */
+  .search-wrap{max-width:680px;margin:0 auto;padding:48px 40px 0;}
+  .search-card{background:var(--bark);border:1px solid rgba(143,175,106,0.2);border-radius:8px;overflow:hidden;}
+  .search-header{background:var(--moss);padding:16px 24px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--mist);}
+  .search-body{padding:24px;}
+  .search-row{display:grid;grid-template-columns:1fr 1fr auto;gap:14px;align-items:end;}
+  .s-field label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,217,176,0.5);display:block;margin-bottom:8px;}
+  .s-input{width:100%;background:rgba(255,255,255,0.06);border:1.5px solid rgba(143,175,106,0.2);border-radius:4px;padding:11px 14px;font-family:'Instrument Sans',sans-serif;font-size:14px;color:var(--cream);outline:none;transition:border-color .2s;}
+  .s-input::placeholder{color:rgba(200,217,176,0.25);}
+  .s-input:focus{border-color:var(--orange);}
+  .s-input.error{border-color:var(--error);}
+  .s-btn{background:var(--orange);color:var(--cream);font-family:'Instrument Sans',sans-serif;font-size:14px;font-weight:600;padding:11px 24px;border-radius:4px;border:none;cursor:pointer;transition:background .2s;white-space:nowrap;}
+  .s-btn:hover{background:var(--rust);}
+  .search-error{font-size:12px;color:#E57373;margin-top:10px;display:none;}
+  .search-error.show{display:block;}
+  .search-hint{font-size:11px;color:rgba(200,217,176,0.35);margin-top:10px;font-family:'DM Mono',monospace;letter-spacing:0.3px;}
+
+  /* RESULT AREA */
+  .result-wrap{max-width:680px;margin:32px auto 0;padding:0 40px;}
+
+  /* Status card */
+  .status-card{background:var(--bark);border:1px solid rgba(143,175,106,0.18);border-radius:8px;overflow:hidden;margin-bottom:24px;}
+  .sc-top{padding:22px 24px;border-bottom:1px solid rgba(143,175,106,0.1);display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+  .sc-ref{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,217,176,0.4);margin-bottom:6px;}
+  .sc-name{font-family:'DM Serif Display',serif;font-size:22px;color:var(--cream);}
+  .sc-route{font-size:12px;color:rgba(200,217,176,0.5);margin-top:3px;font-family:'DM Mono',monospace;}
+  .status-badge{display:inline-flex;align-items:center;gap:8px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;padding:8px 16px;border-radius:3px;font-weight:500;flex-shrink:0;}
+  .status-badge .dot{width:8px;height:8px;border-radius:50%;}
+  .badge-booked   {background:rgba(200,168,75,0.12);border:1px solid rgba(200,168,75,0.3);color:var(--gold);}
+  .badge-booked .dot{background:var(--gold);animation:blink 2s ease-in-out infinite;}
+  .badge-pickup   {background:rgba(212,98,26,0.12);border:1px solid rgba(212,98,26,0.3);color:var(--orange);}
+  .badge-pickup .dot{background:var(--orange);animation:blink 1.5s ease-in-out infinite;}
+  .badge-transit  {background:rgba(61,90,42,0.15);border:1px solid rgba(92,140,58,0.35);color:var(--sage);}
+  .badge-transit .dot{background:var(--sage);animation:blink 1.2s ease-in-out infinite;}
+  .badge-delivered{background:rgba(42,106,58,0.15);border:1px solid rgba(42,106,58,0.4);color:#7ADB8A;}
+  .badge-delivered .dot{background:#7ADB8A;}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0.35}}
+
+  /* Order meta */
+  .sc-meta{padding:18px 24px;display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-bottom:1px solid rgba(143,175,106,0.08);}
+  .sc-meta-item{padding:4px 0;}
+  .sc-meta-item:not(:last-child){border-right:1px solid rgba(143,175,106,0.08);padding-right:20px;margin-right:0;}
+  .sc-meta-item+.sc-meta-item{padding-left:20px;}
+  .meta-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,217,176,0.35);margin-bottom:5px;}
+  .meta-value{font-family:'DM Serif Display',serif;font-size:18px;color:var(--cream);}
+  .meta-value.sm{font-family:'Instrument Sans',sans-serif;font-size:13px;margin-top:2px;}
+
+  /* Timeline */
+  .sc-timeline{padding:22px 24px;}
+  .tl-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,217,176,0.35);margin-bottom:18px;}
+  .tl{display:flex;flex-direction:column;gap:0;position:relative;}
+  .tl::before{content:'';position:absolute;left:15px;top:8px;bottom:8px;width:2px;background:rgba(143,175,106,0.1);}
+  .tl-step{display:flex;gap:16px;align-items:flex-start;padding-bottom:20px;position:relative;}
+  .tl-step:last-child{padding-bottom:0;}
+  .tl-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;position:relative;z-index:1;border:2px solid transparent;}
+  .tl-dot.done{background:var(--leaf);border-color:rgba(92,140,58,0.5);}
+  .tl-dot.active{background:var(--orange);border-color:rgba(212,98,26,0.5);}
+  .tl-dot.pending{background:rgba(255,255,255,0.05);border-color:rgba(143,175,106,0.15);}
+  .tl-content{flex:1;padding-top:4px;}
+  .tl-step-title{font-family:'DM Serif Display',serif;font-size:16px;line-height:1.2;margin-bottom:2px;}
+  .tl-step-title.done{color:var(--cream);}
+  .tl-step-title.active{color:var(--cream);}
+  .tl-step-title.pending{color:rgba(200,217,176,0.3);}
+  .tl-step-bn{font-size:11px;font-weight:500;margin-bottom:4px;}
+  .tl-step-bn.done{color:var(--sage);}
+  .tl-step-bn.active{color:var(--orange);}
+  .tl-step-bn.pending{color:rgba(200,217,176,0.18);}
+  .tl-step-time{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.5px;}
+  .tl-step-time.done{color:rgba(200,217,176,0.45);}
+  .tl-step-time.active{color:var(--orange);}
+  .tl-step-time.pending{color:rgba(200,217,176,0.18);}
+
+  /* Not found */
+  .not-found{background:var(--bark);border:1px solid rgba(212,98,26,0.2);border-radius:8px;padding:40px 28px;text-align:center;}
+  .nf-icon{font-size:36px;margin-bottom:14px;display:block;}
+  .nf-title{font-family:'DM Serif Display',serif;font-size:22px;color:var(--cream);margin-bottom:8px;}
+  .nf-body{font-size:13px;color:rgba(200,217,176,0.55);line-height:1.65;margin-bottom:20px;}
+  .nf-btn{display:inline-block;background:rgba(255,255,255,0.06);border:1px solid rgba(143,175,106,0.2);color:var(--mist);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;padding:10px 20px;border-radius:3px;text-decoration:none;transition:background .2s;}
+  .nf-btn:hover{background:rgba(255,255,255,0.1);}
+
+  /* Help strip */
+  .help-strip{max-width:680px;margin:0 auto;padding:0 40px 64px;}
+  .help-card{background:var(--parchment);border:1px solid rgba(61,90,42,0.15);border-radius:8px;padding:22px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+  .help-left{}
+  .help-title{font-family:'DM Serif Display',serif;font-size:18px;color:var(--soil);margin-bottom:4px;}
+  .help-body{font-size:12px;color:rgba(44,26,14,0.55);line-height:1.55;}
+  .help-body .bn{color:var(--rust);font-weight:500;}
+  .wa-btn{display:inline-flex;align-items:center;gap:8px;background:#25D366;color:white;font-family:'Instrument Sans',sans-serif;font-size:13px;font-weight:600;padding:11px 20px;border-radius:4px;text-decoration:none;white-space:nowrap;transition:background .2s;}
+  .wa-btn:hover{background:#1DA851;}
+
+  /* DEMO note */
+  .demo-note{background:rgba(200,168,75,0.08);border:1px solid rgba(200,168,75,0.2);border-left:3px solid var(--gold);border-radius:0 4px 4px 0;padding:12px 16px;font-size:12px;color:rgba(200,217,176,0.65);margin-bottom:20px;line-height:1.55;}
+  .demo-note strong{color:var(--mist);}
+
+  footer{background:var(--soil);border-top:2px solid var(--moss);padding:40px;}
+  .footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;}
+  .footer-logo{font-family:'DM Serif Display',serif;font-size:22px;color:var(--cream);text-decoration:none;}
+  .footer-logo span{color:var(--orange);font-style:italic;}
+  .footer-logo small{display:block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,217,176,0.3);margin-top:4px;}
+  .footer-links{display:flex;gap:24px;flex-wrap:wrap;}
+  .footer-links a{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(200,217,176,0.4);text-decoration:none;transition:color .2s;}
+  .footer-links a:hover{color:var(--cream);}
+  .footer-copy{font-family:'DM Mono',monospace;font-size:9px;color:rgba(200,217,176,0.2);}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  .fade{animation:fadeUp .4s ease both;}
+
+  @media(max-width:700px){
+    nav,footer{padding-left:20px;padding-right:20px;}
+    .page-hero{padding:48px 20px 40px;}
+    .search-wrap,.result-wrap,.help-strip{padding-left:20px;padding-right:20px;}
+    .search-row{grid-template-columns:1fr;}
+    .sc-meta{grid-template-columns:1fr 1fr;}
+    .sc-meta-item:nth-child(3){grid-column:1/-1;border-right:none;padding-left:0;border-top:1px solid rgba(143,175,106,0.08);padding-top:14px;margin-top:6px;}
+    .footer-inner{flex-direction:column;text-align:center;}
+    .footer-links{justify-content:center;}
+    .help-card{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">পাঠান <span>Pathan</span></a>
+    <div class="nav-links">
+      <a href="how-it-works.html">How it works</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="merchants.html">Merchants</a>
+      <a href="index.html#contact">Contact</a>
+      <a href="book.html" class="nav-cta">এই সপ্তাহে বুক করুন →</a>
+    </div>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">Home</a><span>/</span><span>Track Order</span></div>
+    <div class="ph-eyebrow">অর্ডার ট্র্যাক — Track</div>
+    <h1>Where is your<br/><em>package right now?</em></h1>
+    <p>Enter your booking reference and phone number to see your order status in real time.</p>
+  </div>
+</section>
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <div class="search-card">
+    <div class="search-header">🔍 &nbsp; বুকিং রেফারেন্স দিন — Enter Booking Reference</div>
+    <div class="search-body">
+      <div class="search-row">
+        <div class="s-field">
+          <label>Booking Reference</label>
+          <input type="text" class="s-input" id="refInput" placeholder="e.g. PTH-2025-0042" oninput="this.value=this.value.toUpperCase()"/>
+        </div>
+        <div class="s-field">
+          <label>Your Phone Number</label>
+          <input type="tel" class="s-input" id="phoneInput" placeholder="01XXXXXXXXX"/>
+        </div>
+        <button class="s-btn" onclick="trackOrder()">Track →</button>
+      </div>
+      <div class="search-error" id="searchError">Please enter your booking reference and phone number.</div>
+      <div class="search-hint">Your booking reference was sent to you via WhatsApp when your slot was confirmed. Format: PTH-YYYY-XXXX</div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div class="result-wrap" id="resultWrap" style="display:none;">
+
+  <div class="demo-note" id="demoNote">
+    <strong>Demo mode —</strong> This is a sample order result showing what your tracking page looks like. In live operation, your actual order details and real-time status will appear here.
+  </div>
+
+  <!-- Status card -->
+  <div class="status-card fade" id="statusCard">
+    <div class="sc-top">
+      <div>
+        <div class="sc-ref" id="scRef">Booking Ref: PTH-2025-0042</div>
+        <div class="sc-name" id="scName">Rashed Ahmed</div>
+        <div class="sc-route" id="scRoute">Dhaka → Sylhet · Run #07 · 22 Jun 2025</div>
+      </div>
+      <div class="status-badge badge-transit" id="scBadge">
+        <span class="dot"></span>
+        <span id="scBadgeText">In Transit</span>
+      </div>
+    </div>
+
+    <div class="sc-meta">
+      <div class="sc-meta-item">
+        <div class="meta-label">Weight</div>
+        <div class="meta-value" id="scWeight">4 kg</div>
+      </div>
+      <div class="sc-meta-item">
+        <div class="meta-label">Food Type</div>
+        <div class="meta-value sm" id="scFood">Beef Curry + Fish</div>
+      </div>
+      <div class="sc-meta-item">
+        <div class="meta-label">Est. Delivery</div>
+        <div class="meta-value sm" id="scETA">Sat 22 Jun · 6–10 AM</div>
+      </div>
+    </div>
+
+    <div class="sc-timeline">
+      <div class="tl-label">Order Journey — অর্ডারের যাত্রা</div>
+      <div class="tl" id="scTimeline">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Not found -->
+  <div class="not-found fade" id="notFound" style="display:none;">
+    <span class="nf-icon">🔍</span>
+    <div class="nf-title">Order not found</div>
+    <p class="nf-body">
+      We couldn't find a booking matching that reference and phone number.<br/>
+      <span style="color:var(--mist);font-weight:500;">বুকিং রেফারেন্স বা ফোন নম্বর মিলছে না।</span><br/><br/>
+      Double-check your WhatsApp confirmation message for the correct reference. Still having trouble? Contact us directly.
+    </p>
+    <a href="https://wa.me/8801859929858" target="_blank" class="nf-btn">💬 &nbsp; WhatsApp করুন</a>
+  </div>
+
+</div>
+
+<!-- HELP -->
+<div class="help-strip" style="margin-top:32px;">
+  <div class="help-card">
+    <div class="help-left">
+      <div class="help-title">Can't find your booking?</div>
+      <p class="help-body">
+        <span class="bn">বুকিং খুঁজে পাচ্ছেন না? সরাসরি WhatsApp করুন।</span>
+        Your reference number is in your WhatsApp confirmation. If you don't have it, message us with your name and phone number.
+      </p>
+    </div>
+    <a href="https://wa.me/8801859929858" target="_blank" class="wa-btn">💬 &nbsp; WhatsApp করুন</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <a href="index.html" class="footer-logo">পাঠান <span>Pathan</span><small>Sub-Zero Frozen Courier · Dhaka ↔ Sylhet</small></a>
+    <div class="footer-links">
+      <a href="how-it-works.html">How it works</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="merchants.html">Merchants</a>
+      <a href="index.html#contact">Contact</a>
+      <a href="book.html">Book a slot</a>
+    </div>
+    <div class="footer-copy">© 2025 Pathan Logistics · All rights reserved</div>
+  </div>
+</footer>
+
+<script>
+  /* ── Demo order data ──
+     In Phase 2 this connects to a real backend/Google Sheet.
+     For now, any input shows a demo result so the UI is clear. */
+
+  const STEPS = [
+    { title:'Slot Booked',        bn:'স্লট বুক হয়েছে',          icon:'📋', time:'Thu 19 Jun · 8:42 PM' },
+    { title:'Run Confirmed',      bn:'রান নিশ্চিত হয়েছে',       icon:'✅', time:'Fri 20 Jun · 9:00 AM' },
+    { title:'Picked Up',          bn:'সংগ্রহ করা হয়েছে',         icon:'🏠', time:'Fri 20 Jun · 2:15 PM' },
+    { title:'In Transit — −18°C', bn:'ট্রানজিটে আছে',            icon:'🚐', time:'Fri 20 Jun · 10:00 PM' },
+    { title:'Out for Delivery',   bn:'ডেলিভারিতে বের হয়েছে',    icon:'🛵', time:'Sat 21 Jun · 6:30 AM' },
+    { title:'Delivered ✓',        bn:'ডেলিভারি সম্পন্ন',         icon:'❄️', time:'—' },
+  ];
+
+  /* Active step index — change this to simulate different statuses */
+  const ACTIVE = 3; /* 0=Booked, 1=Confirmed, 2=Picked Up, 3=In Transit, 4=Out for Delivery, 5=Delivered */
+
+  const BADGE_MAP = [
+    { cls:'badge-booked',    text:'Slot Booked' },
+    { cls:'badge-booked',    text:'Run Confirmed' },
+    { cls:'badge-pickup',    text:'Picked Up' },
+    { cls:'badge-transit',   text:'In Transit ❄️' },
+    { cls:'badge-pickup',    text:'Out for Delivery' },
+    { cls:'badge-delivered', text:'Delivered ✓' },
+  ];
+
+  function buildTimeline(activeIdx) {
+    const tl = document.getElementById('scTimeline');
+    tl.innerHTML = '';
+    STEPS.forEach((s, i) => {
+      const state = i < activeIdx ? 'done' : i === activeIdx ? 'active' : 'pending';
+      const dotIcon = state === 'done' ? '✓' : state === 'active' ? s.icon : '○';
+      tl.innerHTML += `
+        <div class="tl-step">
+          <div class="tl-dot ${state}">${dotIcon}</div>
+          <div class="tl-content">
+            <div class="tl-step-title ${state}">${s.title}</div>
+            <div class="tl-step-bn ${state}">${s.bn}</div>
+            <div class="tl-step-time ${state}">${state !== 'pending' ? s.time : '—'}</div>
+          </div>
+        </div>`;
+    });
+  }
+
+  function trackOrder() {
+    const ref   = document.getElementById('refInput').value.trim();
+    const phone = document.getElementById('phoneInput').value.trim();
+    const err   = document.getElementById('searchError');
+
+    if (!ref || !phone) {
+      err.textContent = 'Please enter both your booking reference and phone number.';
+      err.classList.add('show');
+      document.getElementById('refInput').classList.toggle('error', !ref);
+      document.getElementById('phoneInput').classList.toggle('error', !phone);
+      return;
+    }
+    err.classList.remove('show');
+    document.getElementById('refInput').classList.remove('error');
+    document.getElementById('phoneInput').classList.remove('error');
+
+    /* Show result area */
+    const wrap = document.getElementById('resultWrap');
+    wrap.style.display = 'block';
+    wrap.scrollIntoView({ behavior:'smooth', block:'start' });
+
+    /* Populate demo data */
+    document.getElementById('scRef').textContent     = 'Booking Ref: ' + ref;
+    document.getElementById('scName').textContent    = 'Order for ' + phone;
+    document.getElementById('demoNote').style.display = 'block';
+    document.getElementById('statusCard').style.display = 'block';
+    document.getElementById('notFound').style.display  = 'none';
+
+    /* Set badge */
+    const badge = document.getElementById('scBadge');
+    badge.className = 'status-badge ' + BADGE_MAP[ACTIVE].cls;
+    badge.innerHTML = `<span class="dot"></span><span>${BADGE_MAP[ACTIVE].text}</span>`;
+
+    /* Build timeline */
+    buildTimeline(ACTIVE);
+  }
+
+  /* Allow Enter key */
+  document.getElementById('refInput').addEventListener('keydown', e => { if(e.key==='Enter') trackOrder(); });
+  document.getElementById('phoneInput').addEventListener('keydown', e => { if(e.key==='Enter') trackOrder(); });
+</script>
+</body>
+</html>
