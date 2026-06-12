@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Merchant Application — পাঠান Pathan</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root{--soil:#2C1A0E;--bark:#4A2E1A;--moss:#3D5A2A;--leaf:#5C8C3A;--sage:#8FAF6A;--mist:#C8D9B0;--parchment:#F5F0E8;--cream:#FAF7F2;--gold:#C8A84B;--rust:#B85A2A;--orange:#D4621A;--ink:#1A1208;--error:#C0392B;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--cream);color:var(--ink);font-family:'Instrument Sans',sans-serif;font-size:14px;line-height:1.65;overflow-x:hidden;}
+
+  nav{background:var(--soil);padding:0 40px;position:sticky;top:0;z-index:200;border-bottom:2px solid var(--moss);}
+  .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:54px;}
+  .nav-logo{font-family:'DM Serif Display',serif;font-size:20px;color:var(--cream);text-decoration:none;}
+  .nav-logo span{color:var(--orange);font-style:italic;}
+  .nav-links{display:flex;align-items:center;gap:0;overflow-x:auto;scrollbar-width:none;}
+  .nav-links::-webkit-scrollbar{display:none;}
+  .nav-links a{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(200,217,176,0.55);text-decoration:none;padding:0 14px;height:54px;display:flex;align-items:center;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .2s,border-color .2s;}
+  .nav-links a:hover{color:var(--cream);border-bottom-color:var(--sage);}
+  .nav-links a.active{color:var(--cream);border-bottom-color:var(--orange);}
+  .nav-cta{background:var(--orange)!important;color:var(--cream)!important;padding:8px 18px!important;height:auto!important;border-radius:3px!important;border-bottom:none!important;margin-left:8px;font-weight:500!important;}
+  .nav-cta:hover{background:var(--rust)!important;}
+
+  /* HERO */
+  .page-hero{background:var(--bark);padding:60px 40px 52px;position:relative;overflow:hidden;border-bottom:1px solid rgba(143,175,106,0.15);}
+  .page-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 60% at 90% 50%,rgba(212,98,26,0.15) 0%,transparent 65%);pointer-events:none;}
+  .page-hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 45% 70% at 5% 50%,rgba(61,90,42,0.2) 0%,transparent 60%);pointer-events:none;}
+  .page-hero-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1;}
+  .breadcrumb{display:flex;align-items:center;gap:8px;font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.35);margin-bottom:22px;}
+  .breadcrumb a{color:rgba(200,217,176,0.45);text-decoration:none;}
+  .breadcrumb a:hover{color:var(--mist);}
+  .ph-eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);border:1px solid rgba(212,98,26,0.3);padding:6px 14px;border-radius:2px;margin-bottom:20px;}
+  .ph-eyebrow::before{content:'';width:18px;height:1px;background:var(--orange);}
+  .page-hero h1{font-family:'DM Serif Display',serif;font-size:clamp(28px,4vw,50px);color:var(--cream);line-height:1.05;margin-bottom:12px;}
+  .page-hero h1 em{color:var(--orange);font-style:italic;}
+  .page-hero p{font-size:14px;color:rgba(250,247,242,0.52);max-width:520px;line-height:1.7;}
+
+  /* SPOTS BAR */
+  .spots-bar{background:var(--moss);padding:14px 40px;border-bottom:1px solid rgba(143,175,106,0.2);}
+  .spots-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+  .spots-left{display:flex;align-items:center;gap:10px;}
+  .spots-dot{width:8px;height:8px;border-radius:50%;background:#7ADB8A;animation:blink 1.8s ease-in-out infinite;}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0.35}}
+  .spots-text{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;color:var(--mist);}
+  .spots-text strong{color:var(--cream);}
+  .spots-right{font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.55);letter-spacing:0.5px;}
+
+  /* LAYOUT */
+  .main-wrap{max-width:1100px;margin:0 auto;padding:52px 40px 80px;display:grid;grid-template-columns:1fr 320px;gap:48px;align-items:start;}
+
+  /* FORM */
+  .section-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+  .section-label::after{content:'';flex:1;height:1px;background:rgba(212,98,26,0.2);}
+  .form-group{margin-bottom:20px;}
+  .form-label{display:block;font-family:'Instrument Sans',sans-serif;font-size:13px;font-weight:600;color:var(--soil);margin-bottom:5px;}
+  .form-label .bn{font-size:11px;font-weight:400;color:var(--rust);margin-left:6px;}
+  .form-label .req{color:var(--orange);margin-left:2px;}
+  .form-input,.form-select,.form-textarea{width:100%;background:var(--parchment);border:1.5px solid rgba(61,90,42,0.2);border-radius:4px;padding:11px 14px;font-family:'Instrument Sans',sans-serif;font-size:14px;color:var(--ink);transition:border-color .2s,box-shadow .2s;outline:none;appearance:none;}
+  .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(212,98,26,0.1);}
+  .form-input.error,.form-select.error,.form-textarea.error{border-color:var(--error);box-shadow:0 0 0 3px rgba(192,57,43,0.08);}
+  .form-textarea{resize:vertical;min-height:88px;}
+  .form-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23B85A2A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;cursor:pointer;}
+  .form-hint{font-size:11px;color:rgba(44,26,14,0.42);margin-top:5px;line-height:1.5;}
+  .field-error{font-size:11px;color:var(--error);margin-top:4px;display:none;}
+  .field-error.show{display:block;}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .form-divider{border:none;border-top:1px solid rgba(61,90,42,0.12);margin:28px 0;}
+
+  /* Volume slider */
+  .volume-display{background:rgba(61,90,42,0.06);border:1px solid rgba(61,90,42,0.15);border-radius:4px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;margin-top:10px;flex-wrap:wrap;gap:8px;}
+  .vd-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:rgba(44,26,14,0.5);}
+  .vd-value{font-family:'DM Serif Display',serif;font-size:22px;color:var(--soil);}
+  .vd-rate{font-family:'DM Mono',monospace;font-size:11px;color:var(--orange);}
+  .vd-saving{font-family:'DM Mono',monospace;font-size:10px;color:var(--leaf);}
+
+  /* Checkbox */
+  .check-group{display:flex;flex-direction:column;gap:10px;}
+  .check-item{display:flex;align-items:flex-start;gap:10px;cursor:pointer;}
+  .check-item input[type="checkbox"]{width:16px;height:16px;accent-color:var(--orange);margin-top:2px;flex-shrink:0;cursor:pointer;}
+  .check-item-label{font-size:13px;color:rgba(44,26,14,0.7);line-height:1.5;}
+  .check-item-label .bn{display:block;font-size:11px;color:var(--rust);margin-top:1px;}
+
+  /* Submit */
+  .submit-btn{width:100%;background:var(--orange);color:var(--cream);font-family:'Instrument Sans',sans-serif;font-size:15px;font-weight:600;padding:16px 24px;border-radius:4px;border:none;cursor:pointer;transition:background .2s;display:flex;align-items:center;justify-content:center;gap:10px;}
+  .submit-btn:hover{background:var(--rust);}
+  .submit-note{font-size:11px;color:rgba(44,26,14,0.4);text-align:center;margin-top:10px;line-height:1.55;}
+  .submit-note .bn{color:var(--rust);}
+
+  /* SIDEBAR */
+  .sidebar{display:flex;flex-direction:column;gap:20px;}
+  .side-card{background:var(--bark);border:1px solid rgba(143,175,106,0.18);border-radius:8px;overflow:hidden;}
+  .sc-header{background:var(--moss);padding:14px 18px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--mist);}
+  .sc-body{padding:18px;}
+
+  /* What happens next */
+  .next-steps{list-style:none;display:flex;flex-direction:column;gap:14px;}
+  .ns-item{display:flex;gap:12px;align-items:flex-start;}
+  .ns-num{width:26px;height:26px;border-radius:50%;background:rgba(212,98,26,0.15);border:1px solid rgba(212,98,26,0.3);color:var(--orange);font-family:'DM Mono',monospace;font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+  .ns-text{font-size:12px;color:rgba(200,217,176,0.65);line-height:1.55;}
+  .ns-text strong{color:var(--cream);}
+  .ns-text .bn{display:block;font-size:11px;color:rgba(200,217,176,0.4);margin-top:2px;}
+
+  /* Rate preview */
+  .rate-preview{display:flex;flex-direction:column;gap:8px;}
+  .rp-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(143,175,106,0.08);}
+  .rp-row:last-child{border-bottom:none;}
+  .rp-label{font-size:12px;color:rgba(200,217,176,0.55);}
+  .rp-value{font-family:'DM Serif Display',serif;font-size:18px;color:var(--cream);}
+  .rp-value.featured{color:var(--orange);}
+  .rp-tag{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;background:rgba(212,98,26,0.12);border:1px solid rgba(212,98,26,0.2);color:var(--orange);padding:2px 6px;border-radius:2px;margin-left:6px;}
+
+  /* Help */
+  .help-card{background:var(--parchment);border:1px solid rgba(61,90,42,0.15);border-radius:8px;padding:20px 18px;text-align:center;}
+  .help-icon{font-size:26px;margin-bottom:10px;display:block;}
+  .help-title{font-family:'DM Serif Display',serif;font-size:16px;color:var(--soil);margin-bottom:6px;}
+  .help-body{font-size:12px;color:rgba(44,26,14,0.55);margin-bottom:14px;line-height:1.55;}
+  .wa-btn{display:block;background:#25D366;color:white;font-family:'Instrument Sans',sans-serif;font-size:13px;font-weight:600;padding:11px;border-radius:4px;text-decoration:none;transition:background .2s;}
+  .wa-btn:hover{background:#1DA851;}
+
+  footer{background:var(--soil);border-top:2px solid var(--moss);padding:40px;}
+  .footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;}
+  .footer-logo{font-family:'DM Serif Display',serif;font-size:22px;color:var(--cream);text-decoration:none;}
+  .footer-logo span{color:var(--orange);font-style:italic;}
+  .footer-logo small{display:block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,217,176,0.3);margin-top:4px;}
+  .footer-links{display:flex;gap:24px;flex-wrap:wrap;}
+  .footer-links a{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(200,217,176,0.4);text-decoration:none;transition:color .2s;}
+  .footer-links a:hover{color:var(--cream);}
+  .footer-copy{font-family:'DM Mono',monospace;font-size:9px;color:rgba(200,217,176,0.2);}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  .fade{animation:fadeUp .5s ease both;}
+
+  @media(max-width:900px){
+    nav,footer{padding-left:20px;padding-right:20px;}
+    .page-hero{padding:48px 20px 40px;}
+    .spots-bar{padding:12px 20px;}
+    .main-wrap{grid-template-columns:1fr;padding:36px 20px 60px;gap:32px;}
+    .form-row{grid-template-columns:1fr;}
+    .footer-inner{flex-direction:column;text-align:center;}
+    .footer-links{justify-content:center;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">পাঠান <span>Pathan</span></a>
+    <div class="nav-links">
+      <a href="how-it-works.html">How it works</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="merchants.html">Merchants</a>
+      <a href="about.html">About</a>
+      <a href="merchants-apply.html" class="nav-cta active">Apply as merchant →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a><span>/</span>
+      <a href="merchants.html">Merchants</a><span>/</span>
+      <span>Apply</span>
+    </div>
+    <div class="ph-eyebrow">মার্চেন্ট আবেদন — Apply</div>
+    <h1>Apply for a <em>merchant<br/>partner slot.</em></h1>
+    <p>Fill in the form below. We'll review your application and contact you via WhatsApp within 48 hours to discuss your needs and confirm your weekly slot.</p>
+  </div>
+</section>
+
+<!-- SPOTS BAR -->
+<div class="spots-bar">
+  <div class="spots-inner">
+    <div class="spots-left">
+      <div class="spots-dot"></div>
+      <div class="spots-text">Launch slots: <strong>5 available</strong> — first come, first served</div>
+    </div>
+    <div class="spots-right">Response within <strong>48 hours</strong> via WhatsApp</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-wrap fade">
+
+  <!-- FORM -->
+  <div class="form-section">
+
+    <!-- Section 1: Business Info -->
+    <div class="section-label">০১ — ব্যবসার তথ্য · Business Details</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label" for="bizName">Business / Brand Name <span class="bn">ব্যবসার নাম</span> <span class="req">*</span></label>
+        <input type="text" id="bizName" class="form-input" placeholder="e.g. Nasrin's Kitchen BD"/>
+        <div class="field-error" id="err-bizName">Please enter your business name</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="bizType">Business Type <span class="bn">ব্যবসার ধরন</span> <span class="req">*</span></label>
+        <select id="bizType" class="form-select">
+          <option value="">— Select type —</option>
+          <option>F-Commerce Home Chef</option>
+          <option>Cloud Kitchen</option>
+          <option>Frozen Food Brand</option>
+          <option>Catering Business</option>
+          <option>Other Food Business</option>
+        </select>
+        <div class="field-error" id="err-bizType">Please select your business type</div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label" for="ownerName">Owner / Contact Name <span class="bn">মালিকের নাম</span> <span class="req">*</span></label>
+        <input type="text" id="ownerName" class="form-input" placeholder="Your full name"/>
+        <div class="field-error" id="err-ownerName">Please enter your name</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="phone">WhatsApp Number <span class="bn">WhatsApp নম্বর</span> <span class="req">*</span></label>
+        <input type="tel" id="phone" class="form-input" placeholder="01XXXXXXXXX"/>
+        <div class="field-error" id="err-phone">Please enter a valid BD number</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="bizLocation">Kitchen / Business Location <span class="bn">কিচেনের অবস্থান</span> <span class="req">*</span></label>
+      <input type="text" id="bizLocation" class="form-input" placeholder="Area, City — e.g. Mirpur, Dhaka or Zindabazar, Sylhet"/>
+      <div class="form-hint">Where will our rider collect from each week?</div>
+      <div class="field-error" id="err-bizLocation">Please enter your location</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="socialLink">Facebook / Instagram Page <span class="bn">সোশ্যাল মিডিয়া লিঙ্ক</span></label>
+      <input type="text" id="socialLink" class="form-input" placeholder="facebook.com/yourpage or @yourhandle"/>
+      <div class="form-hint">Optional but helps us understand your business better.</div>
+    </div>
+
+    <!-- Section 2: Shipping Details -->
+    <div class="form-divider"></div>
+    <div class="section-label">০২ — শিপিং বিবরণ · Shipping Details</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label" for="route">Preferred Route <span class="bn">রুট</span> <span class="req">*</span></label>
+        <select id="route" class="form-select">
+          <option value="">— Select route —</option>
+          <option>Dhaka → Sylhet</option>
+          <option>Sylhet → Dhaka</option>
+          <option>Both directions</option>
+        </select>
+        <div class="field-error" id="err-route">Please select a route</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="frequency">Shipping Frequency <span class="bn">কতবার পাঠাবেন</span> <span class="req">*</span></label>
+        <select id="frequency" class="form-select">
+          <option value="">— Select frequency —</option>
+          <option>Every week (weekly contract)</option>
+          <option>2-3 times per month</option>
+          <option>Once a month</option>
+          <option>Not sure yet</option>
+        </select>
+        <div class="field-error" id="err-frequency">Please select frequency</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="weeklyKg">Estimated Weekly Volume (kg) <span class="bn">আনুমানিক সাপ্তাহিক ওজন</span> <span class="req">*</span></label>
+      <input type="number" id="weeklyKg" class="form-input" placeholder="e.g. 25" min="10" max="500" step="5" oninput="updateVolume()"/>
+      <div class="form-hint">Minimum 10 kg/week for merchant rate. Enter your honest estimate.</div>
+      <div class="field-error" id="err-weeklyKg">Minimum 10 kg/week for merchant rate</div>
+      <div class="volume-display" id="volDisplay" style="display:none;">
+        <div>
+          <div class="vd-label">Estimated monthly cost</div>
+          <div class="vd-rate">৳90/kg × <span id="volKg">0</span> kg × 4 runs</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="vd-value">৳<span id="volCost">0</span></div>
+          <div class="vd-saving" id="volSaving"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="productTypes">Product Types <span class="bn">পণ্যের ধরন</span> <span class="req">*</span></label>
+      <select id="productTypes" class="form-select">
+        <option value="">— Select main category —</option>
+        <option>Curry / Cooked meals</option>
+        <option>Fish / Seafood</option>
+        <option>Meat (Beef / Mutton / Chicken)</option>
+        <option>Pitha / Sweets / Desserts</option>
+        <option>Sylheti Specialties (Satkara, etc.)</option>
+        <option>Mixed / Assorted products</option>
+        <option>Other frozen food</option>
+      </select>
+      <div class="field-error" id="err-productTypes">Please select your product type</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="productNotes">Describe Your Products <span class="bn">পণ্যের বিবরণ</span></label>
+      <textarea id="productNotes" class="form-textarea" placeholder="Tell us more about what you sell, your packaging, typical order sizes, and anything else we should know.&#10;আপনার পণ্য, প্যাকেজিং, এবং বিশেষ কোনো তথ্য লিখুন।"></textarea>
+    </div>
+
+    <!-- Section 3: Expectations -->
+    <div class="form-divider"></div>
+    <div class="section-label">০৩ — প্রত্যাশা · Your Expectations</div>
+
+    <div class="form-group">
+      <label class="form-label" for="currentMethod">How do you currently ship frozen food? <span class="bn">এখন কীভাবে পাঠান</span></label>
+      <select id="currentMethod" class="form-select">
+        <option value="">— Select current method —</option>
+        <option>Bus / Coach service (no cold chain)</option>
+        <option>Regular courier (SA, Sundarban, etc.)</option>
+        <option>Friends / relatives carrying it</option>
+        <option>Not shipping yet — looking to start</option>
+        <option>Other cold courier</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">What matters most to you? <span class="bn">আপনার কাছে কী সবচেয়ে গুরুত্বপূর্ণ</span></label>
+      <div class="check-group">
+        <label class="check-item">
+          <input type="checkbox" value="cold_chain"/>
+          <span class="check-item-label">Reliable cold chain — food arrives frozen every time <span class="bn">প্রতিবার জমাট অবস্থায় পৌঁছানো</span></span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" value="price"/>
+          <span class="check-item-label">Lowest per-kg rate <span class="bn">সর্বনিম্ন মূল্য</span></span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" value="invoice"/>
+          <span class="check-item-label">Monthly invoice — not paying per run <span class="bn">মাসিক ইনভয়েস</span></span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" value="slot"/>
+          <span class="check-item-label">Guaranteed weekly slot every Friday <span class="bn">প্রতি শুক্রবার নিশ্চিত স্লট</span></span>
+        </label>
+        <label class="check-item">
+          <input type="checkbox" value="scale"/>
+          <span class="check-item-label">Ability to scale volume as business grows <span class="bn">ব্যবসা বাড়লে ভলিউম বাড়ানোর সুবিধা</span></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="additionalInfo">Anything else we should know? <span class="bn">অন্য কোনো তথ্য</span></label>
+      <textarea id="additionalInfo" class="form-textarea" placeholder="Special requirements, questions, or anything else about your business.&#10;যেকোনো বিশেষ প্রয়োজন বা প্রশ্ন লিখুন।"></textarea>
+    </div>
+
+    <!-- Submit -->
+    <div class="form-divider"></div>
+    <button type="button" class="submit-btn" onclick="submitApplication()">
+      <span>💬</span>
+      আবেদন WhatsApp-এ পাঠান →
+    </button>
+    <p class="submit-note">
+      <span class="bn">ফর্ম জমা দিলে WhatsApp খুলবে — আপনার আবেদন আগে থেকেই লেখা থাকবে।</span><br/>
+      Submitting opens WhatsApp with your application pre-filled. We'll review and respond within 48 hours.
+    </p>
+
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <!-- What happens next -->
+    <div class="side-card">
+      <div class="sc-header">📋 &nbsp; আবেদনের পরে — What Happens Next</div>
+      <div class="sc-body">
+        <ul class="next-steps">
+          <li class="ns-item">
+            <div class="ns-num">1</div>
+            <div class="ns-text"><strong>We review your application</strong> within 24 hours.<span class="bn">আমরা ২৪ ঘণ্টার মধ্যে দেখব।</span></div>
+          </li>
+          <li class="ns-item">
+            <div class="ns-num">2</div>
+            <div class="ns-text"><strong>WhatsApp call</strong> to discuss your volume, pickup window, and any questions.<span class="bn">WhatsApp কলে বিস্তারিত আলোচনা।</span></div>
+          </li>
+          <li class="ns-item">
+            <div class="ns-num">3</div>
+            <div class="ns-text"><strong>Contract sent</strong> via WhatsApp — simple one-page terms.<span class="bn">সহজ একপাতার চুক্তি পাঠানো হবে।</span></div>
+          </li>
+          <li class="ns-item">
+            <div class="ns-num">4</div>
+            <div class="ns-text"><strong>First run confirmed</strong> — your slot is live from the next Friday.<span class="bn">পরের শুক্রবার থেকে আপনার স্লট নিশ্চিত।</span></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Rate preview -->
+    <div class="side-card">
+      <div class="sc-header">💰 &nbsp; মার্চেন্ট রেট — Your Rate</div>
+      <div class="sc-body">
+        <div class="rate-preview">
+          <div class="rp-row">
+            <div class="rp-label">On-Demand rate</div>
+            <div class="rp-value" style="font-size:16px;color:rgba(200,217,176,0.45);">৳160/kg</div>
+          </div>
+          <div class="rp-row">
+            <div class="rp-label">Campus Box rate</div>
+            <div class="rp-value" style="font-size:16px;color:rgba(200,217,176,0.45);">৳120/kg</div>
+          </div>
+          <div class="rp-row" style="padding-top:14px;">
+            <div class="rp-label" style="color:var(--mist);font-weight:600;">Your merchant rate<span class="rp-tag">Best</span></div>
+            <div class="rp-value featured">৳90/kg</div>
+          </div>
+        </div>
+        <div style="margin-top:14px;padding:12px 14px;background:rgba(92,140,58,0.08);border:1px solid rgba(92,140,58,0.18);border-radius:4px;font-size:12px;color:rgba(200,217,176,0.6);line-height:1.55;">
+          Save <strong style="color:var(--mist);">৳70/kg</strong> vs On-Demand. At 20 kg/week that's <strong style="color:var(--mist);">৳5,600/month</strong> saved.
+        </div>
+        <a href="merchants-rates.html" style="display:block;text-align:center;margin-top:12px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--sage);text-decoration:none;border-top:1px solid rgba(143,175,106,0.12);padding-top:12px;">See full rate table →</a>
+      </div>
+    </div>
+
+    <!-- Help -->
+    <div class="help-card">
+      <span class="help-icon">💬</span>
+      <div class="help-title">Questions before applying?</div>
+      <p class="help-body">আবেদনের আগে কোনো প্রশ্ন থাকলে সরাসরি WhatsApp করুন।<br/>We're happy to answer before you commit.</p>
+      <a href="https://wa.me/8801859929858" target="_blank" class="wa-btn">💬 &nbsp; WhatsApp করুন</a>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <a href="index.html" class="footer-logo">পাঠান <span>Pathan</span><small>Sub-Zero Frozen Courier · Dhaka ↔ Sylhet</small></a>
+    <div class="footer-links">
+      <a href="how-it-works.html">How it works</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="merchants.html">Merchants</a>
+      <a href="about.html">About</a>
+      <a href="book.html">Book a slot</a>
+    </div>
+    <div class="footer-copy">© 2025 Pathan Logistics · All rights reserved</div>
+  </div>
+</footer>
+
+<script>
+  function updateVolume() {
+    const kg  = parseFloat(document.getElementById('weeklyKg').value);
+    const div = document.getElementById('volDisplay');
+    if (kg && kg >= 10) {
+      div.style.display = 'flex';
+      const monthly = kg * 90 * 4;
+      const saving  = kg * 70 * 4;
+      document.getElementById('volKg').textContent   = kg;
+      document.getElementById('volCost').textContent = monthly.toLocaleString();
+      document.getElementById('volSaving').textContent = 'Saving ৳' + saving.toLocaleString() + '/month vs On-Demand';
+    } else {
+      div.style.display = 'none';
+    }
+  }
+
+  function validate() {
+    let valid = true;
+    const fields = [
+      {id:'bizName',      err:'err-bizName',      check:v=>v.trim().length>1},
+      {id:'bizType',      err:'err-bizType',      check:v=>v!==''},
+      {id:'ownerName',    err:'err-ownerName',    check:v=>v.trim().length>1},
+      {id:'phone',        err:'err-phone',        check:v=>/^01[3-9]\d{8}$/.test(v.trim())},
+      {id:'bizLocation',  err:'err-bizLocation',  check:v=>v.trim().length>3},
+      {id:'route',        err:'err-route',        check:v=>v!==''},
+      {id:'frequency',    err:'err-frequency',    check:v=>v!==''},
+      {id:'weeklyKg',     err:'err-weeklyKg',     check:v=>parseFloat(v)>=10},
+      {id:'productTypes', err:'err-productTypes', check:v=>v!==''},
+    ];
+    fields.forEach(f=>{
+      const el=document.getElementById(f.id);
+      const er=document.getElementById(f.err);
+      if(!f.check(el.value)){el.classList.add('error');er.classList.add('show');valid=false;}
+      else{el.classList.remove('error');er.classList.remove('show');}
+    });
+    return valid;
+  }
+
+  function submitApplication() {
+    if (!validate()) {
+      document.querySelector('.form-input.error,.form-select.error')?.scrollIntoView({behavior:'smooth',block:'center'});
+      return;
+    }
+
+    const biz      = document.getElementById('bizName').value.trim();
+    const bizType  = document.getElementById('bizType').value;
+    const owner    = document.getElementById('ownerName').value.trim();
+    const phone    = document.getElementById('phone').value.trim();
+    const location = document.getElementById('bizLocation').value.trim();
+    const social   = document.getElementById('socialLink').value.trim();
+    const route    = document.getElementById('route').value;
+    const freq     = document.getElementById('frequency').value;
+    const kg       = document.getElementById('weeklyKg').value;
+    const products = document.getElementById('productTypes').value;
+    const prodNote = document.getElementById('productNotes').value.trim();
+    const current  = document.getElementById('currentMethod').value;
+    const addInfo  = document.getElementById('additionalInfo').value.trim();
+
+    const priorities = [...document.querySelectorAll('.check-group input:checked')].map(c=>c.value).join(', ') || 'Not specified';
+
+    const msg =
+`🏪 *PATHAN MERCHANT APPLICATION*
+
+*Business:* ${biz}
+*Type:* ${bizType}
+*Owner:* ${owner}
+*Phone:* ${phone}
+*Location:* ${location}
+${social ? '*Social:* ' + social : ''}
+
+📦 *SHIPPING DETAILS*
+Route: ${route}
+Frequency: ${freq}
+Est. weekly volume: ${kg} kg
+Products: ${products}
+${prodNote ? 'Product details: ' + prodNote : ''}
+
+📋 *BACKGROUND*
+Current shipping method: ${current || 'Not specified'}
+Priorities: ${priorities}
+${addInfo ? 'Additional info: ' + addInfo : ''}
+
+Please review my application. Looking forward to hearing from you! 🙏`;
+
+    window.open('https://wa.me/8801859929858?text=' + encodeURIComponent(msg), '_blank');
+  }
+</script>
+</body>
+</html>

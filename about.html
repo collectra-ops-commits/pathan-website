@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>About — পাঠান Pathan</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --soil:#2C1A0E;--bark:#4A2E1A;--moss:#3D5A2A;--leaf:#5C8C3A;
+    --sage:#8FAF6A;--mist:#C8D9B0;--parchment:#F5F0E8;--cream:#FAF7F2;
+    --gold:#C8A84B;--rust:#B85A2A;--orange:#D4621A;--ink:#1A1208;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--cream);color:var(--ink);font-family:'Instrument Sans',sans-serif;font-size:14px;line-height:1.65;overflow-x:hidden;}
+
+  /* NAV */
+  nav{background:var(--soil);padding:0 40px;position:sticky;top:0;z-index:200;border-bottom:2px solid var(--moss);}
+  .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:54px;}
+  .nav-logo{font-family:'DM Serif Display',serif;font-size:20px;color:var(--cream);text-decoration:none;}
+  .nav-logo span{color:var(--orange);font-style:italic;}
+  .nav-links{display:flex;align-items:center;gap:0;overflow-x:auto;scrollbar-width:none;}
+  .nav-links::-webkit-scrollbar{display:none;}
+  .nav-links a{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(200,217,176,0.55);text-decoration:none;padding:0 14px;height:54px;display:flex;align-items:center;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .2s,border-color .2s;}
+  .nav-links a:hover{color:var(--cream);border-bottom-color:var(--sage);}
+  .nav-links a.active{color:var(--cream);border-bottom-color:var(--orange);}
+  .nav-cta{background:var(--orange)!important;color:var(--cream)!important;padding:8px 18px!important;height:auto!important;border-radius:3px!important;border-bottom:none!important;margin-left:8px;font-weight:500!important;}
+  .nav-cta:hover{background:var(--rust)!important;}
+
+  /* HERO */
+  .page-hero{background:var(--bark);padding:80px 40px 72px;position:relative;overflow:hidden;border-bottom:1px solid rgba(143,175,106,0.15);}
+  .page-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 60% at 90% 50%,rgba(212,98,26,0.15) 0%,transparent 65%);pointer-events:none;}
+  .page-hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 45% 80% at 5% 50%,rgba(61,90,42,0.22) 0%,transparent 60%);pointer-events:none;}
+  .hero-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+  .breadcrumb{display:flex;align-items:center;gap:8px;font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.35);margin-bottom:22px;}
+  .breadcrumb a{color:rgba(200,217,176,0.45);text-decoration:none;}
+  .breadcrumb a:hover{color:var(--mist);}
+  .ph-eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);border:1px solid rgba(212,98,26,0.3);padding:6px 14px;border-radius:2px;margin-bottom:22px;}
+  .ph-eyebrow::before{content:'';width:18px;height:1px;background:var(--orange);}
+  .hero-inner h1{font-family:'DM Serif Display',serif;font-size:clamp(32px,5vw,58px);color:var(--cream);line-height:1.05;margin-bottom:16px;}
+  .hero-inner h1 em{color:var(--orange);font-style:italic;}
+  .hero-inner p{font-size:15px;color:rgba(250,247,242,0.58);line-height:1.75;max-width:460px;}
+
+  /* Hero right — quote card */
+  .hero-quote{background:rgba(255,255,255,0.04);border:1px solid rgba(143,175,106,0.2);border-radius:8px;padding:32px 28px;position:relative;}
+  .hero-quote::before{content:'\201C';font-family:'DM Serif Display',serif;font-size:80px;color:rgba(212,98,26,0.2);position:absolute;top:-10px;left:20px;line-height:1;}
+  .hq-text{font-family:'DM Serif Display',serif;font-size:20px;color:var(--cream);line-height:1.4;margin-bottom:16px;font-style:italic;}
+  .hq-text-bn{font-size:15px;color:var(--mist);font-style:italic;margin-bottom:20px;line-height:1.55;display:block;}
+  .hq-divider{height:1px;background:rgba(143,175,106,0.15);margin-bottom:16px;}
+  .hq-meta{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:rgba(200,217,176,0.4);}
+
+  /* LAYOUT */
+  .page{max-width:1100px;margin:0 auto;padding:72px 40px;}
+  .page-sm{max-width:1100px;margin:0 auto;padding:52px 40px;}
+  .page-narrow{max-width:760px;margin:0 auto;padding:72px 40px;}
+  hr.div{border:none;border-top:1px solid rgba(61,90,42,0.15);margin:0 40px;}
+
+  /* SECTION HEADER */
+  .sh{display:flex;align-items:flex-start;gap:20px;margin-bottom:44px;padding-bottom:20px;border-bottom:1px solid rgba(61,90,42,0.2);}
+  .sh-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--sage);background:rgba(93,140,58,0.1);border:1px solid rgba(93,140,58,0.22);padding:5px 10px;border-radius:2px;white-space:nowrap;margin-top:8px;flex-shrink:0;}
+  .sh h2{font-family:'DM Serif Display',serif;font-size:clamp(24px,3.5vw,38px);color:var(--soil);line-height:1.1;margin-bottom:6px;}
+  .sh h2 em{color:var(--orange);font-style:italic;}
+  .sh p{font-size:13px;color:rgba(44,26,14,0.55);max-width:560px;line-height:1.65;}
+
+  /* FOUNDING STORY */
+  .story-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;}
+  .story-left{}
+  .story-para{font-size:15px;color:rgba(44,26,14,0.72);line-height:1.85;margin-bottom:20px;}
+  .story-para strong{color:var(--soil);}
+  .story-para .bn{color:var(--rust);font-weight:500;font-size:14px;}
+  .story-pull{font-family:'DM Serif Display',serif;font-size:22px;color:var(--soil);line-height:1.35;border-left:3px solid var(--orange);padding-left:20px;margin:28px 0;font-style:italic;}
+  .story-pull em{color:var(--orange);}
+
+  /* Story milestones right */
+  .story-right{}
+  .milestone-list{display:flex;flex-direction:column;gap:0;position:relative;}
+  .milestone-list::before{content:'';position:absolute;left:18px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--orange),var(--moss),var(--leaf));opacity:0.3;}
+  .milestone{display:flex;gap:18px;padding-bottom:28px;position:relative;}
+  .milestone:last-child{padding-bottom:0;}
+  .m-node{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;position:relative;z-index:1;border:2px solid transparent;}
+  .m-node.orange{background:rgba(212,98,26,0.15);border-color:rgba(212,98,26,0.35);}
+  .m-node.green {background:rgba(61,90,42,0.15); border-color:rgba(92,140,58,0.35);}
+  .m-node.gold  {background:rgba(200,168,75,0.15);border-color:rgba(200,168,75,0.35);}
+  .m-node.rust  {background:rgba(184,90,42,0.15); border-color:rgba(184,90,42,0.35);}
+  .m-body{padding-top:6px;}
+  .m-year{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--orange);margin-bottom:4px;}
+  .m-title{font-family:'DM Serif Display',serif;font-size:17px;color:var(--soil);margin-bottom:4px;line-height:1.2;}
+  .m-text{font-size:12px;color:rgba(44,26,14,0.6);line-height:1.6;}
+
+  /* MISSION SECTION — dark */
+  .mission-section{background:var(--bark);padding:72px 40px;border-top:1px solid rgba(143,175,106,0.12);border-bottom:1px solid rgba(143,175,106,0.12);position:relative;overflow:hidden;}
+  .mission-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 100% 50%,rgba(212,98,26,0.12) 0%,transparent 65%);pointer-events:none;}
+  .mission-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1;}
+  .mission-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;background:rgba(143,175,106,0.08);border-radius:8px;overflow:hidden;border:1px solid rgba(143,175,106,0.12);}
+  .mission-card{background:var(--bark);padding:32px 28px;}
+  .mc-icon{font-size:28px;margin-bottom:14px;display:block;}
+  .mc-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);margin-bottom:10px;}
+  .mc-title{font-family:'DM Serif Display',serif;font-size:22px;color:var(--cream);margin-bottom:6px;line-height:1.15;}
+  .mc-title-bn{font-size:13px;color:var(--mist);font-weight:500;margin-bottom:12px;display:block;}
+  .mc-body{font-size:13px;color:rgba(200,217,176,0.6);line-height:1.7;}
+  .mc-body strong{color:var(--cream);}
+
+  /* WHAT WE BELIEVE */
+  .beliefs-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .belief-card{background:var(--parchment);border:1px solid rgba(61,90,42,0.15);border-radius:8px;padding:26px 24px;position:relative;overflow:hidden;}
+  .belief-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+  .belief-card.orange::before{background:var(--orange);}
+  .belief-card.green::before {background:var(--leaf);}
+  .belief-card.gold::before  {background:var(--gold);}
+  .belief-card.rust::before  {background:var(--rust);}
+  .b-icon{font-size:24px;margin-bottom:12px;display:block;}
+  .b-title{font-family:'DM Serif Display',serif;font-size:19px;color:var(--soil);margin-bottom:4px;}
+  .b-title-bn{font-size:12px;color:var(--rust);font-weight:500;margin-bottom:10px;display:block;}
+  .b-body{font-size:12px;color:rgba(44,26,14,0.62);line-height:1.65;}
+  .b-body strong{color:var(--soil);}
+
+  /* COLD CHAIN BRIEF */
+  .tech-strip{background:var(--moss);padding:52px 40px;border-top:1px solid rgba(143,175,106,0.15);border-bottom:1px solid rgba(143,175,106,0.15);}
+  .tech-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center;}
+  .tech-left{}
+  .tech-eyebrow{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--mist);opacity:.6;margin-bottom:14px;}
+  .tech-heading{font-family:'DM Serif Display',serif;font-size:clamp(22px,3vw,34px);color:var(--cream);line-height:1.1;margin-bottom:14px;}
+  .tech-heading em{color:var(--orange);font-style:italic;}
+  .tech-body{font-size:13px;color:rgba(200,217,176,0.65);line-height:1.75;}
+  .tech-body strong{color:var(--cream);}
+  .tech-right{display:flex;flex-direction:column;gap:14px;}
+  .tech-stat{display:flex;align-items:center;gap:16px;background:rgba(255,255,255,0.05);border:1px solid rgba(200,217,176,0.12);border-radius:6px;padding:16px 18px;}
+  .ts-icon{font-size:22px;flex-shrink:0;}
+  .ts-value{font-family:'DM Serif Display',serif;font-size:24px;color:var(--cream);line-height:1;}
+  .ts-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:rgba(200,217,176,0.45);margin-top:3px;}
+
+  /* CTA */
+  .cta-strip{background:var(--bark);padding:72px 40px;text-align:center;position:relative;overflow:hidden;border-top:1px solid rgba(143,175,106,0.12);}
+  .cta-strip::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 100%,rgba(212,98,26,0.18) 0%,transparent 65%);pointer-events:none;}
+  .cta-inner{position:relative;z-index:1;max-width:560px;margin:0 auto;}
+  .cta-tag{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--sage);margin-bottom:14px;}
+  .cta-heading{font-family:'DM Serif Display',serif;font-size:clamp(26px,4vw,44px);color:var(--cream);line-height:1.1;margin-bottom:10px;}
+  .cta-heading em{color:var(--orange);font-style:italic;}
+  .cta-body{font-size:13px;color:rgba(200,217,176,0.6);margin-bottom:28px;line-height:1.65;}
+  .cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+  .btn-primary{background:var(--orange);color:var(--cream);font-family:'Instrument Sans',sans-serif;font-size:14px;font-weight:600;padding:14px 30px;border-radius:4px;text-decoration:none;transition:background .2s;display:inline-block;}
+  .btn-primary:hover{background:var(--rust);}
+  .btn-ghost{color:var(--mist);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;text-decoration:none;padding:14px 0;border-bottom:1px solid rgba(200,217,176,0.3);transition:color .2s,border-color .2s;}
+  .btn-ghost:hover{color:var(--cream);border-color:var(--cream);}
+
+  footer{background:var(--soil);border-top:2px solid var(--moss);padding:40px;}
+  .footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;}
+  .footer-logo{font-family:'DM Serif Display',serif;font-size:22px;color:var(--cream);text-decoration:none;}
+  .footer-logo span{color:var(--orange);font-style:italic;}
+  .footer-logo small{display:block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,217,176,0.3);margin-top:4px;}
+  .footer-links{display:flex;gap:24px;flex-wrap:wrap;}
+  .footer-links a{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(200,217,176,0.4);text-decoration:none;transition:color .2s;}
+  .footer-links a:hover{color:var(--cream);}
+  .footer-copy{font-family:'DM Mono',monospace;font-size:9px;color:rgba(200,217,176,0.2);}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  .fade{animation:fadeUp .5s ease both;}
+  .fade-2{animation:fadeUp .5s .1s ease both;}
+  .fade-3{animation:fadeUp .5s .2s ease both;}
+
+  @media(max-width:900px){
+    nav,footer,.mission-section,.tech-strip,.cta-strip{padding-left:20px;padding-right:20px;}
+    .page,.page-sm,.page-narrow{padding:48px 20px;}
+    hr.div{margin:0 20px;}
+    .page-hero{padding:56px 20px 48px;}
+    .hero-inner{grid-template-columns:1fr;gap:32px;}
+    .story-grid{grid-template-columns:1fr;gap:36px;}
+    .mission-grid{grid-template-columns:1fr;}
+    .beliefs-grid{grid-template-columns:1fr;}
+    .tech-inner{grid-template-columns:1fr;gap:32px;}
+    .footer-inner{flex-direction:column;text-align:center;}
+    .footer-links{justify-content:center;}
+  }
+  @media(max-width:560px){
+    .cta-btns{flex-direction:column;align-items:center;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">পাঠান <span>Pathan</span></a>
+    <div class="nav-links">
+      <a href="how-it-works.html">How it works</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="merchants.html">Merchants</a>
+      <a href="about.html" class="active">About</a>
+      <a href="book.html" class="nav-cta">এই সপ্তাহে বুক করুন →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="hero-inner">
+    <div>
+      <div class="breadcrumb"><a href="index.html">Home</a><span>/</span><span>About</span></div>
+      <div class="ph-eyebrow">আমাদের গল্প — Our Story</div>
+      <h1>We built Pathan<br/>because <em>distance<br/>shouldn't mean<br/>going hungry.</em></h1>
+      <p>A frozen food courier born from a very Sylheti problem — and a very Bangladeshi solution.</p>
+    </div>
+    <div class="hero-quote">
+      <div class="hq-text">"The food that reminds you of home shouldn't stop being available just because you moved to Dhaka."</div>
+      <span class="hq-text-bn">"ঘরের কথা মনে করিয়ে দেওয়া খাবারটা শুধু দূরত্বের কারণে বন্ধ হওয়া উচিত না।"</span>
+      <div class="hq-divider"></div>
+      <div class="hq-meta">The idea behind Pathan · ২০২৫</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDING STORY -->
+<section class="page fade">
+  <div class="sh">
+    <div class="sh-tag">শুরুর গল্প — Origin</div>
+    <div>
+      <h2>Why we <em>started</em> Pathan</h2>
+      <p>A real problem, a real gap, and a decision to fix it.</p>
+    </div>
+  </div>
+
+  <div class="story-grid">
+    <div class="story-left">
+      <p class="story-para">
+        Every year, thousands of Sylheti families send their children to Dhaka for university or work. Within weeks, the same story repeats — <strong>the food is wrong.</strong> Not bad, just not home. Not আম্মুর হাত। Not সাতকড়া। Not the hilsa the way only your mother makes it.
+      </p>
+      <p class="story-para">
+        Families tried everything. Sending food by bus — risky and unreliable. Asking relatives to carry it — inconvenient. Sundarban or SA Paribahan — not designed for frozen food, no cold chain guarantee. The food arrived thawed, sometimes spoiled, always uncertain.
+      </p>
+
+      <div class="story-pull">
+        "There was no service that treated frozen homemade food as a <em>serious logistics problem</em> worth solving properly."
+      </div>
+
+      <p class="story-para">
+        <span class="bn">আমরা সিলেটি পরিবারের সেই সমস্যাটা নিজেদের চোখে দেখেছি।</span> We saw it in our own families. Students in Dhanmondi going months without tasting Sylheti cooking. Parents in Sylhet packing containers of curry with no reliable way to send them. F-commerce home chefs with a loyal Dhaka customer base and no frozen delivery option.
+      </p>
+      <p class="story-para">
+        So we built Pathan. <strong>Not a generic courier with a cooler bag.</strong> A dedicated sub-zero frozen food service — eutectic van, weekly batch model, door-to-door, Dhaka to Sylhet and back. Designed from the ground up for exactly this problem.
+      </p>
+    </div>
+
+    <div class="story-right">
+      <div class="milestone-list">
+        <div class="milestone">
+          <div class="m-node orange">💡</div>
+          <div class="m-body">
+            <div class="m-year">The Problem — সমস্যা</div>
+            <div class="m-title">Sylheti families with no reliable frozen food courier</div>
+            <div class="m-text">Students in Dhaka, parents in Sylhet, home-cooked food with nowhere to go. Existing couriers had no cold chain for frozen items.</div>
+          </div>
+        </div>
+        <div class="milestone">
+          <div class="m-node rust">🔍</div>
+          <div class="m-body">
+            <div class="m-year">The Research — গবেষণা</div>
+            <div class="m-title">Studying how frozen couriers work globally</div>
+            <div class="m-text">We looked at models in India, Nigeria, the UK, and China. The eutectic van model — asset-light, batch-based — was the right answer for Bangladesh's infrastructure.</div>
+          </div>
+        </div>
+        <div class="milestone">
+          <div class="m-node gold">🚐</div>
+          <div class="m-body">
+            <div class="m-year">The Model — মডেল</div>
+            <div class="m-title">Weekly batch delivery, eutectic van, no warehouse</div>
+            <div class="m-text">One van. One route. One Friday night run. Rolling cold hub — no fixed warehouse costs. Lean, scalable, and reliable from day one.</div>
+          </div>
+        </div>
+        <div class="milestone">
+          <div class="m-node green">🚀</div>
+          <div class="m-body">
+            <div class="m-year">The Launch — যাত্রা শুরু</div>
+            <div class="m-title">Pathan goes live on the Dhaka–Sylhet route</div>
+            <div class="m-text">Starting with one weekly run, a small team, and a clear mission — to make আম্মুর হাতের রান্না deliverable across any distance.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="div"/>
+
+<!-- MISSION -->
+<section class="mission-section fade-2">
+  <div class="mission-inner">
+    <div class="sh" style="border-bottom-color:rgba(200,217,176,0.12);">
+      <div class="sh-tag" style="color:var(--mist);background:rgba(200,217,176,0.08);border-color:rgba(200,217,176,0.15);">লক্ষ্য — Mission</div>
+      <div>
+        <h2 style="color:var(--cream);">What Pathan <em>stands for</em></h2>
+        <p style="color:rgba(200,217,176,0.55);">Three commitments we will never compromise on.</p>
+      </div>
+    </div>
+    <div class="mission-grid">
+      <div class="mission-card">
+        <span class="mc-icon">❄️</span>
+        <div class="mc-label">Commitment 01</div>
+        <div class="mc-title">Cold Chain Integrity</div>
+        <span class="mc-title-bn">কোল্ড চেইনের অখণ্ডতা</span>
+        <p class="mc-body">Every package in our van stays at <strong>−18°C from pickup to delivery.</strong> No shortcuts. No compressor vans that warm up in traffic. If the cold chain breaks, our service breaks — so we built it so it can't.</p>
+      </div>
+      <div class="mission-card">
+        <span class="mc-icon">🏠</span>
+        <div class="mc-label">Commitment 02</div>
+        <div class="mc-title">Door-to-Door Trust</div>
+        <span class="mc-title-bn">দরজা থেকে দরজায় বিশ্বাস</span>
+        <p class="mc-body">We collect from your door and deliver to theirs. <strong>No middlemen, no mystery depot handoffs.</strong> The same team that picks it up ensures it arrives. Sender to recipient — direct.</p>
+      </div>
+      <div class="mission-card">
+        <span class="mc-icon">💛</span>
+        <div class="mc-label">Commitment 03</div>
+        <div class="mc-title">Radical Transparency</div>
+        <span class="mc-title-bn">সম্পূর্ণ স্বচ্ছতা</span>
+        <p class="mc-body">Live run tracker. Clear booking rules. <strong>No charge until the run confirms.</strong> Full refund if it doesn't. We tell you exactly what's happening with your food at every step — because you deserve to know.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="div"/>
+
+<!-- WHAT WE BELIEVE -->
+<section class="page-sm fade-3">
+  <div class="sh">
+    <div class="sh-tag">বিশ্বাস — Values</div>
+    <div>
+      <h2>What we <em>believe</em></h2>
+      <p>The principles that shape every decision we make.</p>
+    </div>
+  </div>
+  <div class="beliefs-grid">
+    <div class="belief-card orange">
+      <span class="b-icon">🍱</span>
+      <div class="b-title">Food is more than nutrition</div>
+      <span class="b-title-bn">খাবার শুধু পেট ভরানোর জন্য না</span>
+      <p class="b-body">Home-cooked food carries memory, identity, and love. <strong>A container of Sylheti beef curry isn't just food — it's a message from home.</strong> We treat every package with that understanding.</p>
+    </div>
+    <div class="belief-card green">
+      <span class="b-icon">⚙️</span>
+      <div class="b-title">Operations first, always</div>
+      <span class="b-title-bn">অপারেশনই সব কিছুর ভিত্তি</span>
+      <p class="b-body">A beautiful brand means nothing if the food arrives thawed. <strong>We obsess over the cold chain, the rider SOP, and the departure time</strong> before we think about marketing. Execution is the product.</p>
+    </div>
+    <div class="belief-card gold">
+      <span class="b-icon">📋</span>
+      <div class="b-title">Honest rules, no surprises</div>
+      <span class="b-title-bn">সৎ নিয়ম, কোনো চমক নেই</span>
+      <p class="b-body">We tell you the minimum threshold. We tell you the deadline. <strong>We don't charge you until it's confirmed.</strong> We'd rather lose a booking than earn a customer's distrust.</p>
+    </div>
+    <div class="belief-card rust">
+      <span class="b-icon">🌱</span>
+      <div class="b-title">Start lean, scale right</div>
+      <span class="b-title-bn">ছোট শুরু, সঠিক বিস্তার</span>
+      <p class="b-body">One route. One van. One run per week. <strong>We master Dhaka–Sylhet completely before we expand.</strong> Every city we add will be because the previous route is running flawlessly — not because of investor pressure.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STRIP -->
+<section class="tech-strip">
+  <div class="tech-inner">
+    <div class="tech-left">
+      <div class="tech-eyebrow">প্রযুক্তি — Technology</div>
+      <h2 class="tech-heading">The <em>eutectic van</em> —<br/>our cold chain engine</h2>
+      <p class="tech-body">
+        We don't use a compressor van that needs the engine running. We use <strong>eutectic cold plate technology</strong> — the same used in pharmaceutical cold chains worldwide. Plates are pre-charged to −30°C before departure. They release cold steadily for 12–18 hours with no electricity needed on the road.
+      </p>
+      <br/>
+      <p class="tech-body">
+        This means <strong>Dhaka traffic doesn't affect your food.</strong> A checkpoint delay doesn't raise the hold temperature. Your package arrives in Sylhet at the same −18°C it left Dhaka in.
+      </p>
+      <br/>
+      <a href="how-it-works.html" style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;color:var(--mist);text-decoration:none;border-bottom:1px solid rgba(200,217,176,0.25);padding-bottom:2px;">Read the full cold chain explainer →</a>
+    </div>
+    <div class="tech-right">
+      <div class="tech-stat">
+        <span class="ts-icon">❄️</span>
+        <div>
+          <div class="ts-value">−18°C</div>
+          <div class="ts-label">Maintained throughout — pickup to delivery</div>
+        </div>
+      </div>
+      <div class="tech-stat">
+        <span class="ts-icon">⚡</span>
+        <div>
+          <div class="ts-value">Zero</div>
+          <div class="ts-label">Electricity needed on the road</div>
+        </div>
+      </div>
+      <div class="tech-stat">
+        <span class="ts-icon">🕐</span>
+        <div>
+          <div class="ts-value">12–18 hrs</div>
+          <div class="ts-label">Cold plate hold time — well beyond our 6hr run</div>
+        </div>
+      </div>
+      <div class="tech-stat">
+        <span class="ts-icon">🔒</span>
+        <div>
+          <div class="ts-value">2 opens</div>
+          <div class="ts-label">Cargo hold opened only at Dhaka load & Sylhet unload</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-strip">
+  <div class="cta-inner">
+    <div class="cta-tag">এখনই শুরু করুন — Get Started</div>
+    <h2 class="cta-heading">আম্মুর রান্না পাঠান<br/><em>এই সপ্তাহেই।</em></h2>
+    <p class="cta-body">Book a slot before Thursday 10 PM. Deposit only charged once the run confirms.</p>
+    <div class="cta-btns">
+      <a href="book.html" class="btn-primary">এখনই বুক করুন →</a>
+      <a href="how-it-works.html" class="btn-ghost">How it works →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <a href="index.html" class="footer-logo">পাঠান <span>Pathan</span><small>Sub-Zero Frozen Courier · Dhaka ↔ Sylhet</small></a>
+    <div class="footer-links">
+      <a href="how-it-works.html">How it works</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="about.html">About</a>
+      <a href="index.html#contact">Contact</a>
+      <a href="book.html">Book a slot</a>
+    </div>
+    <div class="footer-copy">© 2025 Pathan Logistics · All rights reserved</div>
+  </div>
+</footer>
+
+</body>
+</html>
