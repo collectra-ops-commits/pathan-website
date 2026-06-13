@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Merchant Rates — পাঠান Pathan</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root{--soil:#2C1A0E;--bark:#4A2E1A;--moss:#3D5A2A;--leaf:#5C8C3A;--sage:#8FAF6A;--mist:#C8D9B0;--parchment:#F5F0E8;--cream:#FAF7F2;--gold:#C8A84B;--rust:#B85A2A;--orange:#D4621A;--ink:#1A1208;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--cream);color:var(--ink);font-family:'Instrument Sans',sans-serif;font-size:14px;line-height:1.65;overflow-x:hidden;}
+
+  nav{background:var(--soil);padding:0 40px;position:sticky;top:0;z-index:200;border-bottom:2px solid var(--moss);}
+  .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:54px;}
+  .nav-logo{font-family:'DM Serif Display',serif;font-size:20px;color:var(--cream);text-decoration:none;}
+  .nav-logo span{color:var(--orange);font-style:italic;}
+  .nav-links{display:flex;align-items:center;gap:0;overflow-x:auto;scrollbar-width:none;}
+  .nav-links::-webkit-scrollbar{display:none;}
+  .nav-links a{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(200,217,176,0.55);text-decoration:none;padding:0 14px;height:54px;display:flex;align-items:center;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .2s,border-color .2s;}
+  .nav-links a:hover{color:var(--cream);border-bottom-color:var(--sage);}
+  .nav-links a.active{color:var(--cream);border-bottom-color:var(--orange);}
+  .nav-cta{background:var(--orange)!important;color:var(--cream)!important;padding:8px 18px!important;height:auto!important;border-radius:3px!important;border-bottom:none!important;margin-left:8px;font-weight:500!important;}
+  .nav-cta:hover{background:var(--rust)!important;}
+
+  /* GATE */
+  .gate-wrap{min-height:calc(100vh - 54px);display:flex;align-items:center;justify-content:center;padding:40px 20px;background:var(--bark);position:relative;overflow:hidden;}
+  .gate-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 80% 50%,rgba(212,98,26,0.15) 0%,transparent 65%);pointer-events:none;}
+  .gate-wrap::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 70% at 10% 50%,rgba(61,90,42,0.2) 0%,transparent 60%);pointer-events:none;}
+  .gate-card{background:rgba(26,18,8,0.7);border:1px solid rgba(143,175,106,0.2);border-radius:10px;padding:44px 40px;max-width:480px;width:100%;position:relative;z-index:1;backdrop-filter:blur(4px);}
+  .gate-icon{font-size:36px;margin-bottom:16px;display:block;text-align:center;}
+  .gate-title{font-family:'DM Serif Display',serif;font-size:28px;color:var(--cream);text-align:center;margin-bottom:8px;line-height:1.1;}
+  .gate-title em{color:var(--orange);font-style:italic;}
+  .gate-sub{font-size:13px;color:rgba(200,217,176,0.5);text-align:center;margin-bottom:28px;line-height:1.6;}
+  .gate-sub .bn{display:block;color:rgba(200,217,176,0.35);font-size:12px;margin-top:4px;}
+  .gate-input{width:100%;background:rgba(255,255,255,0.06);border:1.5px solid rgba(143,175,106,0.2);border-radius:4px;padding:12px 16px;font-family:'Instrument Sans',sans-serif;font-size:14px;color:var(--cream);outline:none;transition:border-color .2s;margin-bottom:14px;}
+  .gate-input::placeholder{color:rgba(200,217,176,0.25);}
+  .gate-input:focus{border-color:var(--orange);}
+  .gate-input.error{border-color:#C0392B;}
+  .gate-btn{width:100%;background:var(--orange);color:var(--cream);font-family:'Instrument Sans',sans-serif;font-size:14px;font-weight:600;padding:13px;border-radius:4px;border:none;cursor:pointer;transition:background .2s;margin-bottom:14px;}
+  .gate-btn:hover{background:var(--rust);}
+  .gate-error{font-size:12px;color:#E57373;text-align:center;margin-bottom:10px;display:none;}
+  .gate-error.show{display:block;}
+  .gate-note{font-size:11px;color:rgba(200,217,176,0.3);text-align:center;line-height:1.55;}
+  .gate-wa{display:block;text-align:center;margin-top:14px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--sage);text-decoration:none;border-top:1px solid rgba(143,175,106,0.12);padding-top:14px;}
+  .gate-wa:hover{color:var(--mist);}
+
+  /* RATES PAGE — hidden until gate passed */
+  .rates-page{display:none;}
+
+  /* HERO */
+  .page-hero{background:var(--bark);padding:60px 40px 52px;position:relative;overflow:hidden;border-bottom:1px solid rgba(143,175,106,0.15);}
+  .page-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 60% at 90% 50%,rgba(212,98,26,0.15) 0%,transparent 65%);pointer-events:none;}
+  .page-hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 45% 70% at 5% 50%,rgba(61,90,42,0.2) 0%,transparent 60%);pointer-events:none;}
+  .page-hero-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1;}
+  .breadcrumb{display:flex;align-items:center;gap:8px;font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.35);margin-bottom:22px;}
+  .breadcrumb a{color:rgba(200,217,176,0.45);text-decoration:none;}
+  .breadcrumb a:hover{color:var(--mist);}
+  .ph-eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);border:1px solid rgba(212,98,26,0.3);padding:6px 14px;border-radius:2px;margin-bottom:20px;}
+  .ph-eyebrow::before{content:'';width:18px;height:1px;background:var(--orange);}
+  .page-hero h1{font-family:'DM Serif Display',serif;font-size:clamp(28px,4vw,50px);color:var(--cream);line-height:1.05;margin-bottom:12px;}
+  .page-hero h1 em{color:var(--orange);font-style:italic;}
+  .page-hero p{font-size:14px;color:rgba(250,247,242,0.52);max-width:520px;line-height:1.7;}
+  .verified-badge{display:inline-flex;align-items:center;gap:8px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:#7ADB8A;background:rgba(42,106,58,0.2);border:1px solid rgba(42,106,58,0.35);padding:6px 14px;border-radius:2px;margin-top:16px;}
+
+  /* LAYOUT */
+  .page{max-width:1100px;margin:0 auto;padding:64px 40px;}
+  .page-sm{max-width:1100px;margin:0 auto;padding:48px 40px;}
+  hr.div{border:none;border-top:1px solid rgba(61,90,42,0.15);margin:0 40px;}
+  .sh{display:flex;align-items:flex-start;gap:20px;margin-bottom:44px;padding-bottom:20px;border-bottom:1px solid rgba(61,90,42,0.2);}
+  .sh-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--sage);background:rgba(93,140,58,0.1);border:1px solid rgba(93,140,58,0.22);padding:5px 10px;border-radius:2px;white-space:nowrap;margin-top:8px;flex-shrink:0;}
+  .sh h2{font-family:'DM Serif Display',serif;font-size:clamp(22px,3vw,36px);color:var(--soil);line-height:1.1;margin-bottom:6px;}
+  .sh h2 em{color:var(--orange);font-style:italic;}
+  .sh p{font-size:13px;color:rgba(44,26,14,0.55);max-width:560px;line-height:1.65;}
+
+  /* RATE CARDS */
+  .rate-hero-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:48px;}
+  .rate-card{background:var(--bark);border:1px solid rgba(143,175,106,0.18);border-radius:8px;overflow:hidden;display:flex;flex-direction:column;}
+  .rate-card.featured{border-color:var(--orange);}
+  .rc-top{padding:22px 22px 16px;border-bottom:1px solid rgba(143,175,106,0.08);position:relative;}
+  .rc-featured-tag{position:absolute;top:0;right:0;background:var(--orange);color:var(--cream);font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;padding:4px 12px;border-radius:0 8px 0 4px;}
+  .rc-tier{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--sage);margin-bottom:8px;}
+  .rc-name{font-family:'DM Serif Display',serif;font-size:22px;color:var(--cream);margin-bottom:3px;}
+  .rc-name-bn{font-size:12px;color:rgba(200,217,176,0.45);}
+  .rc-price-wrap{padding:18px 22px;border-bottom:1px solid rgba(143,175,106,0.08);}
+  .rc-price{display:flex;align-items:baseline;gap:4px;}
+  .rc-amt{font-family:'DM Serif Display',serif;font-size:40px;color:var(--cream);line-height:1;}
+  .rc-unit{font-family:'DM Mono',monospace;font-size:11px;color:rgba(200,217,176,0.4);}
+  .rc-saving{font-family:'DM Mono',monospace;font-size:10px;color:var(--sage);margin-top:6px;letter-spacing:0.3px;}
+  .rc-body{padding:16px 22px;flex:1;}
+  .rc-features{list-style:none;display:flex;flex-direction:column;gap:7px;}
+  .rc-features li{font-size:12px;color:rgba(200,217,176,0.6);display:flex;align-items:flex-start;gap:8px;line-height:1.5;}
+  .rc-features li::before{content:'✓';color:var(--sage);font-weight:600;flex-shrink:0;font-size:11px;margin-top:1px;}
+  .rc-features li.x::before{content:'✗';color:rgba(200,217,176,0.2);}
+
+  /* VOLUME CALCULATOR */
+  .calc-wrap{background:var(--bark);border:1px solid rgba(143,175,106,0.2);border-radius:8px;overflow:hidden;margin-bottom:48px;}
+  .calc-header{background:var(--moss);padding:18px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+  .calc-title{font-family:'DM Serif Display',serif;font-size:20px;color:var(--cream);}
+  .calc-title-bn{font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.5);letter-spacing:1px;margin-top:2px;}
+  .calc-body{padding:28px;}
+  .calc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:24px;}
+  .cf label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,217,176,0.45);display:block;margin-bottom:8px;}
+  .calc-select,.calc-input{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(143,175,106,0.2);border-radius:4px;padding:10px 14px;font-family:'Instrument Sans',sans-serif;font-size:14px;color:var(--cream);outline:none;appearance:none;transition:border-color .2s;}
+  .calc-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238FAF6A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-color:rgba(255,255,255,0.06);padding-right:32px;cursor:pointer;}
+  .calc-select option{background:var(--bark);}
+  .calc-select:focus,.calc-input:focus{border-color:var(--orange);}
+  .calc-results{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+  .cr-box{background:rgba(255,255,255,0.04);border:1px solid rgba(143,175,106,0.12);border-radius:6px;padding:14px 16px;text-align:center;}
+  .cr-box.highlight{background:rgba(212,98,26,0.1);border-color:rgba(212,98,26,0.25);}
+  .cr-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(200,217,176,0.35);margin-bottom:8px;}
+  .cr-value{font-family:'DM Serif Display',serif;font-size:24px;color:var(--cream);line-height:1;}
+  .cr-value.orange{color:var(--orange);}
+  .cr-value.green{color:var(--sage);}
+
+  /* DETAILED RATE TABLE */
+  .rate-table-wrap{overflow-x:auto;margin-bottom:16px;}
+  .rate-table{width:100%;border-collapse:collapse;font-size:13px;}
+  .rate-table th{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(44,26,14,0.45);text-align:left;padding:10px 16px;border-bottom:2px solid rgba(61,90,42,0.15);white-space:nowrap;}
+  .rate-table th.center{text-align:center;}
+  .rate-table td{padding:13px 16px;border-bottom:1px solid rgba(61,90,42,0.09);color:rgba(44,26,14,0.7);vertical-align:middle;}
+  .rate-table td.center{text-align:center;}
+  .rate-table tr:last-child td{border-bottom:none;}
+  .rate-table tr:hover td{background:rgba(61,90,42,0.04);}
+  .rate-table .feature-name{font-weight:600;color:var(--soil);}
+  .rate-table .feature-bn{font-size:11px;color:var(--rust);display:block;font-weight:400;margin-top:1px;}
+  .tick{color:var(--leaf);font-size:15px;}
+  .cross{color:rgba(44,26,14,0.18);font-size:15px;}
+  .best{font-weight:700;color:var(--orange);}
+  .volume-tag{display:inline-block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;background:rgba(212,98,26,0.08);border:1px solid rgba(212,98,26,0.2);color:var(--rust);padding:2px 8px;border-radius:2px;}
+
+  /* TERMS SECTION */
+  .terms-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .term-card{background:var(--parchment);border:1px solid rgba(61,90,42,0.15);border-radius:8px;padding:24px 22px;position:relative;overflow:hidden;}
+  .term-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+  .term-card.orange::before{background:var(--orange);}
+  .term-card.green::before{background:var(--leaf);}
+  .term-card.gold::before{background:var(--gold);}
+  .term-card.rust::before{background:var(--rust);}
+  .tc-icon{font-size:22px;margin-bottom:10px;display:block;}
+  .tc-title{font-family:'DM Serif Display',serif;font-size:17px;color:var(--soil);margin-bottom:3px;}
+  .tc-title-bn{font-size:11px;color:var(--rust);font-weight:500;margin-bottom:8px;display:block;}
+  .tc-body{font-size:12px;color:rgba(44,26,14,0.62);line-height:1.65;}
+  .tc-body strong{color:var(--soil);}
+
+  /* CTA */
+  .cta-strip{background:var(--bark);padding:64px 40px;text-align:center;position:relative;overflow:hidden;border-top:1px solid rgba(143,175,106,0.12);}
+  .cta-strip::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 100%,rgba(212,98,26,0.18) 0%,transparent 65%);pointer-events:none;}
+  .cta-inner{position:relative;z-index:1;max-width:520px;margin:0 auto;}
+  .cta-tag{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--sage);margin-bottom:14px;}
+  .cta-heading{font-family:'DM Serif Display',serif;font-size:clamp(24px,3.5vw,40px);color:var(--cream);line-height:1.1;margin-bottom:10px;}
+  .cta-heading em{color:var(--orange);font-style:italic;}
+  .cta-body{font-size:13px;color:rgba(200,217,176,0.6);margin-bottom:26px;line-height:1.65;}
+  .cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+  .btn-primary{background:var(--orange);color:var(--cream);font-family:'Instrument Sans',sans-serif;font-size:14px;font-weight:600;padding:14px 28px;border-radius:4px;text-decoration:none;transition:background .2s;display:inline-block;}
+  .btn-primary:hover{background:var(--rust);}
+  .btn-ghost{color:var(--mist);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;text-decoration:none;padding:14px 0;border-bottom:1px solid rgba(200,217,176,0.3);transition:color .2s,border-color .2s;}
+  .btn-ghost:hover{color:var(--cream);border-color:var(--cream);}
+
+  footer{background:var(--soil);border-top:2px solid var(--moss);padding:40px;}
+  .footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;}
+  .footer-logo{font-family:'DM Serif Display',serif;font-size:22px;color:var(--cream);text-decoration:none;}
+  .footer-logo span{color:var(--orange);font-style:italic;}
+  .footer-logo small{display:block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,217,176,0.3);margin-top:4px;}
+  .footer-links{display:flex;gap:24px;flex-wrap:wrap;}
+  .footer-links a{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(200,217,176,0.4);text-decoration:none;transition:color .2s;}
+  .footer-links a:hover{color:var(--cream);}
+  .footer-copy{font-family:'DM Mono',monospace;font-size:9px;color:rgba(200,217,176,0.2);}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  .fade{animation:fadeUp .45s ease both;}
+
+  @media(max-width:900px){
+    nav,footer,.cta-strip{padding-left:20px;padding-right:20px;}
+    .page,.page-sm{padding:44px 20px;}
+    hr.div{margin:0 20px;}
+    .page-hero{padding:48px 20px 40px;}
+    .rate-hero-grid{grid-template-columns:1fr;}
+    .calc-grid{grid-template-columns:1fr 1fr;}
+    .calc-results{grid-template-columns:1fr 1fr;}
+    .terms-grid{grid-template-columns:1fr;}
+    .footer-inner{flex-direction:column;text-align:center;}
+    .footer-links{justify-content:center;}
+  }
+  @media(max-width:560px){
+    .calc-grid{grid-template-columns:1fr;}
+    .calc-results{grid-template-columns:1fr 1fr;}
+    .gate-card{padding:32px 22px;}
+    .cta-btns{flex-direction:column;align-items:center;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">পাঠান <span>Pathan</span></a>
+    <div class="nav-links">
+      <a href="how-it-works.html">How it works</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="merchants.html" class="active">Merchants</a>
+      <a href="about.html">About</a>
+      <a href="merchants-apply.html" class="nav-cta">Apply as merchant →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ MERCHANT GATE ══ -->
+<div class="gate-wrap" id="gateWrap">
+  <div class="gate-card fade">
+    <span class="gate-icon">🔒</span>
+    <h2 class="gate-title">Merchant <em>Rates</em></h2>
+    <p class="gate-sub">
+      This page contains confidential B2B pricing for merchant partners only. Please confirm you are a business owner or F-commerce seller to continue.
+      <span class="bn">এই পাতায় শুধুমাত্র মার্চেন্ট পার্টনারদের জন্য বিশেষ রেট রয়েছে।</span>
+    </p>
+    <input type="text" class="gate-input" id="gateBiz" placeholder="Your business / brand name"/>
+    <input type="tel" class="gate-input" id="gatePhone" placeholder="Your WhatsApp number — 01XXXXXXXXX"/>
+    <div class="gate-error" id="gateError">Please enter your business name and phone number.</div>
+    <button class="gate-btn" onclick="unlockRates()">View merchant rates →</button>
+    <p class="gate-note">By continuing you confirm you are a business owner enquiring about B2B rates. Your details are used only to follow up your enquiry.</p>
+    <a href="https://wa.me/8801859929858" target="_blank" class="gate-wa">💬 &nbsp; Prefer to discuss rates on WhatsApp? Message us directly →</a>
+  </div>
+</div>
+
+<!-- ══ RATES PAGE ══ -->
+<div class="rates-page" id="ratesPage">
+
+  <section class="page-hero">
+    <div class="page-hero-inner">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a><span>/</span>
+        <a href="merchants.html">Merchants</a><span>/</span>
+        <span>Rates</span>
+      </div>
+      <div class="ph-eyebrow">মার্চেন্ট রেট — Confidential B2B Rates</div>
+      <h1>Your merchant <em>rate table.</em></h1>
+      <p>Confidential B2B pricing for Pathan merchant partners. All rates are per kg, per run, on a monthly contract basis.</p>
+      <div class="verified-badge">✓ &nbsp; Merchant access confirmed — rates visible</div>
+    </div>
+  </section>
+
+  <!-- RATE CARDS -->
+  <section class="page fade">
+    <div class="sh">
+      <div class="sh-tag">রেট তুলনা — Rate Tiers</div>
+      <div>
+        <h2>All three tiers <em>side by side</em></h2>
+        <p>Merchant rate is only available on a signed monthly contract with minimum 10 kg/run.</p>
+      </div>
+    </div>
+
+    <div class="rate-hero-grid">
+      <div class="rate-card">
+        <div class="rc-top">
+          <div class="rc-tier">Tier 01 — পাবলিক</div>
+          <div class="rc-name">On-Demand</div>
+          <div class="rc-name-bn">No commitment · Single bookings</div>
+        </div>
+        <div class="rc-price-wrap">
+          <div class="rc-price">
+            <div class="rc-amt" style="color:rgba(200,217,176,0.5);">৳160</div>
+            <div class="rc-unit">/ kg</div>
+          </div>
+          <div class="rc-saving" style="color:rgba(200,217,176,0.3);">Public rate — no contract</div>
+        </div>
+        <div class="rc-body">
+          <ul class="rc-features">
+            <li>Book any week, no commitment</li>
+            <li>Pay per run via bKash / Nagad</li>
+            <li class="x">No priority slot</li>
+            <li class="x">No monthly invoice</li>
+            <li class="x">No dedicated pickup window</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rate-card">
+        <div class="rc-top">
+          <div class="rc-tier">Tier 02 — ক্যাম্পাস</div>
+          <div class="rc-name">Campus Box</div>
+          <div class="rc-name-bn">Monthly subscription · Students</div>
+        </div>
+        <div class="rc-price-wrap">
+          <div class="rc-price">
+            <div class="rc-amt" style="color:rgba(200,217,176,0.65);">৳120</div>
+            <div class="rc-unit">/ kg</div>
+          </div>
+          <div class="rc-saving" style="color:rgba(200,217,176,0.35);">Save ৳40/kg vs On-Demand</div>
+        </div>
+        <div class="rc-body">
+          <ul class="rc-features">
+            <li>Monthly subscription — 4 runs/month</li>
+            <li>Priority slot guaranteed</li>
+            <li>Pay per run via bKash / Nagad</li>
+            <li class="x">No monthly invoice</li>
+            <li class="x">No dedicated pickup window</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="rate-card featured">
+        <div class="rc-top">
+          <div class="rc-featured-tag">Your rate</div>
+          <div class="rc-tier">Tier 03 — মার্চেন্ট</div>
+          <div class="rc-name">B2B Merchant</div>
+          <div class="rc-name-bn">Monthly contract · Businesses</div>
+        </div>
+        <div class="rc-price-wrap">
+          <div class="rc-price">
+            <div class="rc-amt">৳90</div>
+            <div class="rc-unit">/ kg</div>
+          </div>
+          <div class="rc-saving">Save ৳70/kg vs On-Demand ✓</div>
+        </div>
+        <div class="rc-body">
+          <ul class="rc-features">
+            <li>Minimum 10 kg / run</li>
+            <li>Fixed weekly slot — every Friday</li>
+            <li>Priority loading in van</li>
+            <li>Monthly invoice — not per run</li>
+            <li>Dedicated pickup window</li>
+            <li>Direct account manager WhatsApp</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- VOLUME CALCULATOR -->
+    <div class="calc-wrap">
+      <div class="calc-header">
+        <div>
+          <div class="calc-title">Volume Savings Calculator — সাশ্রয় হিসাব</div>
+          <div class="calc-title-bn">আপনার সাপ্তাহিক ভলিউম দিন — মাসিক সাশ্রয় দেখুন</div>
+        </div>
+      </div>
+      <div class="calc-body">
+        <div class="calc-grid">
+          <div class="cf">
+            <label>Weekly volume (kg)</label>
+            <input type="number" class="calc-input" id="calcKg" placeholder="e.g. 25" min="10" max="500" step="5" oninput="calcSavings()"/>
+          </div>
+          <div class="cf">
+            <label>Runs per month</label>
+            <select class="calc-select" id="calcRuns" onchange="calcSavings()">
+              <option value="4">4 runs (every week)</option>
+              <option value="3">3 runs per month</option>
+              <option value="2">2 runs per month</option>
+            </select>
+          </div>
+          <div class="cf">
+            <label>Compare against</label>
+            <select class="calc-select" id="calcCompare" onchange="calcSavings()">
+              <option value="160">On-Demand (৳160/kg)</option>
+              <option value="120">Campus Box (৳120/kg)</option>
+            </select>
+          </div>
+        </div>
+        <div class="calc-results">
+          <div class="cr-box">
+            <div class="cr-label">Your merchant cost</div>
+            <div class="cr-value" id="crMerchant">৳ —</div>
+          </div>
+          <div class="cr-box">
+            <div class="cr-label">Standard cost</div>
+            <div class="cr-value" style="color:rgba(44,26,14,0.4);" id="crStandard">৳ —</div>
+          </div>
+          <div class="cr-box highlight">
+            <div class="cr-label">Monthly saving</div>
+            <div class="cr-value orange" id="crSaving">৳ —</div>
+          </div>
+          <div class="cr-box">
+            <div class="cr-label">Annual saving</div>
+            <div class="cr-value green" id="crAnnual">৳ —</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DETAILED TABLE -->
+    <div class="sh" style="margin-top:8px;">
+      <div class="sh-tag">বিস্তারিত — Full Rate Table</div>
+      <div>
+        <h2>Complete <em>feature & rate</em> breakdown</h2>
+        <p>Every detail of what the merchant contract includes vs other tiers.</p>
+      </div>
+    </div>
+
+    <div class="rate-table-wrap">
+      <table class="rate-table">
+        <thead>
+          <tr>
+            <th style="width:36%">Feature</th>
+            <th class="center">On-Demand</th>
+            <th class="center">Campus Box</th>
+            <th class="center" style="background:rgba(212,98,26,0.05);">B2B Merchant</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="feature-name">Rate per kg</span><span class="feature-bn">প্রতি কেজি মূল্য</span></td>
+            <td class="center">৳160</td>
+            <td class="center">৳120</td>
+            <td class="center best">৳90</td>
+          </tr>
+          <tr>
+            <td><span class="feature-name">Minimum per run</span><span class="feature-bn">প্রতি রানে সর্বনিম্ন</span></td>
+            <td class="center">1 kg</td>
+            <td class="center">1 kg</td>
+            <td class="center"><span class="volume-tag">10 kg</span></td>
+          </tr>
+          <tr>
+            <td><span class="feature-name">Commitment</span><span class="feature-bn">প্রতিশ্রুতি</span></td>
+            <td class="center">None</td>
+            <td class="center">Monthly sub</td>
+            <td class="center best">Monthly contract</td>
+          </tr>
+          <tr>
+            <td><span class="feature-name">Payment method</span><span class="feature-bn">পেমেন্ট</span></td>
+            <td class="center">Per run · bKash/Nagad</td>
+            <td class="center">Per run · bKash/Nagad</td>
+            <td class="center best">Monthly invoice</td>
+          </tr>
+          <tr>
+            <td><span class="feature-name">Weekly slot guarantee</span><span class="feature-bn">সাপ্তাহিক স্লট নিশ্চিত</span></td>
+            <td class="center"><span class="cross">✗</span></td>
+            <td class="center"><span class="tick">✓</span></td>
+            <td class="center"><span class="tick">✓</span></td>
+          </tr>
+          <tr>
+            <td><span class="feature-name">Priority loading</span><span class="feature-bn">অগ্রাধিকার লোডিং</span></td>
+            <td class="center"><span class="cross">✗</span></td>
+            <td class="center"><span class="cross">✗</span></td>
+            <td class="center"><span class="tick">✓</span></td>
+          </tr>
+          <tr>
+            <td><span class="feature-name">Dedicated pickup window</span><span class="feature-bn">নির্দিষ্ট পিকআপ সময়</span></td>
+            <td class="center"><span class="cross">✗</span></td>
+            <td class="center"><span class="cross">✗</span></td>
+            <td class="center"><span class="tick">✓</span></td>
+          </tr>
+          <tr>
+            <td><span class="feature-name">Direct account manager</span><span class="feature-bn">ডেডিকেটেড ম্যানেজার</span></td>
+            <td class="center"><span class="cross">✗</span></td>
+            <td class="center"><span class="cross">✗</span></td>
+            <td class="center"><span class="tick">✓</span></td>
+          </tr>
+          <tr>
+            <td><span class="feature-name">Skip week with notice</span><span class="feature-bn">সপ্তাহ বাদ দেওয়া</span></td>
+            <td class="center">Anytime</td>
+            <td class="center">Anytime</td>
+            <td class="center">48hr notice</td>
+          </tr>
+          <tr>
+            <td><span class="feature-name">Contract length</span><span class="feature-bn">চুক্তির মেয়াদ</span></td>
+            <td class="center">—</td>
+            <td class="center">1 month</td>
+            <td class="center">1 month · auto-renew</td>
+          </tr>
+          <tr>
+            <td><span class="feature-name">Cancel notice</span><span class="feature-bn">বাতিলের নোটিশ</span></td>
+            <td class="center">Any time</td>
+            <td class="center">Any time</td>
+            <td class="center">2 weeks notice</td>
+          </tr>
+          <tr>
+            <td><span class="feature-name">−18°C cold chain</span><span class="feature-bn">সাব-জিরো কোল্ড চেইন</span></td>
+            <td class="center"><span class="tick">✓</span></td>
+            <td class="center"><span class="tick">✓</span></td>
+            <td class="center"><span class="tick">✓</span></td>
+          </tr>
+          <tr>
+            <td><span class="feature-name">Doorstep pickup</span><span class="feature-bn">দরজা থেকে সংগ্রহ</span></td>
+            <td class="center"><span class="tick">✓</span></td>
+            <td class="center"><span class="tick">✓</span></td>
+            <td class="center"><span class="tick">✓</span></td>
+          </tr>
+          <tr>
+            <td><span class="feature-name">WhatsApp updates</span><span class="feature-bn">WhatsApp আপডেট</span></td>
+            <td class="center"><span class="tick">✓</span></td>
+            <td class="center"><span class="tick">✓</span></td>
+            <td class="center"><span class="tick">✓</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:11px;color:rgba(44,26,14,0.35);font-family:'DM Mono',monospace;margin-top:12px;">* Rates are indicative and subject to final contract terms. Volume discounts above 100 kg/week available — contact us.</p>
+  </section>
+
+  <hr class="div"/>
+
+  <!-- CONTRACT TERMS -->
+  <section class="page-sm">
+    <div class="sh">
+      <div class="sh-tag">চুক্তির শর্ত — Contract Terms</div>
+      <div>
+        <h2>What the merchant <em>contract</em> covers</h2>
+        <p>Simple, fair terms. No surprises.</p>
+      </div>
+    </div>
+    <div class="terms-grid">
+      <div class="term-card orange">
+        <span class="tc-icon">📅</span>
+        <div class="tc-title">Contract Duration</div>
+        <span class="tc-title-bn">চুক্তির মেয়াদ</span>
+        <p class="tc-body">Monthly contracts, <strong>auto-renewing</strong> each month. Cancel anytime with <strong>2 weeks written notice</strong> via WhatsApp. No lock-in beyond the current month. No cancellation penalty.</p>
+      </div>
+      <div class="term-card green">
+        <span class="tc-icon">🧾</span>
+        <div class="tc-title">Payment & Invoice</div>
+        <span class="tc-title-bn">পেমেন্ট ও ইনভয়েস</span>
+        <p class="tc-body">Invoice sent at <strong>month end via WhatsApp</strong> with run-by-run breakdown. Payment due within <strong>5 days</strong> via bKash, Nagad, or bank transfer. Late payment may suspend the slot.</p>
+      </div>
+      <div class="term-card gold">
+        <span class="tc-icon">📦</span>
+        <div class="tc-title">Minimum Volume</div>
+        <span class="tc-title-bn">সর্বনিম্ন ভলিউম</span>
+        <p class="tc-body">Minimum <strong>10 kg per run</strong> to maintain merchant rate. If volume drops below 10 kg for 2 consecutive runs without notice, the contract rate reverts to On-Demand for that period.</p>
+      </div>
+      <div class="term-card rust">
+        <span class="tc-icon">⏸️</span>
+        <div class="tc-title">Skipping a Week</div>
+        <span class="tc-title-bn">সপ্তাহ বাদ দেওয়া</span>
+        <p class="tc-body">Skip any week with <strong>48 hours notice by Wednesday 10 PM</strong>. No charge for skipped weeks. More than 2 skips per month without notice may trigger a contract review.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-strip">
+    <div class="cta-inner">
+      <div class="cta-tag">আবেদন করুন — Apply</div>
+      <h2 class="cta-heading">Ready to lock your <em>weekly slot?</em></h2>
+      <p class="cta-body">Only 5 launch spots available. Apply now — we'll contact you within 48 hours to finalize your contract.</p>
+      <div class="cta-btns">
+        <a href="merchants-apply.html" class="btn-primary">Apply as merchant partner →</a>
+        <a href="https://wa.me/8801859929858" target="_blank" class="btn-ghost">💬 &nbsp; Discuss on WhatsApp →</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <a href="index.html" class="footer-logo">পাঠান <span>Pathan</span><small>Sub-Zero Frozen Courier · Dhaka ↔ Sylhet</small></a>
+      <div class="footer-links">
+        <a href="how-it-works.html">How it works</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="merchants.html">Merchants</a>
+        <a href="merchants-apply.html">Apply</a>
+        <a href="book.html">Book a slot</a>
+      </div>
+      <div class="footer-copy">© 2025 Pathan Logistics · All rights reserved</div>
+    </div>
+  </footer>
+
+</div><!-- end rates-page -->
+
+<script>
+  function unlockRates() {
+    const biz   = document.getElementById('gateBiz').value.trim();
+    const phone = document.getElementById('gatePhone').value.trim();
+    const err   = document.getElementById('gateError');
+    if (!biz || !/^01[3-9]\d{8}$/.test(phone)) {
+      err.textContent = !biz
+        ? 'Please enter your business name.'
+        : 'Please enter a valid Bangladesh phone number (01XXXXXXXXX).';
+      err.classList.add('show');
+      return;
+    }
+    err.classList.remove('show');
+    document.getElementById('gateWrap').style.display  = 'none';
+    document.getElementById('ratesPage').style.display = 'block';
+    window.scrollTo(0,0);
+  }
+
+  document.getElementById('gateBiz').addEventListener('keydown',  e=>{ if(e.key==='Enter') unlockRates(); });
+  document.getElementById('gatePhone').addEventListener('keydown', e=>{ if(e.key==='Enter') unlockRates(); });
+
+  function calcSavings() {
+    const kg      = parseFloat(document.getElementById('calcKg').value);
+    const runs    = parseInt(document.getElementById('calcRuns').value);
+    const compare = parseInt(document.getElementById('calcCompare').value);
+    if (!kg || kg < 10) {
+      ['crMerchant','crStandard','crSaving','crAnnual'].forEach(id=>document.getElementById(id).textContent='৳ —');
+      return;
+    }
+    const merchant  = kg * 90 * runs;
+    const standard  = kg * compare * runs;
+    const saving    = standard - merchant;
+    const annual    = saving * 12;
+    document.getElementById('crMerchant').textContent = '৳' + merchant.toLocaleString();
+    document.getElementById('crStandard').textContent = '৳' + standard.toLocaleString();
+    document.getElementById('crSaving').textContent   = '৳' + saving.toLocaleString();
+    document.getElementById('crAnnual').textContent   = '৳' + annual.toLocaleString();
+  }
+</script>
+</body>
+</html>
