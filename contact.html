@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Contact — পাঠান Pathan</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root{--soil:#2C1A0E;--bark:#4A2E1A;--moss:#3D5A2A;--leaf:#5C8C3A;--sage:#8FAF6A;--mist:#C8D9B0;--parchment:#F5F0E8;--cream:#FAF7F2;--gold:#C8A84B;--rust:#B85A2A;--orange:#D4621A;--ink:#1A1208;--error:#C0392B;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--cream);color:var(--ink);font-family:'Instrument Sans',sans-serif;font-size:14px;line-height:1.65;overflow-x:hidden;}
+
+  nav{background:var(--soil);padding:0 40px;position:sticky;top:0;z-index:200;border-bottom:2px solid var(--moss);}
+  .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:54px;}
+  .nav-logo{font-family:'DM Serif Display',serif;font-size:20px;color:var(--cream);text-decoration:none;}
+  .nav-logo span{color:var(--orange);font-style:italic;}
+  .nav-links{display:flex;align-items:center;gap:0;overflow-x:auto;scrollbar-width:none;}
+  .nav-links::-webkit-scrollbar{display:none;}
+  .nav-links a{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(200,217,176,0.55);text-decoration:none;padding:0 14px;height:54px;display:flex;align-items:center;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;transition:color .2s,border-color .2s;}
+  .nav-links a:hover{color:var(--cream);border-bottom-color:var(--sage);}
+  .nav-links a.active{color:var(--cream);border-bottom-color:var(--orange);}
+  .nav-cta{background:var(--orange)!important;color:var(--cream)!important;padding:8px 18px!important;height:auto!important;border-radius:3px!important;border-bottom:none!important;margin-left:8px;font-weight:500!important;}
+  .nav-cta:hover{background:var(--rust)!important;}
+
+  /* HERO */
+  .page-hero{background:var(--bark);padding:60px 40px 52px;position:relative;overflow:hidden;border-bottom:1px solid rgba(143,175,106,0.15);}
+  .page-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 60% at 90% 50%,rgba(212,98,26,0.15) 0%,transparent 65%);pointer-events:none;}
+  .page-hero::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 45% 70% at 5% 50%,rgba(61,90,42,0.2) 0%,transparent 60%);pointer-events:none;}
+  .page-hero-inner{max-width:1100px;margin:0 auto;position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+  .breadcrumb{display:flex;align-items:center;gap:8px;font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.35);margin-bottom:22px;}
+  .breadcrumb a{color:rgba(200,217,176,0.45);text-decoration:none;}
+  .breadcrumb a:hover{color:var(--mist);}
+  .ph-eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);border:1px solid rgba(212,98,26,0.3);padding:6px 14px;border-radius:2px;margin-bottom:20px;}
+  .ph-eyebrow::before{content:'';width:18px;height:1px;background:var(--orange);}
+  .page-hero h1{font-family:'DM Serif Display',serif;font-size:clamp(28px,4vw,50px);color:var(--cream);line-height:1.05;margin-bottom:12px;}
+  .page-hero h1 em{color:var(--orange);font-style:italic;}
+  .page-hero p{font-size:14px;color:rgba(250,247,242,0.52);line-height:1.7;}
+
+  /* Hero right — hours card */
+  .hours-card{background:rgba(255,255,255,0.04);border:1px solid rgba(143,175,106,0.2);border-radius:8px;overflow:hidden;}
+  .hc-header{background:var(--moss);padding:14px 20px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--mist);}
+  .hc-body{padding:20px;}
+  .hc-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(143,175,106,0.08);}
+  .hc-row:last-child{border-bottom:none;padding-bottom:0;}
+  .hc-day{font-size:13px;color:rgba(200,217,176,0.65);}
+  .hc-day .bn{display:block;font-size:10px;color:rgba(200,217,176,0.35);margin-top:1px;}
+  .hc-time{font-family:'DM Mono',monospace;font-size:11px;color:var(--cream);}
+  .hc-time.closed{color:rgba(200,217,176,0.25);}
+  .response-note{margin-top:16px;background:rgba(212,98,26,0.08);border:1px solid rgba(212,98,26,0.2);border-left:3px solid var(--orange);border-radius:0 3px 3px 0;padding:12px 14px;font-size:12px;color:rgba(200,217,176,0.65);line-height:1.55;}
+  .response-note .bn{display:block;color:var(--mist);font-weight:500;margin-bottom:3px;font-size:12px;}
+
+  /* LAYOUT */
+  .page{max-width:1100px;margin:0 auto;padding:64px 40px;}
+  .page-sm{max-width:1100px;margin:0 auto;padding:48px 40px;}
+  hr.div{border:none;border-top:1px solid rgba(61,90,42,0.15);margin:0 40px;}
+  .sh{display:flex;align-items:flex-start;gap:20px;margin-bottom:44px;padding-bottom:20px;border-bottom:1px solid rgba(61,90,42,0.2);}
+  .sh-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--sage);background:rgba(93,140,58,0.1);border:1px solid rgba(93,140,58,0.22);padding:5px 10px;border-radius:2px;white-space:nowrap;margin-top:8px;flex-shrink:0;}
+  .sh h2{font-family:'DM Serif Display',serif;font-size:clamp(22px,3vw,36px);color:var(--soil);line-height:1.1;margin-bottom:6px;}
+  .sh h2 em{color:var(--orange);font-style:italic;}
+  .sh p{font-size:13px;color:rgba(44,26,14,0.55);max-width:560px;line-height:1.65;}
+
+  /* MAIN CONTACT CHANNELS */
+  .channels-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
+  .channel-card{border-radius:8px;overflow:hidden;display:flex;flex-direction:column;}
+
+  /* Primary — WhatsApp */
+  .channel-primary{background:var(--bark);border:2px solid rgba(37,211,102,0.3);position:relative;}
+  .channel-primary::before{content:'PRIMARY';position:absolute;top:0;right:0;background:#25D366;color:white;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;padding:4px 12px;border-radius:0 8px 0 4px;}
+  .channel-secondary{background:var(--parchment);border:1px solid rgba(61,90,42,0.15);}
+
+  .cc-top{padding:24px 24px 18px;border-bottom:1px solid rgba(143,175,106,0.1);display:flex;gap:16px;align-items:flex-start;}
+  .channel-secondary .cc-top{border-bottom-color:rgba(61,90,42,0.1);}
+  .cc-icon-wrap{width:52px;height:52px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+  .icon-wa   {background:rgba(37,211,102,0.15);border:1px solid rgba(37,211,102,0.3);}
+  .icon-phone{background:rgba(212,98,26,0.12);border:1px solid rgba(212,98,26,0.25);}
+  .icon-email{background:rgba(61,90,42,0.12); border:1px solid rgba(61,90,42,0.25);}
+  .icon-social{background:rgba(200,168,75,0.12);border:1px solid rgba(200,168,75,0.25);}
+  .cc-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;}
+  .channel-primary .cc-label{color:rgba(200,217,176,0.45);}
+  .channel-secondary .cc-label{color:rgba(44,26,14,0.4);}
+  .cc-value{font-family:'DM Serif Display',serif;font-size:22px;line-height:1.1;text-decoration:none;display:block;transition:color .2s;}
+  .channel-primary .cc-value{color:var(--cream);}
+  .channel-secondary .cc-value{color:var(--soil);}
+  .channel-secondary .cc-value:hover{color:var(--orange);}
+  .cc-note{font-size:12px;margin-top:5px;line-height:1.5;}
+  .channel-primary .cc-note{color:rgba(200,217,176,0.5);}
+  .channel-secondary .cc-note{color:rgba(44,26,14,0.5);}
+  .cc-note .bn{display:block;font-weight:500;}
+  .channel-primary .cc-note .bn{color:var(--mist);}
+  .channel-secondary .cc-note .bn{color:var(--rust);}
+
+  .cc-bottom{padding:18px 24px;margin-top:auto;}
+  .wa-cta{display:flex;align-items:center;justify-content:center;gap:10px;background:#25D366;color:white;font-family:'Instrument Sans',sans-serif;font-size:14px;font-weight:600;padding:13px;border-radius:5px;text-decoration:none;transition:background .2s;}
+  .wa-cta:hover{background:#1DA851;}
+  .call-cta{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--orange);color:var(--cream);font-family:'Instrument Sans',sans-serif;font-size:14px;font-weight:600;padding:13px;border-radius:5px;text-decoration:none;transition:background .2s;}
+  .call-cta:hover{background:var(--rust);}
+
+  /* Social placeholder */
+  .social-card{background:var(--parchment);border:1px solid rgba(61,90,42,0.15);border-radius:8px;padding:24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+  .social-left{display:flex;align-items:center;gap:16px;flex:1;}
+  .social-icon-wrap{width:52px;height:52px;border-radius:10px;background:rgba(200,168,75,0.12);border:1px solid rgba(200,168,75,0.25);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+  .social-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(44,26,14,0.4);margin-bottom:5px;}
+  .social-value{font-family:'DM Serif Display',serif;font-size:20px;color:var(--soil);margin-bottom:4px;}
+  .social-note{font-size:12px;color:rgba(44,26,14,0.45);line-height:1.5;}
+  .social-note .bn{color:var(--rust);font-weight:500;display:block;margin-bottom:2px;}
+  .coming-tag{display:inline-block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;color:rgba(44,26,14,0.35);border:1px dashed rgba(44,26,14,0.18);padding:3px 10px;border-radius:2px;}
+
+  /* ENQUIRY FORM */
+  .form-wrap{max-width:1100px;margin:0 auto;padding:0 40px 64px;}
+  .form-card{background:var(--bark);border:1px solid rgba(143,175,106,0.18);border-radius:8px;overflow:hidden;}
+  .form-card-header{background:var(--moss);padding:20px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+  .fch-title{font-family:'DM Serif Display',serif;font-size:20px;color:var(--cream);}
+  .fch-sub{font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.5);letter-spacing:0.5px;margin-top:2px;}
+  .fch-note{font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.45);letter-spacing:0.5px;}
+  .form-card-body{padding:28px;}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .form-group{margin-bottom:18px;}
+  .form-label{display:block;font-family:'Instrument Sans',sans-serif;font-size:13px;font-weight:600;color:var(--cream);margin-bottom:5px;}
+  .form-label .bn{font-size:11px;font-weight:400;color:rgba(200,217,176,0.5);margin-left:6px;}
+  .form-label .req{color:var(--orange);margin-left:2px;}
+  .form-input,.form-select,.form-textarea{width:100%;background:rgba(255,255,255,0.06);border:1.5px solid rgba(143,175,106,0.2);border-radius:4px;padding:11px 14px;font-family:'Instrument Sans',sans-serif;font-size:14px;color:var(--cream);transition:border-color .2s,box-shadow .2s;outline:none;appearance:none;}
+  .form-input::placeholder,.form-textarea::placeholder{color:rgba(200,217,176,0.2);}
+  .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(212,98,26,0.1);}
+  .form-input.error,.form-select.error,.form-textarea.error{border-color:var(--error);}
+  .form-textarea{resize:vertical;min-height:100px;}
+  .form-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238FAF6A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;cursor:pointer;}
+  .form-select option{background:var(--bark);}
+  .field-error{font-size:11px;color:#E57373;margin-top:4px;display:none;}
+  .field-error.show{display:block;}
+  .submit-btn{width:100%;background:var(--orange);color:var(--cream);font-family:'Instrument Sans',sans-serif;font-size:15px;font-weight:600;padding:15px;border-radius:4px;border:none;cursor:pointer;transition:background .2s;display:flex;align-items:center;justify-content:center;gap:10px;}
+  .submit-btn:hover{background:var(--rust);}
+  .submit-note{font-size:11px;color:rgba(200,217,176,0.35);text-align:center;margin-top:10px;line-height:1.55;}
+
+  /* FAQ */
+  .faq-list{display:flex;flex-direction:column;gap:2px;}
+  .faq-item{background:var(--parchment);border:1px solid rgba(61,90,42,0.13);border-radius:4px;overflow:hidden;}
+  .faq-q{padding:16px 20px;font-size:13px;font-weight:600;color:var(--soil);cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none;}
+  .faq-q:hover{background:rgba(61,90,42,0.04);}
+  .faq-chevron{font-size:11px;color:var(--sage);transition:transform .25s;flex-shrink:0;margin-left:14px;}
+  .faq-item.open .faq-chevron{transform:rotate(180deg);}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease;font-size:13px;color:rgba(44,26,14,0.62);line-height:1.7;padding:0 20px;}
+  .faq-item.open .faq-a{max-height:200px;padding:0 20px 16px;}
+
+  footer{background:var(--soil);border-top:2px solid var(--moss);padding:40px;}
+  .footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;}
+  .footer-logo{font-family:'DM Serif Display',serif;font-size:22px;color:var(--cream);text-decoration:none;}
+  .footer-logo span{color:var(--orange);font-style:italic;}
+  .footer-logo small{display:block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,217,176,0.3);margin-top:4px;}
+  .footer-links{display:flex;gap:24px;flex-wrap:wrap;}
+  .footer-links a{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(200,217,176,0.4);text-decoration:none;transition:color .2s;}
+  .footer-links a:hover{color:var(--cream);}
+  .footer-copy{font-family:'DM Mono',monospace;font-size:9px;color:rgba(200,217,176,0.2);}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  .fade{animation:fadeUp .5s ease both;}
+
+  @media(max-width:900px){
+    nav,footer{padding-left:20px;padding-right:20px;}
+    .page,.page-sm{padding:48px 20px;}
+    .form-wrap{padding:0 20px 48px;}
+    hr.div{margin:0 20px;}
+    .page-hero{padding:48px 20px 40px;}
+    .page-hero-inner{grid-template-columns:1fr;gap:32px;}
+    .channels-grid{grid-template-columns:1fr;}
+    .form-row{grid-template-columns:1fr;}
+    .footer-inner{flex-direction:column;text-align:center;}
+    .footer-links{justify-content:center;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">পাঠান <span>Pathan</span></a>
+    <div class="nav-links">
+      <a href="how-it-works.html">How it works</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="merchants.html">Merchants</a>
+      <a href="about.html">About</a>
+      <a href="contact.html" class="active">Contact</a>
+      <a href="book.html" class="nav-cta">এই সপ্তাহে বুক করুন →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div>
+      <div class="breadcrumb"><a href="index.html">Home</a><span>/</span><span>Contact</span></div>
+      <div class="ph-eyebrow">যোগাযোগ — Contact</div>
+      <h1>We're here.<br/><em>Talk to us.</em></h1>
+      <p>Book a slot, ask about merchant rates, or just send us a question. WhatsApp is fastest — we reply within minutes during working hours.</p>
+    </div>
+    <div class="hours-card">
+      <div class="hc-header">🕐 &nbsp; সেবার সময় — Working Hours</div>
+      <div class="hc-body">
+        <div class="hc-row">
+          <div class="hc-day">Saturday – Thursday <span class="bn">শনি – বৃহস্পতি</span></div>
+          <div class="hc-time">9:00 AM – 9:00 PM</div>
+        </div>
+        <div class="hc-row">
+          <div class="hc-day">Friday — Run Day <span class="bn">শুক্রবার — রান দিন</span></div>
+          <div class="hc-time">9:00 AM – 6:00 PM</div>
+        </div>
+        <div class="hc-row">
+          <div class="hc-day">Friday Night <span class="bn">শুক্রবার রাত</span></div>
+          <div class="hc-time closed">Van in transit — no support</div>
+        </div>
+        <div class="response-note">
+          <span class="bn">সাধারণত ৩০ মিনিটের মধ্যে উত্তর দিই।</span>
+          WhatsApp messages are typically answered within 30 minutes during working hours. After hours we'll reply first thing the next morning.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT CHANNELS -->
+<section class="page fade">
+  <div class="sh">
+    <div class="sh-tag">চ্যানেল — Channels</div>
+    <div>
+      <h2>How to <em>reach us</em></h2>
+      <p>Three ways to contact Pathan. WhatsApp is always fastest.</p>
+    </div>
+  </div>
+
+  <div class="channels-grid">
+    <!-- WhatsApp — PRIMARY -->
+    <div class="channel-card channel-primary">
+      <div class="cc-top">
+        <div class="cc-icon-wrap icon-wa">💬</div>
+        <div>
+          <div class="cc-label">WhatsApp — সবচেয়ে দ্রুত</div>
+          <a href="https://wa.me/8801859929858" target="_blank" class="cc-value">+880 1859 929 858</a>
+          <div class="cc-note">
+            <span class="bn">বুকিং, প্রশ্ন, মার্চেন্ট এনকোয়ারি — সব কিছুর জন্য WhatsApp করুন।</span>
+            For bookings, order questions, merchant enquiries, and anything else. Fastest response guaranteed.
+          </div>
+        </div>
+      </div>
+      <div class="cc-bottom">
+        <a href="https://wa.me/8801859929858?text=Hello%20Pathan%2C%20I%20have%20a%20question." target="_blank" class="wa-cta">
+          💬 &nbsp; Open WhatsApp →
+        </a>
+      </div>
+    </div>
+
+    <!-- Phone call -->
+    <div class="channel-card channel-secondary">
+      <div class="cc-top">
+        <div class="cc-icon-wrap icon-phone">📞</div>
+        <div>
+          <div class="cc-label">Call Us — ফোন করুন</div>
+          <a href="tel:+8801859929858" class="cc-value">01859 929 858</a>
+          <div class="cc-note">
+            <span class="bn">শনি–বৃহস্পতি সকাল ৯টা – রাত ৯টা। শুক্রবার রাতে ফোন করবেন না — ভ্যান চলছে।</span>
+            Available Saturday–Thursday 9 AM–9 PM. Do not call Friday night — van is in transit, no phone support until Saturday morning.
+          </div>
+        </div>
+      </div>
+      <div class="cc-bottom">
+        <a href="tel:+8801859929858" class="call-cta">
+          📞 &nbsp; Call now →
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Email + Social in a row -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px;">
+
+    <!-- Email -->
+    <div class="channel-card channel-secondary" style="border-radius:8px;">
+      <div class="cc-top" style="border-bottom:none;padding-bottom:24px;">
+        <div class="cc-icon-wrap icon-email">✉️</div>
+        <div>
+          <div class="cc-label">Email — ইমেইল</div>
+          <a href="mailto:hello@pathan.com.bd" class="cc-value" style="font-size:17px;">hello@pathan.com.bd</a>
+          <div class="cc-note">
+            <span class="bn">B2B চুক্তি, অভিযোগ বা বিস্তারিত জিজ্ঞাসার জন্য।</span>
+            For formal enquiries, complaints, B2B contract discussions, and anything that needs a paper trail. We respond within 24 hours.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Social -->
+    <div class="channel-secondary" style="border:1px solid rgba(61,90,42,0.15);border-radius:8px;padding:24px;display:flex;flex-direction:column;justify-content:center;">
+      <div style="display:flex;gap:14px;align-items:flex-start;">
+        <div class="cc-icon-wrap icon-social" style="flex-shrink:0;">📱</div>
+        <div>
+          <div class="cc-label" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(44,26,14,0.4);margin-bottom:5px;">Social Media — সোশ্যাল মিডিয়া</div>
+          <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--soil);margin-bottom:6px;">Facebook · Instagram</div>
+          <div style="font-size:12px;color:rgba(44,26,14,0.45);line-height:1.55;">
+            <span style="display:block;color:var(--rust);font-weight:500;margin-bottom:4px;">শীঘ্রই আসছে — লিঙ্ক যোগ হবে।</span>
+            Our social media pages are being set up. Links will be added here soon. For now, WhatsApp is the fastest way to reach us.
+          </div>
+          <span class="coming-tag" style="margin-top:8px;display:inline-block;">Coming soon</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="div"/>
+
+<!-- ENQUIRY FORM -->
+<section class="page-sm">
+  <div class="sh">
+    <div class="sh-tag">ফর্ম — Enquiry Form</div>
+    <div>
+      <h2>Send us a <em>message</em></h2>
+      <p>Prefer not to use WhatsApp? Fill in the form — we'll reply to your phone via WhatsApp or call within 24 hours.</p>
+    </div>
+  </div>
+</section>
+
+<div class="form-wrap">
+  <div class="form-card fade">
+    <div class="form-card-header">
+      <div>
+        <div class="fch-title">General Enquiry — সাধারণ জিজ্ঞাসা</div>
+        <div class="fch-sub">For bookings, use the Book page. This form is for general questions only.</div>
+      </div>
+      <div class="fch-note">We reply via WhatsApp within 24 hrs</div>
+    </div>
+    <div class="form-card-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="cName">Your Name <span class="bn">আপনার নাম</span> <span class="req">*</span></label>
+          <input type="text" id="cName" class="form-input" placeholder="Full name"/>
+          <div class="field-error" id="err-cName">Please enter your name</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="cPhone">Phone / WhatsApp <span class="bn">ফোন নম্বর</span> <span class="req">*</span></label>
+          <input type="tel" id="cPhone" class="form-input" placeholder="01XXXXXXXXX"/>
+          <div class="field-error" id="err-cPhone">Please enter a valid BD number</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="cTopic">Topic <span class="bn">বিষয়</span> <span class="req">*</span></label>
+        <select id="cTopic" class="form-select">
+          <option value="">— Select topic —</option>
+          <option>General question about the service</option>
+          <option>Booking help</option>
+          <option>Track my order</option>
+          <option>Merchant / B2B enquiry</option>
+          <option>Complaint or feedback</option>
+          <option>Cold chain concern</option>
+          <option>Other</option>
+        </select>
+        <div class="field-error" id="err-cTopic">Please select a topic</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="cMessage">Message <span class="bn">বার্তা</span> <span class="req">*</span></label>
+        <textarea id="cMessage" class="form-textarea" placeholder="Write your question or message here.&#10;আপনার প্রশ্ন বা বার্তা এখানে লিখুন।"></textarea>
+        <div class="field-error" id="err-cMessage">Please write your message</div>
+      </div>
+      <button type="button" class="submit-btn" onclick="submitEnquiry()">
+        <span>💬</span> Send via WhatsApp →
+      </button>
+      <p class="submit-note">Submitting opens WhatsApp with your message pre-filled. We reply within 24 hours.<br/>ফর্ম জমা দিলে WhatsApp-এ বার্তা পাঠানো হবে।</p>
+    </div>
+  </div>
+</div>
+
+<hr class="div"/>
+
+<!-- FAQ -->
+<section class="page-sm">
+  <div class="sh">
+    <div class="sh-tag">প্রশ্ন — FAQ</div>
+    <div><h2>Quick <em>answers</em></h2></div>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How do I book a slot? <span class="faq-chevron">▼</span></div>
+      <div class="faq-a">Visit our <a href="book.html" style="color:var(--rust);">Book page</a> and fill in the form — it opens WhatsApp with your booking pre-filled. Or message us directly on WhatsApp at 01859 929 858. Bookings close every Thursday at 10 PM.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How do I track my order? <span class="faq-chevron">▼</span></div>
+      <div class="faq-a">Visit our <a href="track.html" style="color:var(--rust);">Track page</a> and enter your booking reference number and phone number. Your reference was sent to you on WhatsApp when your slot was confirmed.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">I want to become a merchant partner — who do I contact? <span class="faq-chevron">▼</span></div>
+      <div class="faq-a">Visit our <a href="merchants-apply.html" style="color:var(--rust);">Merchant Application page</a> and fill in the form. Or WhatsApp us at 01859 929 858 with your business name and estimated weekly volume. We respond within 48 hours.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">My food arrived thawed — what do I do? <span class="faq-chevron">▼</span></div>
+      <div class="faq-a">Contact us on WhatsApp immediately — within 2 hours of delivery — with a photo of the issue. Message 01859 929 858 with your booking reference, the photo, and a brief description. We investigate every cold chain complaint and respond within the same day.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Can I cancel or change my booking? <span class="faq-chevron">▼</span></div>
+      <div class="faq-a">Yes — message us on WhatsApp before Wednesday 10 PM to cancel or change your booking for that week's run. After Wednesday 10 PM, cancellations may not be possible if the rider schedule is already set.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <a href="index.html" class="footer-logo">পাঠান <span>Pathan</span><small>Sub-Zero Frozen Courier · Dhaka ↔ Sylhet</small></a>
+    <div class="footer-links">
+      <a href="how-it-works.html">How it works</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="merchants.html">Merchants</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div class="footer-copy">© 2025 Pathan Logistics · All rights reserved</div>
+  </div>
+</footer>
+
+<script>
+  function toggleFaq(el){el.parentElement.classList.toggle('open');}
+
+  function validate(){
+    let valid = true;
+    const fields = [
+      {id:'cName',    err:'err-cName',    check:v=>v.trim().length>1},
+      {id:'cPhone',   err:'err-cPhone',   check:v=>/^01[3-9]\d{8}$/.test(v.trim())},
+      {id:'cTopic',   err:'err-cTopic',   check:v=>v!==''},
+      {id:'cMessage', err:'err-cMessage', check:v=>v.trim().length>5},
+    ];
+    fields.forEach(f=>{
+      const el=document.getElementById(f.id);
+      const er=document.getElementById(f.err);
+      if(!f.check(el.value)){el.classList.add('error');er.classList.add('show');valid=false;}
+      else{el.classList.remove('error');er.classList.remove('show');}
+    });
+    return valid;
+  }
+
+  function submitEnquiry(){
+    if(!validate()){
+      document.querySelector('.form-input.error,.form-select.error,.form-textarea.error')?.scrollIntoView({behavior:'smooth',block:'center'});
+      return;
+    }
+    const name    = document.getElementById('cName').value.trim();
+    const phone   = document.getElementById('cPhone').value.trim();
+    const topic   = document.getElementById('cTopic').value;
+    const message = document.getElementById('cMessage').value.trim();
+
+    const msg =
+`📩 *PATHAN ENQUIRY*
+
+*Name:* ${name}
+*Phone:* ${phone}
+*Topic:* ${topic}
+
+*Message:*
+${message}`;
+
+    window.open('https://wa.me/8801859929858?text=' + encodeURIComponent(msg), '_blank');
+  }
+</script>
+</body>
+</html>
