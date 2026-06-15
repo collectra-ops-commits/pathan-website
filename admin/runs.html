@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Run Dashboard — Pathan Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root{--soil:#2C1A0E;--bark:#4A2E1A;--moss:#3D5A2A;--leaf:#5C8C3A;--sage:#8FAF6A;--mist:#C8D9B0;--parchment:#F5F0E8;--cream:#FAF7F2;--gold:#C8A84B;--rust:#B85A2A;--orange:#D4621A;--ink:#1A1208;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:#0F0A06;color:var(--cream);font-family:'Instrument Sans',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;}
+
+  /* ADMIN NAV */
+  .admin-nav{background:#1A0E06;border-bottom:1px solid rgba(212,98,26,0.25);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:200;}
+  .an-left{display:flex;align-items:center;gap:24px;}
+  .an-logo{font-family:'DM Serif Display',serif;font-size:18px;color:var(--cream);}
+  .an-logo span{color:var(--orange);font-style:italic;}
+  .an-badge{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;background:rgba(212,98,26,0.15);border:1px solid rgba(212,98,26,0.3);color:var(--orange);padding:3px 10px;border-radius:2px;}
+  .an-links{display:flex;gap:0;}
+  .an-links a{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(200,217,176,0.45);text-decoration:none;padding:0 14px;height:52px;display:flex;align-items:center;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .2s,border-color .2s;white-space:nowrap;}
+  .an-links a:hover{color:var(--cream);border-bottom-color:var(--sage);}
+  .an-links a.active{color:var(--cream);border-bottom-color:var(--orange);}
+  .an-right{display:flex;align-items:center;gap:12px;}
+  .an-time{font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.35);letter-spacing:0.5px;}
+  .an-site{font-family:'DM Mono',monospace;font-size:10px;color:var(--sage);text-decoration:none;border:1px solid rgba(143,175,106,0.2);padding:5px 12px;border-radius:2px;transition:background .2s;}
+  .an-site:hover{background:rgba(143,175,106,0.1);}
+
+  /* LAYOUT */
+  .admin-wrap{max-width:1200px;margin:0 auto;padding:36px 32px 80px;}
+
+  /* PAGE HEADER */
+  .page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:32px;flex-wrap:wrap;gap:16px;}
+  .ph-left{}
+  .ph-eyebrow{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);margin-bottom:8px;}
+  .ph-title{font-family:'DM Serif Display',serif;font-size:28px;color:var(--cream);line-height:1.1;}
+  .ph-sub{font-size:12px;color:rgba(200,217,176,0.4);margin-top:4px;font-family:'DM Mono',monospace;}
+  .ph-right{display:flex;gap:10px;flex-wrap:wrap;}
+  .btn-action{font-family:'Instrument Sans',sans-serif;font-size:13px;font-weight:600;padding:10px 20px;border-radius:4px;border:none;cursor:pointer;transition:background .2s;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+  .btn-orange{background:var(--orange);color:var(--cream);}
+  .btn-orange:hover{background:var(--rust);}
+  .btn-outline{background:transparent;color:var(--sage);border:1px solid rgba(143,175,106,0.3);}
+  .btn-outline:hover{background:rgba(143,175,106,0.08);}
+  .btn-red{background:rgba(192,57,43,0.15);color:#E57373;border:1px solid rgba(192,57,43,0.3);}
+  .btn-red:hover{background:rgba(192,57,43,0.25);}
+  .btn-green{background:rgba(42,106,58,0.2);color:#7ADB8A;border:1px solid rgba(42,106,58,0.4);}
+  .btn-green:hover{background:rgba(42,106,58,0.3);}
+  .btn-sm{padding:7px 14px;font-size:12px;}
+
+  /* STAT CARDS */
+  .stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:28px;}
+  .stat-card{background:#1A0E06;border:1px solid rgba(143,175,106,0.12);border-radius:6px;padding:16px 18px;}
+  .stat-card.highlight{border-color:rgba(212,98,26,0.3);background:rgba(212,98,26,0.06);}
+  .stat-card.green{border-color:rgba(42,106,58,0.35);background:rgba(42,106,58,0.08);}
+  .sc-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,217,176,0.35);margin-bottom:8px;}
+  .sc-value{font-family:'DM Serif Display',serif;font-size:26px;color:var(--cream);line-height:1;}
+  .sc-value.orange{color:var(--orange);}
+  .sc-value.green{color:#7ADB8A;}
+  .sc-value.gold{color:var(--gold);}
+  .sc-sub{font-size:11px;color:rgba(200,217,176,0.35);margin-top:5px;font-family:'DM Mono',monospace;}
+
+  /* THIS WEEK'S RUN — MAIN CARD */
+  .run-main{background:#1A0E06;border:1px solid rgba(212,98,26,0.25);border-radius:8px;overflow:hidden;margin-bottom:28px;}
+  .rm-header{background:rgba(212,98,26,0.1);border-bottom:1px solid rgba(212,98,26,0.2);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+  .rm-title{font-family:'DM Serif Display',serif;font-size:20px;color:var(--cream);}
+  .rm-week{font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.45);margin-top:3px;letter-spacing:0.5px;}
+  .rm-badge{display:inline-flex;align-items:center;gap:8px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;padding:8px 16px;border-radius:3px;}
+  .badge-filling{background:rgba(200,168,75,0.12);border:1px solid rgba(200,168,75,0.3);color:var(--gold);}
+  .badge-confirmed{background:rgba(42,106,58,0.15);border:1px solid rgba(42,106,58,0.4);color:#7ADB8A;}
+  .badge-closed{background:rgba(192,57,43,0.12);border:1px solid rgba(192,57,43,0.3);color:#E57373;}
+  .badge-dot{width:7px;height:7px;border-radius:50%;animation:blink 1.8s ease-in-out infinite;}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0.35}}
+  .badge-filling .badge-dot{background:var(--gold);}
+  .badge-confirmed .badge-dot{background:#7ADB8A;}
+
+  .rm-body{padding:24px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;}
+  .rm-section-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,217,176,0.3);margin-bottom:12px;}
+
+  /* Capacity bar */
+  .cap-wrap{}
+  .cap-nums{display:flex;align-items:baseline;gap:6px;margin-bottom:10px;}
+  .cap-booked{font-family:'DM Serif Display',serif;font-size:36px;color:var(--cream);line-height:1;}
+  .cap-total{font-family:'DM Mono',monospace;font-size:14px;color:rgba(200,217,176,0.4);}
+  .cap-bar-outer{height:12px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:visible;position:relative;margin-bottom:8px;}
+  .cap-bar-inner{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--leaf),var(--sage));transition:width 1s ease;}
+  .cap-threshold{position:absolute;left:60%;top:-5px;bottom:-5px;width:2px;background:var(--gold);opacity:0.8;}
+  .cap-threshold-label{position:absolute;left:60%;bottom:-20px;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:8px;color:var(--gold);white-space:nowrap;}
+  .cap-pct{font-family:'DM Mono',monospace;font-size:11px;color:var(--sage);margin-top:18px;}
+
+  /* Tier breakdown */
+  .tier-list{display:flex;flex-direction:column;gap:10px;}
+  .tier-row{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .tier-name{font-size:12px;color:rgba(200,217,176,0.6);flex:1;}
+  .tier-bar-wrap{flex:2;height:6px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;}
+  .tier-bar{height:100%;border-radius:2px;}
+  .tier-kg{font-family:'DM Mono',monospace;font-size:11px;color:var(--cream);white-space:nowrap;}
+
+  /* Run controls */
+  .run-controls{display:flex;flex-direction:column;gap:10px;}
+  .rc-row{display:flex;gap:8px;}
+  .ctrl-btn{flex:1;padding:10px 12px;border-radius:4px;border:none;cursor:pointer;font-family:'Instrument Sans',sans-serif;font-size:12px;font-weight:600;transition:background .2s;text-align:center;}
+  .ctrl-confirm{background:rgba(42,106,58,0.2);color:#7ADB8A;border:1px solid rgba(42,106,58,0.4);}
+  .ctrl-confirm:hover{background:rgba(42,106,58,0.35);}
+  .ctrl-cancel{background:rgba(192,57,43,0.12);color:#E57373;border:1px solid rgba(192,57,43,0.3);}
+  .ctrl-cancel:hover{background:rgba(192,57,43,0.22);}
+  .ctrl-close{background:rgba(200,168,75,0.1);color:var(--gold);border:1px solid rgba(200,168,75,0.25);}
+  .ctrl-close:hover{background:rgba(200,168,75,0.18);}
+  .ctrl-note{font-size:11px;color:rgba(200,217,176,0.3);line-height:1.5;padding:10px 12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:4px;}
+
+  .rm-footer{padding:14px 24px;border-top:1px solid rgba(143,175,106,0.08);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+  .rm-footer-info{font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.35);letter-spacing:0.5px;}
+  .rm-footer-info strong{color:var(--cream);}
+
+  /* RUN HISTORY TABLE */
+  .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+  .section-title{font-family:'DM Serif Display',serif;font-size:20px;color:var(--cream);}
+  .section-sub{font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.35);margin-top:2px;}
+
+  .table-wrap{background:#1A0E06;border:1px solid rgba(143,175,106,0.12);border-radius:8px;overflow:hidden;margin-bottom:28px;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  thead tr{background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(143,175,106,0.12);}
+  th{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,217,176,0.35);text-align:left;padding:12px 16px;white-space:nowrap;}
+  th.center{text-align:center;}
+  td{padding:13px 16px;border-bottom:1px solid rgba(143,175,106,0.06);color:rgba(200,217,176,0.7);vertical-align:middle;}
+  td.center{text-align:center;}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(255,255,255,0.02);}
+  .run-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--orange);}
+  .run-date{font-size:12px;color:var(--cream);}
+  .run-date-sub{font-size:10px;color:rgba(200,217,176,0.35);font-family:'DM Mono',monospace;margin-top:2px;}
+  .kg-val{font-family:'DM Serif Display',serif;font-size:16px;color:var(--cream);}
+  .status-pill{display:inline-flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;padding:4px 10px;border-radius:2px;}
+  .pill-confirmed{background:rgba(42,106,58,0.15);border:1px solid rgba(42,106,58,0.3);color:#7ADB8A;}
+  .pill-cancelled{background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.25);color:#E57373;}
+  .pill-pending{background:rgba(200,168,75,0.1);border:1px solid rgba(200,168,75,0.25);color:var(--gold);}
+  .revenue-val{font-family:'DM Serif Display',serif;font-size:15px;color:var(--cream);}
+  .revenue-val.low{color:rgba(200,217,176,0.35);}
+  .action-links{display:flex;gap:8px;}
+  .action-links a{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--sage);text-decoration:none;border:1px solid rgba(143,175,106,0.2);padding:4px 10px;border-radius:2px;transition:background .2s;white-space:nowrap;}
+  .action-links a:hover{background:rgba(143,175,106,0.1);}
+  .action-links a.danger{color:#E57373;border-color:rgba(192,57,43,0.25);}
+  .action-links a.danger:hover{background:rgba(192,57,43,0.1);}
+
+  /* NEW RUN FORM */
+  .new-run-card{background:#1A0E06;border:1px solid rgba(143,175,106,0.15);border-radius:8px;overflow:hidden;margin-bottom:28px;}
+  .nrc-header{background:rgba(61,90,42,0.15);border-bottom:1px solid rgba(143,175,106,0.12);padding:16px 22px;font-family:'DM Serif Display',serif;font-size:18px;color:var(--cream);}
+  .nrc-body{padding:22px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;align-items:end;}
+  .nf-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,217,176,0.35);display:block;margin-bottom:8px;}
+  .nf-input,.nf-select{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(143,175,106,0.2);border-radius:4px;padding:10px 12px;font-family:'Instrument Sans',sans-serif;font-size:13px;color:var(--cream);outline:none;transition:border-color .2s;appearance:none;}
+  .nf-input:focus,.nf-select:focus{border-color:var(--orange);}
+  .nf-select option{background:#1A0E06;}
+
+  /* CONFIRM MODAL */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;}
+  .modal-overlay.show{display:flex;}
+  .modal{background:#1A0E06;border:1px solid rgba(212,98,26,0.3);border-radius:8px;padding:32px;max-width:420px;width:100%;}
+  .modal-icon{font-size:32px;margin-bottom:14px;display:block;text-align:center;}
+  .modal-title{font-family:'DM Serif Display',serif;font-size:22px;color:var(--cream);text-align:center;margin-bottom:8px;}
+  .modal-body{font-size:13px;color:rgba(200,217,176,0.6);text-align:center;line-height:1.65;margin-bottom:24px;}
+  .modal-btns{display:flex;gap:10px;}
+  .modal-btns button{flex:1;padding:12px;border-radius:4px;border:none;cursor:pointer;font-family:'Instrument Sans',sans-serif;font-size:14px;font-weight:600;transition:background .2s;}
+  .modal-confirm-btn{background:var(--orange);color:var(--cream);}
+  .modal-confirm-btn:hover{background:var(--rust);}
+  .modal-confirm-btn.green-btn{background:rgba(42,106,58,0.8);}
+  .modal-confirm-btn.green-btn:hover{background:rgba(42,106,58,1);}
+  .modal-cancel-btn{background:rgba(255,255,255,0.06);color:rgba(200,217,176,0.6);border:1px solid rgba(255,255,255,0.08)!important;}
+  .modal-cancel-btn:hover{background:rgba(255,255,255,0.1);}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  .fade{animation:fadeUp .4s ease both;}
+
+  @media(max-width:900px){
+    .admin-wrap{padding:24px 16px 60px;}
+    .stats-grid{grid-template-columns:repeat(3,1fr);}
+    .rm-body{grid-template-columns:1fr;}
+    .nrc-body{grid-template-columns:1fr 1fr;}
+    .an-links{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ADMIN NAV -->
+<nav class="admin-nav">
+  <div class="an-left">
+    <div class="an-logo">পাঠান <span>Admin</span></div>
+    <div class="an-badge">Internal Only</div>
+    <div class="an-links">
+      <a href="runs.html" class="active">Runs</a>
+      <a href="orders.html">Orders</a>
+      <a href="riders.html">Riders</a>
+      <a href="payments.html">Payments</a>
+    </div>
+  </div>
+  <div class="an-right">
+    <div class="an-time" id="adminTime">--:-- --</div>
+    <a href="../index.html" class="an-site" target="_blank">↗ Live site</a>
+  </div>
+</nav>
+
+<div class="admin-wrap">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header fade">
+    <div class="ph-left">
+      <div class="ph-eyebrow">Run Management</div>
+      <div class="ph-title">Weekly Run Dashboard</div>
+      <div class="ph-sub">Manage, confirm, and monitor every Pathan run</div>
+    </div>
+    <div class="ph-right">
+      <button class="btn-action btn-outline" onclick="showNewRun()">+ Schedule New Run</button>
+      <a href="orders.html" class="btn-action btn-orange">View All Orders →</a>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-grid fade">
+    <div class="stat-card highlight">
+      <div class="sc-label">This Week Booked</div>
+      <div class="sc-value orange">36 <span style="font-size:16px;font-family:'DM Mono',monospace;color:rgba(200,217,176,0.4);">/ 60 kg</span></div>
+      <div class="sc-sub">60% capacity — Run #08</div>
+    </div>
+    <div class="stat-card green">
+      <div class="sc-label">Run Status</div>
+      <div class="sc-value green">Confirmed</div>
+      <div class="sc-sub">Threshold reached ✓</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Total Bookings</div>
+      <div class="sc-value">14</div>
+      <div class="sc-sub">This run · 3 tiers</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Est. Revenue</div>
+      <div class="sc-value gold">৳4,820</div>
+      <div class="sc-sub">Before refunds</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Runs Completed</div>
+      <div class="sc-value">7</div>
+      <div class="sc-sub">Since launch</div>
+    </div>
+  </div>
+
+  <!-- THIS WEEK'S RUN -->
+  <div class="run-main fade">
+    <div class="rm-header">
+      <div>
+        <div class="rm-title">Run #08 — This Week</div>
+        <div class="rm-week">Fri 27 Jun 2025 · Departure 10:00 PM · Dhaka ↔ Sylhet</div>
+      </div>
+      <div class="rm-badge badge-confirmed">
+        <span class="badge-dot"></span>
+        Run Confirmed ✓
+      </div>
+    </div>
+
+    <div class="rm-body">
+
+      <!-- Capacity -->
+      <div class="cap-wrap">
+        <div class="rm-section-label">Cargo Capacity</div>
+        <div class="cap-nums">
+          <div class="cap-booked">36</div>
+          <div class="cap-total">/ 60 kg booked</div>
+        </div>
+        <div style="position:relative;">
+          <div class="cap-bar-outer">
+            <div class="cap-threshold"></div>
+            <div class="cap-bar-inner" style="width:60%;"></div>
+          </div>
+          <div class="cap-threshold-label">Min. 60%</div>
+        </div>
+        <div class="cap-pct" style="margin-top:22px;">60% filled · 24 kg remaining capacity</div>
+      </div>
+
+      <!-- Tier breakdown -->
+      <div>
+        <div class="rm-section-label">Bookings by Tier</div>
+        <div class="tier-list">
+          <div class="tier-row">
+            <div class="tier-name">Campus Box</div>
+            <div class="tier-bar-wrap"><div class="tier-bar" style="width:50%;background:var(--sage);"></div></div>
+            <div class="tier-kg">18 kg</div>
+          </div>
+          <div class="tier-row">
+            <div class="tier-name">On-Demand</div>
+            <div class="tier-bar-wrap"><div class="tier-bar" style="width:30%;background:var(--orange);"></div></div>
+            <div class="tier-kg">12 kg</div>
+          </div>
+          <div class="tier-row">
+            <div class="tier-name">B2B Merchant</div>
+            <div class="tier-bar-wrap"><div class="tier-bar" style="width:15%;background:var(--gold);"></div></div>
+            <div class="tier-kg">6 kg</div>
+          </div>
+          <div class="tier-row" style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(143,175,106,0.1);">
+            <div class="tier-name">Dhaka → Sylhet</div>
+            <div class="tier-bar-wrap"><div class="tier-bar" style="width:65%;background:var(--leaf);"></div></div>
+            <div class="tier-kg">26 kg</div>
+          </div>
+          <div class="tier-row">
+            <div class="tier-name">Sylhet → Dhaka</div>
+            <div class="tier-bar-wrap"><div class="tier-bar" style="width:25%;background:var(--moss);"></div></div>
+            <div class="tier-kg">10 kg</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="run-controls">
+        <div class="rm-section-label">Run Controls</div>
+        <div class="rc-row">
+          <button class="ctrl-btn ctrl-confirm" onclick="showModal('confirm')">✓ Confirm Run</button>
+          <button class="ctrl-btn ctrl-cancel" onclick="showModal('cancel')">✗ Cancel Run</button>
+        </div>
+        <button class="ctrl-btn ctrl-close" style="width:100%;" onclick="showModal('close')">🔒 Close Bookings Now</button>
+        <div class="ctrl-note">
+          Confirming the run charges all deposits and locks the manifest. Cancelling refunds all deposits. Close bookings to stop new entries before the deadline.
+        </div>
+        <a href="orders.html" class="btn-action btn-outline btn-sm" style="justify-content:center;">View full order list →</a>
+        <a href="riders.html" class="btn-action btn-outline btn-sm" style="justify-content:center;">Assign riders →</a>
+      </div>
+    </div>
+
+    <div class="rm-footer">
+      <div class="rm-footer-info">Booking deadline: <strong>Thu 26 Jun · 10:00 PM</strong></div>
+      <div class="rm-footer-info">Van departure: <strong>Fri 27 Jun · 10:00 PM</strong></div>
+      <div class="rm-footer-info">Expected Sylhet arrival: <strong>Sat 28 Jun · 4–5 AM</strong></div>
+      <div class="rm-footer-info">Countdown: <strong id="adminCountdown">--:--:--</strong></div>
+    </div>
+  </div>
+
+  <!-- SCHEDULE NEW RUN -->
+  <div class="new-run-card fade" id="newRunCard" style="display:none;">
+    <div class="nrc-header">+ Schedule New Run</div>
+    <div class="nrc-body">
+      <div>
+        <label class="nf-label">Run Number</label>
+        <input type="text" class="nf-input" placeholder="e.g. 09" value="09"/>
+      </div>
+      <div>
+        <label class="nf-label">Departure Date</label>
+        <input type="date" class="nf-input"/>
+      </div>
+      <div>
+        <label class="nf-label">Van Capacity (kg)</label>
+        <input type="number" class="nf-input" placeholder="60" value="60"/>
+      </div>
+      <div>
+        <button class="btn-action btn-orange" style="width:100%;justify-content:center;" onclick="scheduleRun()">Schedule Run →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RUN HISTORY -->
+  <div class="section-header fade">
+    <div>
+      <div class="section-title">Run History</div>
+      <div class="section-sub">All runs since launch · Most recent first</div>
+    </div>
+    <button class="btn-action btn-outline btn-sm">Export CSV</button>
+  </div>
+
+  <div class="table-wrap fade">
+    <table>
+      <thead>
+        <tr>
+          <th>Run</th>
+          <th>Date</th>
+          <th class="center">Booked</th>
+          <th class="center">Capacity</th>
+          <th class="center">Fill %</th>
+          <th class="center">Orders</th>
+          <th class="center">Revenue</th>
+          <th class="center">Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="run-num">#08</div></td>
+          <td><div class="run-date">27 Jun 2025</div><div class="run-date-sub">This week · Active</div></td>
+          <td class="center"><div class="kg-val">36 kg</div></td>
+          <td class="center"><div style="font-size:12px;color:rgba(200,217,176,0.4);">60 kg</div></td>
+          <td class="center"><div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--sage);">60%</div></td>
+          <td class="center">14</td>
+          <td class="center"><div class="revenue-val">৳4,820</div></td>
+          <td class="center"><span class="status-pill pill-confirmed"><span style="width:6px;height:6px;border-radius:50%;background:#7ADB8A;display:inline-block;"></span>Confirmed</span></td>
+          <td><div class="action-links"><a href="orders.html">Orders</a><a href="riders.html">Riders</a></div></td>
+        </tr>
+        <tr>
+          <td><div class="run-num">#07</div></td>
+          <td><div class="run-date">20 Jun 2025</div><div class="run-date-sub">Last week</div></td>
+          <td class="center"><div class="kg-val">52 kg</div></td>
+          <td class="center"><div style="font-size:12px;color:rgba(200,217,176,0.4);">60 kg</div></td>
+          <td class="center"><div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--sage);">87%</div></td>
+          <td class="center">21</td>
+          <td class="center"><div class="revenue-val">৳6,840</div></td>
+          <td class="center"><span class="status-pill pill-confirmed"><span style="width:6px;height:6px;border-radius:50%;background:#7ADB8A;display:inline-block;"></span>Completed</span></td>
+          <td><div class="action-links"><a href="#">View</a></div></td>
+        </tr>
+        <tr>
+          <td><div class="run-num">#06</div></td>
+          <td><div class="run-date">13 Jun 2025</div><div class="run-date-sub">2 weeks ago</div></td>
+          <td class="center"><div class="kg-val">48 kg</div></td>
+          <td class="center"><div style="font-size:12px;color:rgba(200,217,176,0.4);">60 kg</div></td>
+          <td class="center"><div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--sage);">80%</div></td>
+          <td class="center">19</td>
+          <td class="center"><div class="revenue-val">৳6,120</div></td>
+          <td class="center"><span class="status-pill pill-confirmed"><span style="width:6px;height:6px;border-radius:50%;background:#7ADB8A;display:inline-block;"></span>Completed</span></td>
+          <td><div class="action-links"><a href="#">View</a></div></td>
+        </tr>
+        <tr>
+          <td><div class="run-num">#05</div></td>
+          <td><div class="run-date">06 Jun 2025</div><div class="run-date-sub">3 weeks ago</div></td>
+          <td class="center"><div class="kg-val">28 kg</div></td>
+          <td class="center"><div style="font-size:12px;color:rgba(200,217,176,0.4);">60 kg</div></td>
+          <td class="center"><div style="font-family:'DM Mono',monospace;font-size:12px;color:#E57373;">47%</div></td>
+          <td class="center">11</td>
+          <td class="center"><div class="revenue-val low">—</div></td>
+          <td class="center"><span class="status-pill pill-cancelled"><span style="width:6px;height:6px;border-radius:50%;background:#E57373;display:inline-block;"></span>Cancelled</span></td>
+          <td><div class="action-links"><a href="#">View</a></div></td>
+        </tr>
+        <tr>
+          <td><div class="run-num">#04</div></td>
+          <td><div class="run-date">30 May 2025</div><div class="run-date-sub">4 weeks ago</div></td>
+          <td class="center"><div class="kg-val">55 kg</div></td>
+          <td class="center"><div style="font-size:12px;color:rgba(200,217,176,0.4);">60 kg</div></td>
+          <td class="center"><div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--sage);">92%</div></td>
+          <td class="center">23</td>
+          <td class="center"><div class="revenue-val">৳7,290</div></td>
+          <td class="center"><span class="status-pill pill-confirmed"><span style="width:6px;height:6px;border-radius:50%;background:#7ADB8A;display:inline-block;"></span>Completed</span></td>
+          <td><div class="action-links"><a href="#">View</a></div></td>
+        </tr>
+        <tr>
+          <td><div class="run-num">#03</div></td>
+          <td><div class="run-date">23 May 2025</div></td>
+          <td class="center"><div class="kg-val">41 kg</div></td>
+          <td class="center"><div style="font-size:12px;color:rgba(200,217,176,0.4);">60 kg</div></td>
+          <td class="center"><div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--sage);">68%</div></td>
+          <td class="center">17</td>
+          <td class="center"><div class="revenue-val">৳5,380</div></td>
+          <td class="center"><span class="status-pill pill-confirmed"><span style="width:6px;height:6px;border-radius:50%;background:#7ADB8A;display:inline-block;"></span>Completed</span></td>
+          <td><div class="action-links"><a href="#">View</a></div></td>
+        </tr>
+        <tr>
+          <td><div class="run-num">#02</div></td>
+          <td><div class="run-date">16 May 2025</div></td>
+          <td class="center"><div class="kg-val">38 kg</div></td>
+          <td class="center"><div style="font-size:12px;color:rgba(200,217,176,0.4);">60 kg</div></td>
+          <td class="center"><div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--sage);">63%</div></td>
+          <td class="center">15</td>
+          <td class="center"><div class="revenue-val">৳4,960</div></td>
+          <td class="center"><span class="status-pill pill-confirmed"><span style="width:6px;height:6px;border-radius:50%;background:#7ADB8A;display:inline-block;"></span>Completed</span></td>
+          <td><div class="action-links"><a href="#">View</a></div></td>
+        </tr>
+        <tr>
+          <td><div class="run-num">#01</div></td>
+          <td><div class="run-date">09 May 2025</div><div class="run-date-sub">Launch run</div></td>
+          <td class="center"><div class="kg-val">32 kg</div></td>
+          <td class="center"><div style="font-size:12px;color:rgba(200,217,176,0.4);">60 kg</div></td>
+          <td class="center"><div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--gold);">53%</div></td>
+          <td class="center">12</td>
+          <td class="center"><div class="revenue-val">৳4,160</div></td>
+          <td class="center"><span class="status-pill pill-confirmed"><span style="width:6px;height:6px;border-radius:50%;background:#7ADB8A;display:inline-block;"></span>Completed</span></td>
+          <td><div class="action-links"><a href="#">View</a></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- end admin-wrap -->
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <span class="modal-icon" id="modalIcon">✓</span>
+    <div class="modal-title" id="modalTitle">Confirm Run #08?</div>
+    <div class="modal-body" id="modalBody">This will charge all pending deposits and lock the booking manifest. Riders will be notified. This action cannot be undone.</div>
+    <div class="modal-btns">
+      <button class="modal-cancel-btn" onclick="closeModal()">Cancel</button>
+      <button class="modal-confirm-btn" id="modalConfirmBtn" onclick="closeModal()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* Live clock */
+  function updateTime(){
+    const now = new Date();
+    document.getElementById('adminTime').textContent =
+      now.toLocaleTimeString('en-BD',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  }
+  updateTime(); setInterval(updateTime,1000);
+
+  /* Countdown to next Thu 10PM departure */
+  function pad(n){return String(n).padStart(2,'0');}
+  function nextFri10PM(){
+    const now=new Date();
+    let d=(5-now.getDay()+7)%7;
+    if(d===0&&now.getHours()>=22)d=7;
+    const t=new Date(now);
+    t.setDate(now.getDate()+d);
+    t.setHours(22,0,0,0);
+    return t;
+  }
+  function tick(){
+    let diff=Math.max(0,nextFri10PM()-new Date());
+    const h=Math.floor(diff/3600000);diff-=h*3600000;
+    const m=Math.floor(diff/60000);diff-=m*60000;
+    const s=Math.floor(diff/1000);
+    document.getElementById('adminCountdown').textContent=pad(h)+':'+pad(m)+':'+pad(s);
+  }
+  tick();setInterval(tick,1000);
+
+  /* New run toggle */
+  function showNewRun(){
+    const c=document.getElementById('newRunCard');
+    c.style.display=c.style.display==='none'?'block':'none';
+  }
+  function scheduleRun(){
+    alert('Run scheduled. Visible in the table on next page load.');
+    document.getElementById('newRunCard').style.display='none';
+  }
+
+  /* Modal */
+  const modals={
+    confirm:{icon:'✅',title:'Confirm Run #08?',body:'This will charge all pending deposits and lock the manifest. Riders will be notified. Cannot be undone.',btn:'Confirm & Charge Deposits',green:true},
+    cancel :{icon:'⚠️',title:'Cancel Run #08?',body:'This will refund all deposits and notify customers. The run will be marked as cancelled. Cannot be undone.',btn:'Yes, Cancel Run',green:false},
+    close  :{icon:'🔒',title:'Close Bookings for Run #08?',body:'No new bookings will be accepted after this. Existing bookings remain. You can reopen until the deadline.',btn:'Close Bookings',green:false},
+  };
+  let activeModal='';
+  function showModal(type){
+    activeModal=type;
+    const m=modals[type];
+    document.getElementById('modalIcon').textContent=m.icon;
+    document.getElementById('modalTitle').textContent=m.title;
+    document.getElementById('modalBody').textContent=m.body;
+    const btn=document.getElementById('modalConfirmBtn');
+    btn.textContent=m.btn;
+    btn.className='modal-confirm-btn'+(m.green?' green-btn':'');
+    document.getElementById('modalOverlay').classList.add('show');
+  }
+  function closeModal(){document.getElementById('modalOverlay').classList.remove('show');}
+  document.getElementById('modalOverlay').addEventListener('click',function(e){if(e.target===this)closeModal();});
+</script>
+</body>
+</html>

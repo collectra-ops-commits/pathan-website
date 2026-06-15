@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Orders — Pathan Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root{--soil:#2C1A0E;--bark:#4A2E1A;--moss:#3D5A2A;--leaf:#5C8C3A;--sage:#8FAF6A;--mist:#C8D9B0;--parchment:#F5F0E8;--cream:#FAF7F2;--gold:#C8A84B;--rust:#B85A2A;--orange:#D4621A;--ink:#1A1208;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:#0F0A06;color:var(--cream);font-family:'Instrument Sans',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;}
+
+  .admin-nav{background:#1A0E06;border-bottom:1px solid rgba(212,98,26,0.25);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:200;}
+  .an-left{display:flex;align-items:center;gap:24px;}
+  .an-logo{font-family:'DM Serif Display',serif;font-size:18px;color:var(--cream);}
+  .an-logo span{color:var(--orange);font-style:italic;}
+  .an-badge{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;background:rgba(212,98,26,0.15);border:1px solid rgba(212,98,26,0.3);color:var(--orange);padding:3px 10px;border-radius:2px;}
+  .an-links{display:flex;}
+  .an-links a{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(200,217,176,0.45);text-decoration:none;padding:0 14px;height:52px;display:flex;align-items:center;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .2s,border-color .2s;white-space:nowrap;}
+  .an-links a:hover{color:var(--cream);border-bottom-color:var(--sage);}
+  .an-links a.active{color:var(--cream);border-bottom-color:var(--orange);}
+  .an-right{display:flex;align-items:center;gap:12px;}
+  .an-time{font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.35);}
+  .an-site{font-family:'DM Mono',monospace;font-size:10px;color:var(--sage);text-decoration:none;border:1px solid rgba(143,175,106,0.2);padding:5px 12px;border-radius:2px;transition:background .2s;}
+  .an-site:hover{background:rgba(143,175,106,0.1);}
+
+  .admin-wrap{max-width:1300px;margin:0 auto;padding:32px 32px 80px;}
+
+  .page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:16px;}
+  .ph-eyebrow{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);margin-bottom:6px;}
+  .ph-title{font-family:'DM Serif Display',serif;font-size:26px;color:var(--cream);}
+  .ph-sub{font-size:12px;color:rgba(200,217,176,0.35);margin-top:3px;font-family:'DM Mono',monospace;}
+  .ph-right{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .btn-action{font-family:'Instrument Sans',sans-serif;font-size:12px;font-weight:600;padding:9px 16px;border-radius:4px;border:none;cursor:pointer;transition:background .2s;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+  .btn-orange{background:var(--orange);color:var(--cream);}
+  .btn-orange:hover{background:var(--rust);}
+  .btn-outline{background:transparent;color:var(--sage);border:1px solid rgba(143,175,106,0.3);}
+  .btn-outline:hover{background:rgba(143,175,106,0.08);}
+
+  /* STATS */
+  .stats-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:24px;}
+  .stat-card{background:#1A0E06;border:1px solid rgba(143,175,106,0.1);border-radius:5px;padding:14px 16px;}
+  .stat-card.hl{border-color:rgba(212,98,26,0.25);background:rgba(212,98,26,0.05);}
+  .sc-label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,217,176,0.3);margin-bottom:6px;}
+  .sc-val{font-family:'DM Serif Display',serif;font-size:22px;color:var(--cream);line-height:1;}
+  .sc-val.orange{color:var(--orange);}
+  .sc-val.green{color:#7ADB8A;}
+  .sc-val.gold{color:var(--gold);}
+  .sc-sub{font-size:10px;color:rgba(200,217,176,0.3);margin-top:4px;font-family:'DM Mono',monospace;}
+
+  /* FILTERS */
+  .filters-bar{background:#1A0E06;border:1px solid rgba(143,175,106,0.1);border-radius:6px;padding:14px 18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;}
+  .filter-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,217,176,0.3);flex-shrink:0;}
+  .filter-select,.filter-input{background:rgba(255,255,255,0.05);border:1px solid rgba(143,175,106,0.15);border-radius:3px;padding:7px 12px;font-family:'DM Mono',monospace;font-size:11px;color:var(--cream);outline:none;appearance:none;transition:border-color .2s;cursor:pointer;}
+  .filter-select option{background:#1A0E06;}
+  .filter-select:focus,.filter-input:focus{border-color:var(--orange);}
+  .filter-input{min-width:180px;}
+  .filter-input::placeholder{color:rgba(200,217,176,0.2);}
+  .filter-divider{width:1px;height:20px;background:rgba(143,175,106,0.1);flex-shrink:0;}
+  .filter-count{font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.35);margin-left:auto;}
+
+  /* TABLE */
+  .table-wrap{background:#1A0E06;border:1px solid rgba(143,175,106,0.1);border-radius:8px;overflow:hidden;}
+  table{width:100%;border-collapse:collapse;font-size:12px;}
+  thead tr{background:rgba(255,255,255,0.02);border-bottom:1px solid rgba(143,175,106,0.1);}
+  th{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,217,176,0.3);text-align:left;padding:11px 14px;white-space:nowrap;cursor:pointer;user-select:none;}
+  th:hover{color:rgba(200,217,176,0.6);}
+  th.center{text-align:center;}
+  td{padding:12px 14px;border-bottom:1px solid rgba(143,175,106,0.05);color:rgba(200,217,176,0.65);vertical-align:middle;}
+  td.center{text-align:center;}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(255,255,255,0.015);}
+
+  .ref-tag{font-family:'DM Mono',monospace;font-size:10px;color:var(--orange);display:block;}
+  .sender-name{font-size:13px;font-weight:600;color:var(--cream);}
+  .sender-phone{font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.4);margin-top:2px;}
+  .addr-text{font-size:11px;color:rgba(200,217,176,0.5);line-height:1.4;max-width:150px;}
+
+  .tier-tag{display:inline-block;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:2px;}
+  .tier-od{background:rgba(212,98,26,0.12);border:1px solid rgba(212,98,26,0.25);color:var(--orange);}
+  .tier-cb{background:rgba(92,140,58,0.12);border:1px solid rgba(92,140,58,0.25);color:var(--sage);}
+  .tier-b2b{background:rgba(200,168,75,0.12);border:1px solid rgba(200,168,75,0.25);color:var(--gold);}
+
+  .route-tag{font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.5);}
+
+  .kg-val{font-family:'DM Serif Display',serif;font-size:15px;color:var(--cream);}
+  .cost-val{font-family:'DM Serif Display',serif;font-size:14px;color:var(--cream);}
+
+  .status-pill{display:inline-flex;align-items:center;gap:5px;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;padding:3px 9px;border-radius:2px;white-space:nowrap;}
+  .s-dot{width:6px;height:6px;border-radius:50%;}
+  .pill-booked{background:rgba(200,168,75,0.1);border:1px solid rgba(200,168,75,0.25);color:var(--gold);}
+  .pill-booked .s-dot{background:var(--gold);animation:blink 2s ease-in-out infinite;}
+  .pill-pickup{background:rgba(212,98,26,0.1);border:1px solid rgba(212,98,26,0.25);color:var(--orange);}
+  .pill-pickup .s-dot{background:var(--orange);}
+  .pill-transit{background:rgba(61,90,42,0.15);border:1px solid rgba(92,140,58,0.3);color:var(--sage);}
+  .pill-transit .s-dot{background:var(--sage);animation:blink 1.3s ease-in-out infinite;}
+  .pill-delivered{background:rgba(42,106,58,0.15);border:1px solid rgba(42,106,58,0.35);color:#7ADB8A;}
+  .pill-delivered .s-dot{background:#7ADB8A;}
+  .pill-refunded{background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.25);color:#E57373;}
+  .pill-refunded .s-dot{background:#E57373;}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0.35}}
+
+  .pay-pill{display:inline-block;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;padding:3px 8px;border-radius:2px;}
+  .pay-held{background:rgba(200,168,75,0.08);border:1px solid rgba(200,168,75,0.2);color:var(--gold);}
+  .pay-charged{background:rgba(42,106,58,0.1);border:1px solid rgba(42,106,58,0.25);color:#7ADB8A;}
+  .pay-refunded{background:rgba(192,57,43,0.08);border:1px solid rgba(192,57,43,0.2);color:#E57373;}
+
+  .rider-tag{font-family:'DM Mono',monospace;font-size:10px;color:var(--sage);}
+  .rider-unassigned{color:rgba(200,217,176,0.25);font-style:italic;}
+
+  .action-btns{display:flex;gap:6px;flex-wrap:wrap;}
+  .ab{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--sage);border:1px solid rgba(143,175,106,0.2);padding:4px 9px;border-radius:2px;cursor:pointer;background:none;transition:background .2s;white-space:nowrap;}
+  .ab:hover{background:rgba(143,175,106,0.1);}
+  .ab.danger{color:#E57373;border-color:rgba(192,57,43,0.2);}
+  .ab.danger:hover{background:rgba(192,57,43,0.1);}
+
+  /* ORDER DETAIL PANEL */
+  .detail-panel{position:fixed;right:0;top:52px;bottom:0;width:380px;background:#130C05;border-left:1px solid rgba(212,98,26,0.2);z-index:300;transform:translateX(100%);transition:transform .3s ease;overflow-y:auto;}
+  .detail-panel.open{transform:translateX(0);}
+  .dp-header{padding:20px 22px;border-bottom:1px solid rgba(143,175,106,0.1);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#130C05;z-index:1;}
+  .dp-title{font-family:'DM Serif Display',serif;font-size:18px;color:var(--cream);}
+  .dp-close{background:none;border:none;color:rgba(200,217,176,0.4);font-size:20px;cursor:pointer;padding:4px;line-height:1;}
+  .dp-close:hover{color:var(--cream);}
+  .dp-body{padding:22px;}
+  .dp-section{margin-bottom:22px;}
+  .dp-section-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,217,176,0.3);margin-bottom:10px;}
+  .dp-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid rgba(143,175,106,0.06);}
+  .dp-row:last-child{border-bottom:none;}
+  .dp-key{font-size:12px;color:rgba(200,217,176,0.45);flex-shrink:0;}
+  .dp-val{font-size:12px;color:var(--cream);text-align:right;line-height:1.4;}
+  .dp-val.mono{font-family:'DM Mono',monospace;font-size:11px;}
+  .dp-actions{display:flex;flex-direction:column;gap:8px;margin-top:4px;}
+  .dp-btn{width:100%;padding:11px;border-radius:4px;border:none;cursor:pointer;font-family:'Instrument Sans',sans-serif;font-size:13px;font-weight:600;transition:background .2s;display:flex;align-items:center;justify-content:center;gap:6px;}
+  .dp-btn-wa{background:#25D366;color:white;}
+  .dp-btn-wa:hover{background:#1DA851;}
+  .dp-btn-status{background:rgba(61,90,42,0.2);color:#7ADB8A;border:1px solid rgba(42,106,58,0.35);}
+  .dp-btn-status:hover{background:rgba(61,90,42,0.35);}
+  .dp-btn-refund{background:rgba(192,57,43,0.12);color:#E57373;border:1px solid rgba(192,57,43,0.25);}
+  .dp-btn-refund:hover{background:rgba(192,57,43,0.22);}
+
+  .panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:299;display:none;}
+  .panel-overlay.show{display:block;}
+
+  /* BULK ACTION BAR */
+  .bulk-bar{background:rgba(212,98,26,0.1);border:1px solid rgba(212,98,26,0.25);border-radius:5px;padding:12px 18px;display:none;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
+  .bulk-bar.show{display:flex;}
+  .bulk-info{font-family:'DM Mono',monospace;font-size:11px;color:var(--orange);}
+  .bulk-btns{display:flex;gap:8px;}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  .fade{animation:fadeUp .4s ease both;}
+
+  @media(max-width:1000px){
+    .admin-wrap{padding:20px 16px 60px;}
+    .stats-grid{grid-template-columns:repeat(3,1fr);}
+    .detail-panel{width:100%;}
+    .an-links{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="admin-nav">
+  <div class="an-left">
+    <div class="an-logo">পাঠান <span>Admin</span></div>
+    <div class="an-badge">Internal Only</div>
+    <div class="an-links">
+      <a href="runs.html">Runs</a>
+      <a href="orders.html" class="active">Orders</a>
+      <a href="riders.html">Riders</a>
+      <a href="payments.html">Payments</a>
+    </div>
+  </div>
+  <div class="an-right">
+    <div class="an-time" id="adminTime">--:--:--</div>
+    <a href="../index.html" class="an-site" target="_blank">↗ Live site</a>
+  </div>
+</nav>
+
+<div class="admin-wrap">
+
+  <div class="page-header fade">
+    <div>
+      <div class="ph-eyebrow">Order Management</div>
+      <div class="ph-title">All Bookings — Run #08</div>
+      <div class="ph-sub">27 Jun 2025 · 14 orders · 36 kg booked · Run confirmed</div>
+    </div>
+    <div class="ph-right">
+      <select class="filter-select" onchange="switchRun(this.value)" style="font-size:12px;padding:9px 14px;">
+        <option>Run #08 — 27 Jun (Current)</option>
+        <option>Run #07 — 20 Jun</option>
+        <option>Run #06 — 13 Jun</option>
+        <option>Run #05 — 06 Jun (Cancelled)</option>
+      </select>
+      <button class="btn-action btn-outline" onclick="exportCSV()">↓ Export CSV</button>
+      <button class="btn-action btn-orange" onclick="printManifest()">🖨 Print Manifest</button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-grid fade">
+    <div class="stat-card hl">
+      <div class="sc-label">Total Orders</div>
+      <div class="sc-val orange">14</div>
+      <div class="sc-sub">This run</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Total kg</div>
+      <div class="sc-val">36 kg</div>
+      <div class="sc-sub">Of 60 kg capacity</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Deposits Held</div>
+      <div class="sc-val gold">৳4,820</div>
+      <div class="sc-sub">Awaiting charge</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Riders Assigned</div>
+      <div class="sc-val">9 / 14</div>
+      <div class="sc-sub">5 unassigned</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Dhaka → Sylhet</div>
+      <div class="sc-val green">10</div>
+      <div class="sc-sub">26 kg</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Sylhet → Dhaka</div>
+      <div class="sc-val">4</div>
+      <div class="sc-sub">10 kg</div>
+    </div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filters-bar fade">
+    <div class="filter-label">Filter</div>
+    <select class="filter-select" onchange="filterOrders()">
+      <option value="all">All statuses</option>
+      <option value="booked">Booked</option>
+      <option value="pickup">Picked Up</option>
+      <option value="transit">In Transit</option>
+      <option value="delivered">Delivered</option>
+      <option value="refunded">Refunded</option>
+    </select>
+    <select class="filter-select" onchange="filterOrders()">
+      <option value="all">All tiers</option>
+      <option value="od">On-Demand</option>
+      <option value="cb">Campus Box</option>
+      <option value="b2b">B2B Merchant</option>
+    </select>
+    <select class="filter-select" onchange="filterOrders()">
+      <option value="all">Both directions</option>
+      <option value="ds">Dhaka → Sylhet</option>
+      <option value="sd">Sylhet → Dhaka</option>
+    </select>
+    <div class="filter-divider"></div>
+    <input type="text" class="filter-input" placeholder="Search name, phone, or ref…" oninput="filterOrders()"/>
+    <div class="filter-count" id="filterCount">Showing 14 of 14 orders</div>
+  </div>
+
+  <!-- BULK BAR -->
+  <div class="bulk-bar" id="bulkBar">
+    <div class="bulk-info" id="bulkInfo">0 orders selected</div>
+    <div class="bulk-btns">
+      <button class="btn-action btn-outline" style="font-size:11px;padding:7px 12px;">Mark Picked Up</button>
+      <button class="btn-action btn-outline" style="font-size:11px;padding:7px 12px;">Mark Delivered</button>
+      <button class="btn-action btn-outline" style="font-size:11px;padding:7px 12px;color:#E57373;border-color:rgba(192,57,43,0.3);">Refund Selected</button>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-wrap fade">
+    <table id="ordersTable">
+      <thead>
+        <tr>
+          <th><input type="checkbox" id="selectAll" onchange="toggleAll(this)" style="accent-color:var(--orange);"/></th>
+          <th>Ref / Sender</th>
+          <th>Pickup Address</th>
+          <th>Recipient</th>
+          <th>Delivery Address</th>
+          <th class="center">Tier</th>
+          <th class="center">Route</th>
+          <th class="center">kg</th>
+          <th class="center">Cost</th>
+          <th class="center">Status</th>
+          <th class="center">Payment</th>
+          <th>Rider</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="ordersBody">
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- DETAIL PANEL -->
+<div class="panel-overlay" id="panelOverlay" onclick="closePanel()"></div>
+<div class="detail-panel" id="detailPanel">
+  <div class="dp-header">
+    <div class="dp-title" id="dpTitle">Order Details</div>
+    <button class="dp-close" onclick="closePanel()">✕</button>
+  </div>
+  <div class="dp-body" id="dpBody"></div>
+</div>
+
+<script>
+  /* ── ORDER DATA ── */
+  const ORDERS = [
+    {ref:'PTH-08-001',sender:'Rashed Ahmed',sPhone:'01712345678',pickup:'House 5, Rd 3, Dhanmondi, Dhaka',recipient:'Farida Begum',rPhone:'01812345678',delivery:'Mirboxtola, Sylhet',tier:'od',route:'ds',kg:4,cost:640,status:'transit',payment:'charged',rider:'Karim (DH-1)'},
+    {ref:'PTH-08-002',sender:'Nasrin Khanam',sPhone:'01611112222',pickup:'Flat 3B, Mohammadpur, Dhaka',recipient:'Abdul Gafur',rPhone:'01911112222',delivery:'Ambarkhana, Sylhet',tier:'cb',route:'ds',kg:3,cost:360,status:'booked',payment:'held',rider:'Unassigned'},
+    {ref:'PTH-08-003',sender:'Pitha Ghar BD',sPhone:'01755556666',pickup:'Zindabazar, Sylhet',recipient:'Meherun Nessa',rPhone:'01655556666',delivery:'Gulshan 2, Dhaka',tier:'b2b',route:'sd',kg:10,cost:900,status:'transit',payment:'invoice',rider:'Rina (SY-2)'},
+    {ref:'PTH-08-004',sender:'Karim Frozen',sPhone:'01933334444',pickup:'Lamabazar, Sylhet',recipient:'Rafiq Ahmed',rPhone:'01833334444',delivery:'Mirpur 10, Dhaka',tier:'b2b',route:'sd',kg:8,cost:720,status:'booked',payment:'invoice',rider:'Rina (SY-2)'},
+    {ref:'PTH-08-005',sender:'Sumaiya Islam',sPhone:'01500001111',pickup:'Uttara Sec 7, Dhaka',recipient:'Rahela Begum',rPhone:'01600001111',delivery:'Shahjalal Upashahar, Sylhet',tier:'od',route:'ds',kg:2,cost:320,status:'pickup',payment:'held',rider:'Karim (DH-1)'},
+    {ref:'PTH-08-006',sender:'SUST Student Hub',sPhone:'01877778888',pickup:'New Market, Dhaka',recipient:'Batch Group',rPhone:'01977778888',delivery:'SUST Campus, Sylhet',tier:'cb',route:'ds',kg:5,cost:600,status:'booked',payment:'held',rider:'Unassigned'},
+    {ref:'PTH-08-007',sender:'Tahmina Akter',sPhone:'01344445555',pickup:'Rayer Bazar, Dhaka',recipient:'Saleha Khanam',rPhone:'01444445555',delivery:'Bandar Bazar, Sylhet',tier:'od',route:'ds',kg:2.5,cost:400,status:'booked',payment:'held',rider:'Unassigned'},
+    {ref:'PTH-08-008',sender:'Jamal Uddin',sPhone:'01266667777',pickup:'Kazir Dewri, Sylhet',recipient:'Hasina Begum',rPhone:'01366667777',delivery:'Adabor, Dhaka',tier:'od',route:'sd',kg:3,cost:480,status:'booked',payment:'held',rider:'Unassigned'},
+    {ref:'PTH-08-009',sender:'Fatema Khanom',sPhone:'01188889999',pickup:'Bashundhara R/A, Dhaka',recipient:'Rokshana Akter',rPhone:'01288889999',delivery:'Upashahar, Sylhet',tier:'cb',route:'ds',kg:4,cost:480,status:'transit',payment:'charged',rider:'Sajal (DH-2)'},
+    {ref:'PTH-08-010',sender:'Sakib Hassan',sPhone:'01900001111',pickup:'Dhanmondi 27, Dhaka',recipient:'Shirin Akter',rPhone:'01800001111',delivery:'Modina Market, Sylhet',tier:'od',route:'ds',kg:1.5,cost:240,status:'delivered',payment:'charged',rider:'Sajal (DH-2)'},
+    {ref:'PTH-08-011',sender:'Momtaz Cooking',sPhone:'01622223333',pickup:'Shyamoli, Dhaka',recipient:'Arif Hossain',rPhone:'01522223333',delivery:'Pathantula, Sylhet',tier:'cb',route:'ds',kg:3,cost:360,status:'booked',payment:'held',rider:'Unassigned'},
+    {ref:'PTH-08-012',sender:'Nasim Uddin',sPhone:'01744445555',pickup:'Sylhet Sadar',recipient:'Mitu Begum',rPhone:'01844445555',delivery:'Wari, Dhaka',tier:'od',route:'sd',kg:2,cost:320,status:'booked',payment:'held',rider:'Unassigned'},
+    {ref:'PTH-08-013',sender:'Rima Akter',sPhone:'01555556666',pickup:'Khilgaon, Dhaka',recipient:'Nurun Nahar',rPhone:'01455556666',delivery:'Tilagarh, Sylhet',tier:'od',route:'ds',kg:2,cost:320,status:'booked',payment:'held',rider:'Unassigned'},
+    {ref:'PTH-08-014',sender:'Touhid Frozen',sPhone:'01666667777',pickup:'Sunamganj Road, Sylhet',recipient:'Nasrin Parvin',rPhone:'01766667777',delivery:'Rampura, Dhaka',tier:'b2b',route:'sd',kg:6,cost:540,status:'booked',payment:'invoice',rider:'Rina (SY-2)'},
+  ];
+
+  const TIER_LABEL = {od:'On-Demand',cb:'Campus Box',b2b:'B2B'};
+  const TIER_CLASS = {od:'tier-od',cb:'tier-cb',b2b:'tier-b2b'};
+  const STATUS_CLASS= {booked:'pill-booked',pickup:'pill-pickup',transit:'pill-transit',delivered:'pill-delivered',refunded:'pill-refunded'};
+  const STATUS_LABEL= {booked:'Booked',pickup:'Picked Up',transit:'In Transit',delivered:'Delivered',refunded:'Refunded'};
+  const PAY_CLASS  = {held:'pay-held',charged:'pay-charged',invoice:'pay-held',refunded:'pay-refunded'};
+  const PAY_LABEL  = {held:'Held',charged:'Charged',invoice:'Invoice',refunded:'Refunded'};
+
+  function renderOrders(data){
+    const tbody = document.getElementById('ordersBody');
+    tbody.innerHTML = data.map(o=>`
+      <tr>
+        <td><input type="checkbox" class="row-check" style="accent-color:var(--orange);" onchange="updateBulk()"/></td>
+        <td>
+          <div class="ref-tag">${o.ref}</div>
+          <div class="sender-name">${o.sender}</div>
+          <div class="sender-phone">${o.sPhone}</div>
+        </td>
+        <td><div class="addr-text">${o.pickup}</div></td>
+        <td>
+          <div class="sender-name" style="font-size:12px;">${o.recipient}</div>
+          <div class="sender-phone">${o.rPhone}</div>
+        </td>
+        <td><div class="addr-text">${o.delivery}</div></td>
+        <td class="center"><span class="tier-tag ${TIER_CLASS[o.tier]}">${TIER_LABEL[o.tier]}</span></td>
+        <td class="center"><div class="route-tag">${o.route==='ds'?'DH→SY':'SY→DH'}</div></td>
+        <td class="center"><div class="kg-val">${o.kg}</div></td>
+        <td class="center"><div class="cost-val">৳${o.cost.toLocaleString()}</div></td>
+        <td class="center"><span class="status-pill ${STATUS_CLASS[o.status]}"><span class="s-dot"></span>${STATUS_LABEL[o.status]}</span></td>
+        <td class="center"><span class="pay-pill ${PAY_CLASS[o.payment]}">${PAY_LABEL[o.payment]}</span></td>
+        <td><div class="${o.rider==='Unassigned'?'rider-unassigned':'rider-tag'}">${o.rider}</div></td>
+        <td>
+          <div class="action-btns">
+            <button class="ab" onclick='openPanel(${JSON.stringify(o).replace(/'/g,"\\'")})'}>View</button>
+            <button class="ab" onclick="waContact('${o.sPhone}','${o.ref}')">WhatsApp</button>
+          </div>
+        </td>
+      </tr>`).join('');
+    document.getElementById('filterCount').textContent=`Showing ${data.length} of ${ORDERS.length} orders`;
+  }
+
+  renderOrders(ORDERS);
+
+  function filterOrders(){
+    const selects = document.querySelectorAll('.filters-bar .filter-select');
+    const search  = document.querySelector('.filter-input').value.toLowerCase();
+    let data = ORDERS.filter(o=>{
+      const s = selects[0].value;
+      const t = selects[1].value;
+      const r = selects[2].value;
+      if(s!=='all'&&o.status!==s) return false;
+      if(t!=='all'&&o.tier!==t)   return false;
+      if(r!=='all'&&o.route!==r)  return false;
+      if(search && !o.sender.toLowerCase().includes(search) && !o.ref.toLowerCase().includes(search) && !o.sPhone.includes(search)) return false;
+      return true;
+    });
+    renderOrders(data);
+  }
+
+  function toggleAll(cb){
+    document.querySelectorAll('.row-check').forEach(c=>c.checked=cb.checked);
+    updateBulk();
+  }
+
+  function updateBulk(){
+    const checked = document.querySelectorAll('.row-check:checked').length;
+    const bar = document.getElementById('bulkBar');
+    if(checked>0){bar.classList.add('show');document.getElementById('bulkInfo').textContent=`${checked} order${checked>1?'s':''} selected`;}
+    else bar.classList.remove('show');
+  }
+
+  function openPanel(order){
+    const panel = document.getElementById('detailPanel');
+    document.getElementById('panelOverlay').classList.add('show');
+    document.getElementById('dpTitle').textContent = order.ref;
+    document.getElementById('dpBody').innerHTML = `
+      <div class="dp-section">
+        <div class="dp-section-label">Sender</div>
+        <div class="dp-row"><div class="dp-key">Name</div><div class="dp-val">${order.sender}</div></div>
+        <div class="dp-row"><div class="dp-key">Phone</div><div class="dp-val mono">${order.sPhone}</div></div>
+        <div class="dp-row"><div class="dp-key">Pickup</div><div class="dp-val">${order.pickup}</div></div>
+      </div>
+      <div class="dp-section">
+        <div class="dp-section-label">Recipient</div>
+        <div class="dp-row"><div class="dp-key">Name</div><div class="dp-val">${order.recipient}</div></div>
+        <div class="dp-row"><div class="dp-key">Phone</div><div class="dp-val mono">${order.rPhone}</div></div>
+        <div class="dp-row"><div class="dp-key">Delivery</div><div class="dp-val">${order.delivery}</div></div>
+      </div>
+      <div class="dp-section">
+        <div class="dp-section-label">Order Details</div>
+        <div class="dp-row"><div class="dp-key">Tier</div><div class="dp-val">${TIER_LABEL[order.tier]}</div></div>
+        <div class="dp-row"><div class="dp-key">Route</div><div class="dp-val">${order.route==='ds'?'Dhaka → Sylhet':'Sylhet → Dhaka'}</div></div>
+        <div class="dp-row"><div class="dp-key">Weight</div><div class="dp-val mono">${order.kg} kg</div></div>
+        <div class="dp-row"><div class="dp-key">Cost</div><div class="dp-val mono">৳${order.cost.toLocaleString()}</div></div>
+        <div class="dp-row"><div class="dp-key">Payment</div><div class="dp-val">${PAY_LABEL[order.payment]}</div></div>
+        <div class="dp-row"><div class="dp-key">Status</div><div class="dp-val">${STATUS_LABEL[order.status]}</div></div>
+        <div class="dp-row"><div class="dp-key">Rider</div><div class="dp-val">${order.rider}</div></div>
+      </div>
+      <div class="dp-section">
+        <div class="dp-section-label">Actions</div>
+        <div class="dp-actions">
+          <button class="dp-btn dp-btn-wa" onclick="waContact('${order.sPhone}','${order.ref}')">💬 WhatsApp Sender</button>
+          <button class="dp-btn dp-btn-wa" style="background:rgba(37,211,102,0.7);" onclick="waContact('${order.rPhone}','${order.ref}')">💬 WhatsApp Recipient</button>
+          <button class="dp-btn dp-btn-status">✓ Update Status</button>
+          <button class="dp-btn dp-btn-refund">↩ Issue Refund</button>
+        </div>
+      </div>`;
+    panel.classList.add('open');
+  }
+
+  function closePanel(){
+    document.getElementById('detailPanel').classList.remove('open');
+    document.getElementById('panelOverlay').classList.remove('show');
+  }
+
+  function waContact(phone, ref){
+    const msg = `Hi, this is Pathan regarding your booking ${ref}. `;
+    window.open(`https://wa.me/880${phone.substring(1)}?text=${encodeURIComponent(msg)}`,'_blank');
+  }
+
+  function exportCSV(){
+    const headers = ['Ref','Sender','Phone','Pickup','Recipient','R.Phone','Delivery','Tier','Route','KG','Cost','Status','Payment','Rider'];
+    const rows = ORDERS.map(o=>[o.ref,o.sender,o.sPhone,`"${o.pickup}"`,o.recipient,o.rPhone,`"${o.delivery}"`,TIER_LABEL[o.tier],o.route==='ds'?'DH>SY':'SY>DH',o.kg,o.cost,STATUS_LABEL[o.status],PAY_LABEL[o.payment],o.rider]);
+    const csv = [headers,...rows].map(r=>r.join(',')).join('\n');
+    const a=document.createElement('a');
+    a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+    a.download='pathan-run-08-orders.csv';
+    a.click();
+  }
+
+  function printManifest(){
+    window.print();
+  }
+
+  function switchRun(val){
+    alert('In live version this loads orders for: '+val);
+  }
+
+  /* Live clock */
+  function updateTime(){document.getElementById('adminTime').textContent=new Date().toLocaleTimeString('en-BD',{hour:'2-digit',minute:'2-digit',second:'2-digit'});}
+  updateTime();setInterval(updateTime,1000);
+</script>
+</body>
+</html>
