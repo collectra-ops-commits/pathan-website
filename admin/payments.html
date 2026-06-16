@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Payments — Pathan Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root{--soil:#2C1A0E;--bark:#4A2E1A;--moss:#3D5A2A;--leaf:#5C8C3A;--sage:#8FAF6A;--mist:#C8D9B0;--cream:#FAF7F2;--gold:#C8A84B;--rust:#B85A2A;--orange:#D4621A;--ink:#1A1208;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:#0F0A06;color:var(--cream);font-family:'Instrument Sans',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;}
+
+  .admin-nav{background:#1A0E06;border-bottom:1px solid rgba(212,98,26,0.25);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:200;}
+  .an-left{display:flex;align-items:center;gap:24px;}
+  .an-logo{font-family:'DM Serif Display',serif;font-size:18px;color:var(--cream);}
+  .an-logo span{color:var(--orange);font-style:italic;}
+  .an-badge{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;background:rgba(212,98,26,0.15);border:1px solid rgba(212,98,26,0.3);color:var(--orange);padding:3px 10px;border-radius:2px;}
+  .an-links{display:flex;}
+  .an-links a{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(200,217,176,0.45);text-decoration:none;padding:0 14px;height:52px;display:flex;align-items:center;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .2s,border-color .2s;white-space:nowrap;}
+  .an-links a:hover{color:var(--cream);border-bottom-color:var(--sage);}
+  .an-links a.active{color:var(--cream);border-bottom-color:var(--orange);}
+  .an-right{display:flex;align-items:center;gap:12px;}
+  .an-time{font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.35);}
+  .an-site{font-family:'DM Mono',monospace;font-size:10px;color:var(--sage);text-decoration:none;border:1px solid rgba(143,175,106,0.2);padding:5px 12px;border-radius:2px;transition:background .2s;}
+  .an-site:hover{background:rgba(143,175,106,0.1);}
+
+  .admin-wrap{max-width:1200px;margin:0 auto;padding:32px 32px 80px;}
+
+  .page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:16px;}
+  .ph-eyebrow{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);margin-bottom:6px;}
+  .ph-title{font-family:'DM Serif Display',serif;font-size:26px;color:var(--cream);}
+  .ph-sub{font-size:12px;color:rgba(200,217,176,0.35);margin-top:3px;font-family:'DM Mono',monospace;}
+  .ph-right{display:flex;gap:10px;flex-wrap:wrap;}
+  .btn{font-family:'Instrument Sans',sans-serif;font-size:12px;font-weight:600;padding:9px 16px;border-radius:4px;border:none;cursor:pointer;transition:background .2s;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+  .btn-orange{background:var(--orange);color:var(--cream);}
+  .btn-orange:hover{background:var(--rust);}
+  .btn-outline{background:transparent;color:var(--sage);border:1px solid rgba(143,175,106,0.3);}
+  .btn-outline:hover{background:rgba(143,175,106,0.08);}
+  .btn-green{background:rgba(42,106,58,0.2);color:#7ADB8A;border:1px solid rgba(42,106,58,0.4);}
+  .btn-green:hover{background:rgba(42,106,58,0.3);}
+  .btn-red{background:rgba(192,57,43,0.15);color:#E57373;border:1px solid rgba(192,57,43,0.3);}
+  .btn-red:hover{background:rgba(192,57,43,0.25);}
+
+  /* STATS */
+  .stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px;}
+  .stat-card{background:#1A0E06;border:1px solid rgba(143,175,106,0.1);border-radius:5px;padding:14px 16px;}
+  .stat-card.hl{border-color:rgba(212,98,26,0.25);background:rgba(212,98,26,0.05);}
+  .stat-card.gn{border-color:rgba(42,106,58,0.3);background:rgba(42,106,58,0.06);}
+  .stat-card.gd{border-color:rgba(200,168,75,0.25);background:rgba(200,168,75,0.05);}
+  .sc-label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,217,176,0.3);margin-bottom:6px;}
+  .sc-val{font-family:'DM Serif Display',serif;font-size:24px;color:var(--cream);line-height:1;}
+  .sc-val.orange{color:var(--orange);}
+  .sc-val.green{color:#7ADB8A;}
+  .sc-val.gold{color:var(--gold);}
+  .sc-sub{font-size:10px;color:rgba(200,217,176,0.3);margin-top:4px;font-family:'DM Mono',monospace;}
+
+  /* MAIN LAYOUT */
+  .main-grid{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start;}
+
+  /* PAYMENT TABLE */
+  .table-wrap{background:#1A0E06;border:1px solid rgba(143,175,106,0.1);border-radius:8px;overflow:hidden;margin-bottom:20px;}
+  .tw-header{background:rgba(255,255,255,0.02);border-bottom:1px solid rgba(143,175,106,0.1);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+  .tw-title{font-family:'DM Serif Display',serif;font-size:17px;color:var(--cream);}
+  .tw-sub{font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.35);margin-top:2px;}
+  table{width:100%;border-collapse:collapse;font-size:12px;}
+  thead tr{background:rgba(255,255,255,0.02);border-bottom:1px solid rgba(143,175,106,0.1);}
+  th{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,217,176,0.3);text-align:left;padding:11px 14px;white-space:nowrap;}
+  th.center{text-align:center;}
+  td{padding:12px 14px;border-bottom:1px solid rgba(143,175,106,0.05);color:rgba(200,217,176,0.65);vertical-align:middle;}
+  td.center{text-align:center;}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(255,255,255,0.015);}
+
+  .ref-tag{font-family:'DM Mono',monospace;font-size:10px;color:var(--orange);}
+  .sender-name{font-size:13px;color:var(--cream);font-weight:600;}
+  .sender-phone{font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.35);margin-top:2px;}
+
+  .pay-method{display:flex;align-items:center;gap:6px;}
+  .pm-icon{width:20px;height:20px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;}
+  .pm-bkash{background:rgba(220,0,80,0.2);border:1px solid rgba(220,0,80,0.3);}
+  .pm-nagad{background:rgba(240,100,0,0.2);border:1px solid rgba(240,100,0,0.3);}
+  .pm-invoice{background:rgba(200,168,75,0.15);border:1px solid rgba(200,168,75,0.25);}
+  .pm-label{font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.55);}
+
+  .amt-val{font-family:'DM Serif Display',serif;font-size:16px;color:var(--cream);}
+
+  .pay-status{display:inline-flex;align-items:center;gap:5px;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;padding:4px 10px;border-radius:2px;white-space:nowrap;}
+  .s-dot{width:6px;height:6px;border-radius:50%;}
+  .ps-held{background:rgba(200,168,75,0.1);border:1px solid rgba(200,168,75,0.25);color:var(--gold);}
+  .ps-held .s-dot{background:var(--gold);animation:blink 2s ease-in-out infinite;}
+  .ps-charged{background:rgba(42,106,58,0.12);border:1px solid rgba(42,106,58,0.3);color:#7ADB8A;}
+  .ps-charged .s-dot{background:#7ADB8A;}
+  .ps-refunded{background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.25);color:#E57373;}
+  .ps-refunded .s-dot{background:#E57373;}
+  .ps-invoice{background:rgba(200,168,75,0.08);border:1px solid rgba(200,168,75,0.2);color:var(--gold);}
+  .ps-invoice .s-dot{background:var(--gold);}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0.35}}
+
+  .action-btns{display:flex;gap:5px;flex-wrap:wrap;}
+  .ab{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--sage);border:1px solid rgba(143,175,106,0.2);padding:4px 9px;border-radius:2px;cursor:pointer;background:none;transition:background .2s;white-space:nowrap;}
+  .ab:hover{background:rgba(143,175,106,0.1);}
+  .ab.confirm{color:#7ADB8A;border-color:rgba(42,106,58,0.3);}
+  .ab.confirm:hover{background:rgba(42,106,58,0.12);}
+  .ab.refund{color:#E57373;border-color:rgba(192,57,43,0.2);}
+  .ab.refund:hover{background:rgba(192,57,43,0.1);}
+  .ab.wa{color:var(--orange);border-color:rgba(212,98,26,0.25);}
+  .ab.wa:hover{background:rgba(212,98,26,0.08);}
+
+  /* BULK ACTION BAR */
+  .bulk-bar{background:rgba(212,98,26,0.08);border:1px solid rgba(212,98,26,0.2);border-radius:5px;padding:12px 18px;display:none;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
+  .bulk-bar.show{display:flex;}
+  .bulk-info{font-family:'DM Mono',monospace;font-size:11px;color:var(--orange);}
+
+  /* SIDEBAR CARDS */
+  .side-card{background:#1A0E06;border:1px solid rgba(143,175,106,0.12);border-radius:8px;overflow:hidden;margin-bottom:16px;}
+  .sc-header{background:rgba(61,90,42,0.12);border-bottom:1px solid rgba(143,175,106,0.08);padding:13px 18px;font-family:'DM Serif Display',serif;font-size:16px;color:var(--cream);}
+  .sc-header.orange-bg{background:rgba(212,98,26,0.1);border-bottom-color:rgba(212,98,26,0.15);}
+  .sc-body{padding:16px 18px;}
+
+  /* Run summary */
+  .run-sum-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(143,175,106,0.06);}
+  .run-sum-row:last-child{border-bottom:none;}
+  .rs-label{font-size:12px;color:rgba(200,217,176,0.5);}
+  .rs-val{font-family:'DM Serif Display',serif;font-size:16px;color:var(--cream);}
+  .rs-val.green{color:#7ADB8A;}
+  .rs-val.orange{color:var(--orange);}
+  .rs-val.gold{color:var(--gold);}
+
+  /* Confirm all button */
+  .confirm-all-btn{width:100%;padding:13px;background:rgba(42,106,58,0.2);color:#7ADB8A;border:1px solid rgba(42,106,58,0.4);border-radius:4px;font-family:'Instrument Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:background .2s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;}
+  .confirm-all-btn:hover{background:rgba(42,106,58,0.35);}
+  .refund-all-btn{width:100%;padding:11px;background:rgba(192,57,43,0.1);color:#E57373;border:1px solid rgba(192,57,43,0.25);border-radius:4px;font-family:'Instrument Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;}
+  .refund-all-btn:hover{background:rgba(192,57,43,0.2);}
+
+  /* Merchant invoices */
+  .invoice-item{padding:12px 0;border-bottom:1px solid rgba(143,175,106,0.06);}
+  .invoice-item:last-child{border-bottom:none;padding-bottom:0;}
+  .inv-name{font-size:13px;color:var(--cream);font-weight:600;margin-bottom:3px;}
+  .inv-meta{font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.35);margin-bottom:6px;}
+  .inv-row{display:flex;align-items:center;justify-content:space-between;}
+  .inv-amt{font-family:'DM Serif Display',serif;font-size:18px;color:var(--gold);}
+  .inv-actions{display:flex;gap:6px;}
+
+  /* Payment method info */
+  .pay-info-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(143,175,106,0.06);}
+  .pay-info-row:last-child{border-bottom:none;padding-bottom:0;}
+  .pay-info-icon{width:36px;height:36px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+  .pay-info-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:rgba(200,217,176,0.35);margin-bottom:3px;}
+  .pay-info-num{font-family:'DM Serif Display',serif;font-size:16px;color:var(--cream);}
+  .pay-info-note{font-size:11px;color:rgba(200,217,176,0.35);margin-top:2px;}
+
+  /* Filters */
+  .filters{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+  .filter-select{background:rgba(255,255,255,0.04);border:1px solid rgba(143,175,106,0.15);border-radius:3px;padding:7px 12px;font-family:'DM Mono',monospace;font-size:11px;color:var(--cream);outline:none;appearance:none;cursor:pointer;}
+  .filter-select option{background:#1A0E06;}
+  .filter-select:focus{border-color:var(--orange);}
+  .filter-input{background:rgba(255,255,255,0.04);border:1px solid rgba(143,175,106,0.15);border-radius:3px;padding:7px 12px;font-family:'DM Mono',monospace;font-size:11px;color:var(--cream);outline:none;min-width:160px;}
+  .filter-input::placeholder{color:rgba(200,217,176,0.2);}
+  .filter-input:focus{border-color:var(--orange);}
+  .filter-count{font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.3);margin-left:auto;}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  .fade{animation:fadeUp .4s ease both;}
+
+  @media(max-width:900px){
+    .admin-wrap{padding:20px 16px 60px;}
+    .stats-grid{grid-template-columns:repeat(3,1fr);}
+    .main-grid{grid-template-columns:1fr;}
+    .an-links{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="admin-nav">
+  <div class="an-left">
+    <div class="an-logo">পাঠান <span>Admin</span></div>
+    <div class="an-badge">Internal Only</div>
+    <div class="an-links">
+      <a href="runs.html">Runs</a>
+      <a href="orders.html">Orders</a>
+      <a href="riders.html">Riders</a>
+      <a href="payments.html" class="active">Payments</a>
+    </div>
+  </div>
+  <div class="an-right">
+    <div class="an-time" id="adminTime">--:--:--</div>
+    <a href="../index.html" class="an-site" target="_blank">↗ Live site</a>
+  </div>
+</nav>
+
+<div class="admin-wrap">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header fade">
+    <div>
+      <div class="ph-eyebrow">Payment Management</div>
+      <div class="ph-title">Deposits & Invoices — Run #08</div>
+      <div class="ph-sub">27 Jun 2025 · Run Confirmed ✓ · Ready to charge deposits</div>
+    </div>
+    <div class="ph-right">
+      <button class="btn btn-outline" onclick="exportPayments()">↓ Export CSV</button>
+      <button class="btn btn-green" onclick="confirmAllDeposits()">✓ Confirm All Deposits</button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-grid fade">
+    <div class="stat-card gd">
+      <div class="sc-label">Total Held</div>
+      <div class="sc-val gold">৳3,920</div>
+      <div class="sc-sub">11 deposits pending charge</div>
+    </div>
+    <div class="stat-card gn">
+      <div class="sc-label">Charged</div>
+      <div class="sc-val green">৳900</div>
+      <div class="sc-sub">3 orders confirmed</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">B2B Invoice</div>
+      <div class="sc-val gold">৳2,160</div>
+      <div class="sc-sub">3 merchants · month-end</div>
+    </div>
+    <div class="stat-card hl">
+      <div class="sc-label">Total Run Revenue</div>
+      <div class="sc-val orange">৳6,980</div>
+      <div class="sc-sub">All tiers combined</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Refunds Issued</div>
+      <div class="sc-val">৳0</div>
+      <div class="sc-sub">Run confirmed — none needed</div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+
+    <!-- LEFT — PAYMENT TABLE -->
+    <div>
+
+      <!-- Filters -->
+      <div class="filters fade">
+        <select class="filter-select" onchange="filterPayments()">
+          <option value="all">All statuses</option>
+          <option value="held">Deposit Held</option>
+          <option value="charged">Charged</option>
+          <option value="refunded">Refunded</option>
+          <option value="invoice">B2B Invoice</option>
+        </select>
+        <select class="filter-select" onchange="filterPayments()">
+          <option value="all">All methods</option>
+          <option value="bkash">bKash</option>
+          <option value="nagad">Nagad</option>
+          <option value="invoice">Monthly invoice</option>
+        </select>
+        <input type="text" class="filter-input" placeholder="Search name or ref…" oninput="filterPayments()"/>
+        <div class="filter-count" id="filterCount">Showing 14 of 14</div>
+      </div>
+
+      <!-- Bulk bar -->
+      <div class="bulk-bar" id="bulkBar">
+        <div class="bulk-info" id="bulkInfo">0 selected</div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-green" style="font-size:11px;padding:7px 12px;" onclick="bulkAction('charge')">✓ Charge Selected</button>
+          <button class="btn btn-red" style="font-size:11px;padding:7px 12px;" onclick="bulkAction('refund')">↩ Refund Selected</button>
+        </div>
+      </div>
+
+      <!-- Consumer deposits table -->
+      <div class="table-wrap fade">
+        <div class="tw-header">
+          <div>
+            <div class="tw-title">Consumer Deposits — bKash / Nagad</div>
+            <div class="tw-sub">11 orders · ৳4,820 total · Charge after run confirms</div>
+          </div>
+          <button class="btn btn-green" style="font-size:11px;padding:7px 14px;" onclick="confirmAllDeposits()">✓ Charge All</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="selectAll" onchange="toggleAll(this)" style="accent-color:var(--orange);"/></th>
+              <th>Ref / Sender</th>
+              <th>Method</th>
+              <th class="center">Amount</th>
+              <th class="center">Tier</th>
+              <th class="center">Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="payBody"></tbody>
+        </table>
+      </div>
+
+      <!-- B2B Invoice table -->
+      <div class="table-wrap fade">
+        <div class="tw-header">
+          <div>
+            <div class="tw-title">B2B Merchant Invoices — Monthly</div>
+            <div class="tw-sub">3 merchants · ৳2,160 this run · Invoice sent month-end</div>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Merchant</th>
+              <th>This Run (kg)</th>
+              <th class="center">This Run Amount</th>
+              <th class="center">Month-to-date</th>
+              <th class="center">Invoice Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="sender-name">Pitha Ghar BD</div><div class="sender-phone">01755556666 · Contract: ৳90/kg</div></td>
+              <td>10 kg</td>
+              <td class="center"><div class="amt-val">৳900</div></td>
+              <td class="center"><div class="amt-val" style="color:var(--gold);">৳3,600</div></td>
+              <td class="center"><span class="pay-status ps-invoice"><span class="s-dot"></span>Month-end</span></td>
+              <td><div class="action-btns"><button class="ab wa" onclick="waRider('01755556666','Pitha Ghar BD')">WhatsApp</button><button class="ab confirm" onclick="sendInvoice('Pitha Ghar BD')">Send Invoice</button></div></td>
+            </tr>
+            <tr>
+              <td><div class="sender-name">Karim Frozen Foods</div><div class="sender-phone">01933334444 · Contract: ৳90/kg</div></td>
+              <td>8 kg</td>
+              <td class="center"><div class="amt-val">৳720</div></td>
+              <td class="center"><div class="amt-val" style="color:var(--gold);">৳2,880</div></td>
+              <td class="center"><span class="pay-status ps-invoice"><span class="s-dot"></span>Month-end</span></td>
+              <td><div class="action-btns"><button class="ab wa" onclick="waRider('01933334444','Karim Frozen')">WhatsApp</button><button class="ab confirm" onclick="sendInvoice('Karim Frozen')">Send Invoice</button></div></td>
+            </tr>
+            <tr>
+              <td><div class="sender-name">Touhid Frozen</div><div class="sender-phone">01666667777 · Contract: ৳90/kg</div></td>
+              <td>6 kg</td>
+              <td class="center"><div class="amt-val">৳540</div></td>
+              <td class="center"><div class="amt-val" style="color:var(--gold);">৳2,160</div></td>
+              <td class="center"><span class="pay-status ps-invoice"><span class="s-dot"></span>Month-end</span></td>
+              <td><div class="action-btns"><button class="ab wa" onclick="waRider('01666667777','Touhid Frozen')">WhatsApp</button><button class="ab confirm" onclick="sendInvoice('Touhid Frozen')">Send Invoice</button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDEBAR -->
+    <div>
+
+      <!-- Run summary -->
+      <div class="side-card fade">
+        <div class="sc-header orange-bg">💰 Run #08 — Payment Summary</div>
+        <div class="sc-body">
+          <div class="run-sum-row"><div class="rs-label">Consumer deposits held</div><div class="rs-val gold">৳3,920</div></div>
+          <div class="run-sum-row"><div class="rs-label">Already charged</div><div class="rs-val green">৳900</div></div>
+          <div class="run-sum-row"><div class="rs-label">B2B invoice (month-end)</div><div class="rs-val gold">৳2,160</div></div>
+          <div class="run-sum-row"><div class="rs-label">Refunds issued</div><div class="rs-val">৳0</div></div>
+          <div class="run-sum-row" style="padding-top:12px;border-top:1px solid rgba(200,168,75,0.2);margin-top:4px;">
+            <div class="rs-label" style="font-weight:600;color:var(--cream);">Total run revenue</div>
+            <div class="rs-val orange">৳6,980</div>
+          </div>
+          <button class="confirm-all-btn" onclick="confirmAllDeposits()">✓ Charge All Pending Deposits</button>
+          <button class="refund-all-btn" onclick="refundAll()">↩ Refund All (Cancel Run)</button>
+        </div>
+      </div>
+
+      <!-- Merchant invoices quick view -->
+      <div class="side-card fade">
+        <div class="sc-header">🧾 Merchant Month-to-Date</div>
+        <div class="sc-body">
+          <div class="invoice-item">
+            <div class="inv-name">Pitha Ghar BD</div>
+            <div class="inv-meta">4 runs · 10 kg avg · ৳900/run</div>
+            <div class="inv-row">
+              <div class="inv-amt">৳3,600</div>
+              <div class="inv-actions">
+                <button class="ab confirm" onclick="sendInvoice('Pitha Ghar BD')">Invoice</button>
+                <button class="ab wa" onclick="waRider('01755556666','Pitha Ghar BD')">WA</button>
+              </div>
+            </div>
+          </div>
+          <div class="invoice-item">
+            <div class="inv-name">Karim Frozen Foods</div>
+            <div class="inv-meta">4 runs · 8 kg avg · ৳720/run</div>
+            <div class="inv-row">
+              <div class="inv-amt">৳2,880</div>
+              <div class="inv-actions">
+                <button class="ab confirm" onclick="sendInvoice('Karim Frozen')">Invoice</button>
+                <button class="ab wa" onclick="waRider('01933334444','Karim Frozen')">WA</button>
+              </div>
+            </div>
+          </div>
+          <div class="invoice-item">
+            <div class="inv-name">Touhid Frozen</div>
+            <div class="inv-meta">4 runs · 6 kg avg · ৳540/run</div>
+            <div class="inv-row">
+              <div class="inv-amt">৳2,160</div>
+              <div class="inv-actions">
+                <button class="ab confirm" onclick="sendInvoice('Touhid Frozen')">Invoice</button>
+                <button class="ab wa" onclick="waRider('01666667777','Touhid Frozen')">WA</button>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:14px;padding-top:12px;border-top:1px solid rgba(143,175,106,0.1);display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.4);">Month total (3 merchants)</div>
+            <div style="font-family:'DM Serif Display',serif;font-size:20px;color:var(--gold);">৳8,640</div>
+          </div>
+          <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:12px;font-size:11px;" onclick="sendAllInvoices()">Send All Month-End Invoices</button>
+        </div>
+      </div>
+
+      <!-- Payment method info -->
+      <div class="side-card fade">
+        <div class="sc-header">📱 Our Payment Numbers</div>
+        <div class="sc-body">
+          <div class="pay-info-row">
+            <div class="pay-info-icon pm-bkash">🩷</div>
+            <div>
+              <div class="pay-info-label">bKash (Personal)</div>
+              <div class="pay-info-num">01859 929 858</div>
+              <div class="pay-info-note">Send Money only · Not merchant</div>
+            </div>
+          </div>
+          <div class="pay-info-row">
+            <div class="pay-info-icon pm-nagad">🟠</div>
+            <div>
+              <div class="pay-info-label">Nagad (Personal)</div>
+              <div class="pay-info-num">01859 929 858</div>
+              <div class="pay-info-note">Send Money only · Not merchant</div>
+            </div>
+          </div>
+          <div style="margin-top:12px;padding:10px 12px;background:rgba(200,168,75,0.06);border:1px solid rgba(200,168,75,0.15);border-radius:4px;font-size:11px;color:rgba(200,217,176,0.55);line-height:1.55;">
+            Always confirm payment receipt manually before marking as charged. Check bKash/Nagad app for transaction ID.
+          </div>
+        </div>
+      </div>
+
+      <!-- Refund policy -->
+      <div class="side-card fade">
+        <div class="sc-header">↩ Refund Policy</div>
+        <div class="sc-body">
+          <div style="font-size:12px;color:rgba(200,217,176,0.55);line-height:1.7;">
+            <div style="margin-bottom:8px;"><strong style="color:var(--cream);">Run cancelled:</strong> Refund all deposits within 24 hours via same payment method. Message each customer on WhatsApp.</div>
+            <div style="margin-bottom:8px;"><strong style="color:var(--cream);">Cold chain failure:</strong> Full refund if fault is on Pathan's side. Investigate within same day of delivery.</div>
+            <div style="margin-bottom:8px;"><strong style="color:var(--cream);">Customer no-show:</strong> No refund if rider arrived and customer was not home after 2 calls.</div>
+            <div><strong style="color:var(--cream);">Partially thawed at pickup:</strong> Deposit refunded if rider correctly refused item. Rider must log refusal via WhatsApp.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  /* Payment data */
+  const PAYMENTS = [
+    {ref:'PTH-08-001',name:'Rashed Ahmed',phone:'01712345678',method:'bkash',amt:640,tier:'On-Demand',status:'charged'},
+    {ref:'PTH-08-002',name:'Nasrin Khanam',phone:'01611112222',method:'nagad',amt:360,tier:'Campus Box',status:'held'},
+    {ref:'PTH-08-005',name:'Sumaiya Islam',phone:'01500001111',method:'bkash',amt:320,tier:'On-Demand',status:'held'},
+    {ref:'PTH-08-006',name:'SUST Student Hub',phone:'01877778888',method:'bkash',amt:600,tier:'Campus Box',status:'held'},
+    {ref:'PTH-08-007',name:'Tahmina Akter',phone:'01344445555',method:'nagad',amt:400,tier:'On-Demand',status:'held'},
+    {ref:'PTH-08-008',name:'Jamal Uddin',phone:'01266667777',method:'bkash',amt:480,tier:'On-Demand',status:'held'},
+    {ref:'PTH-08-009',name:'Fatema Khanom',phone:'01188889999',method:'nagad',amt:480,tier:'Campus Box',status:'charged'},
+    {ref:'PTH-08-010',name:'Sakib Hassan',phone:'01900001111',method:'bkash',amt:240,tier:'On-Demand',status:'charged'},
+    {ref:'PTH-08-011',name:'Momtaz Cooking',phone:'01622223333',method:'bkash',amt:360,tier:'Campus Box',status:'held'},
+    {ref:'PTH-08-012',name:'Nasim Uddin',phone:'01744445555',method:'nagad',amt:320,tier:'On-Demand',status:'held'},
+    {ref:'PTH-08-013',name:'Rima Akter',phone:'01555556666',method:'bkash',amt:320,tier:'On-Demand',status:'held'},
+  ];
+
+  const STATUS_CLASS = {held:'ps-held',charged:'ps-charged',refunded:'ps-refunded'};
+  const STATUS_LABEL = {held:'Deposit Held',charged:'Charged ✓',refunded:'Refunded'};
+
+  function renderPayments(data){
+    document.getElementById('payBody').innerHTML = data.map(p=>`
+      <tr>
+        <td><input type="checkbox" class="row-check" style="accent-color:var(--orange);" onchange="updateBulk()"/></td>
+        <td>
+          <div class="ref-tag">${p.ref}</div>
+          <div class="sender-name">${p.name}</div>
+          <div class="sender-phone">${p.phone}</div>
+        </td>
+        <td>
+          <div class="pay-method">
+            <div class="pm-icon ${p.method==='bkash'?'pm-bkash':'pm-nagad'}">${p.method==='bkash'?'🩷':'🟠'}</div>
+            <div class="pm-label">${p.method==='bkash'?'bKash':'Nagad'}</div>
+          </div>
+        </td>
+        <td class="center"><div class="amt-val">৳${p.amt.toLocaleString()}</div></td>
+        <td class="center"><span style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;padding:3px 8px;border-radius:2px;background:rgba(143,175,106,0.08);border:1px solid rgba(143,175,106,0.15);color:var(--sage);">${p.tier}</span></td>
+        <td class="center"><span class="pay-status ${STATUS_CLASS[p.status]}"><span class="s-dot"></span>${STATUS_LABEL[p.status]}</span></td>
+        <td>
+          <div class="action-btns">
+            ${p.status==='held'?`<button class="ab confirm" onclick="chargeDeposit('${p.ref}','${p.name}')">Charge</button>`:''}
+            ${p.status==='held'?`<button class="ab refund" onclick="refundDeposit('${p.ref}','${p.name}')">Refund</button>`:''}
+            <button class="ab wa" onclick="waCustomer('${p.phone}','${p.ref}','${p.status}')">WhatsApp</button>
+          </div>
+        </td>
+      </tr>`).join('');
+    document.getElementById('filterCount').textContent = `Showing ${data.length} of ${PAYMENTS.length}`;
+  }
+
+  renderPayments(PAYMENTS);
+
+  function filterPayments(){
+    const selects = document.querySelectorAll('.filters .filter-select');
+    const search  = document.querySelector('.filter-input').value.toLowerCase();
+    const data = PAYMENTS.filter(p=>{
+      if(selects[0].value!=='all'&&p.status!==selects[0].value) return false;
+      if(selects[1].value!=='all'&&p.method!==selects[1].value) return false;
+      if(search&&!p.name.toLowerCase().includes(search)&&!p.ref.toLowerCase().includes(search)) return false;
+      return true;
+    });
+    renderPayments(data);
+  }
+
+  function toggleAll(cb){
+    document.querySelectorAll('.row-check').forEach(c=>c.checked=cb.checked);
+    updateBulk();
+  }
+
+  function updateBulk(){
+    const n = document.querySelectorAll('.row-check:checked').length;
+    const bar = document.getElementById('bulkBar');
+    if(n>0){bar.classList.add('show');document.getElementById('bulkInfo').textContent=`${n} order${n>1?'s':''} selected`;}
+    else bar.classList.remove('show');
+  }
+
+  function chargeDeposit(ref, name){
+    if(confirm(`Charge deposit for ${name} (${ref})?\n\nThis will mark their payment as confirmed. Verify receipt in your bKash/Nagad app first.`)){
+      alert(`✓ ${ref} marked as charged.\n\nSend confirmation WhatsApp to customer.`);
+    }
+  }
+
+  function refundDeposit(ref, name){
+    if(confirm(`Issue refund for ${name} (${ref})?\n\nThis will mark the order as refunded. Send money back via bKash/Nagad manually first.`)){
+      alert(`↩ ${ref} marked as refunded.\n\nSend refund confirmation to customer via WhatsApp.`);
+    }
+  }
+
+  function confirmAllDeposits(){
+    if(confirm('Charge ALL 8 pending deposits?\n\nTotal: ৳3,920\n\nVerify all payments received in bKash/Nagad before proceeding. This action marks all held deposits as charged.')){
+      alert('✓ All deposits marked as charged.\n\nSend run confirmation messages to all customers via WhatsApp.');
+    }
+  }
+
+  function refundAll(){
+    if(confirm('⚠ REFUND ALL DEPOSITS?\n\nThis should only be done if the run is cancelled.\n\nTotal to refund: ৳3,920\n\nAre you sure you want to cancel Run #08 and refund everyone?')){
+      alert('↩ All deposits marked for refund.\n\nManually send money via bKash/Nagad to each customer and message them on WhatsApp.');
+    }
+  }
+
+  function waCustomer(phone, ref, status){
+    let msg;
+    if(status==='held') msg = `Hi, this is Pathan. Your booking ${ref} is confirmed and your deposit has been received. Your package will be collected Friday and delivered Saturday morning. ধন্যবাদ! 🙏`;
+    else if(status==='charged') msg = `Hi, this is Pathan regarding your booking ${ref}. `;
+    else msg = `Hi, your refund for booking ${ref} has been processed. Please allow 24 hours for it to appear. ধন্যবাদ।`;
+    window.open(`https://wa.me/880${phone.substring(1)}?text=${encodeURIComponent(msg)}`,'_blank');
+  }
+
+  function waRider(phone, name){
+    const msg = `Hi ${name}, this is Pathan. Your monthly invoice is ready. Please check WhatsApp for the full breakdown. Payment due within 5 days via bKash/Nagad to 01859929858. ধন্যবাদ!`;
+    window.open(`https://wa.me/880${phone.substring(1)}?text=${encodeURIComponent(msg)}`,'_blank');
+  }
+
+  function sendInvoice(merchant){
+    alert(`Invoice sent to ${merchant} via WhatsApp.\n\nIn live version this generates a PDF invoice with run-by-run breakdown and sends it automatically.`);
+  }
+
+  function sendAllInvoices(){
+    if(confirm('Send month-end invoices to all 3 merchants?\n\n• Pitha Ghar BD — ৳3,600\n• Karim Frozen Foods — ৳2,880\n• Touhid Frozen — ৳2,160\n\nTotal: ৳8,640')){
+      alert('✓ Invoices sent to all 3 merchants via WhatsApp. Payment due within 5 days.');
+    }
+  }
+
+  function bulkAction(type){
+    const n = document.querySelectorAll('.row-check:checked').length;
+    if(type==='charge') { if(confirm(`Charge deposits for ${n} selected orders?`)) alert(`✓ ${n} deposits charged.`); }
+    else { if(confirm(`Refund ${n} selected orders?`)) alert(`↩ ${n} refunds processed.`); }
+  }
+
+  function exportPayments(){
+    const csv = `Ref,Sender,Phone,Method,Amount,Tier,Status\n`+PAYMENTS.map(p=>`${p.ref},${p.name},${p.phone},${p.method},${p.amt},${p.tier},${p.status}`).join('\n');
+    const a=document.createElement('a');
+    a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+    a.download='pathan-run-08-payments.csv';
+    a.click();
+  }
+
+  function updateTime(){document.getElementById('adminTime').textContent=new Date().toLocaleTimeString('en-BD',{hour:'2-digit',minute:'2-digit',second:'2-digit'});}
+  updateTime();setInterval(updateTime,1000);
+</script>
+</body>
+</html>

@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Riders — Pathan Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root{--soil:#2C1A0E;--bark:#4A2E1A;--moss:#3D5A2A;--leaf:#5C8C3A;--sage:#8FAF6A;--mist:#C8D9B0;--cream:#FAF7F2;--gold:#C8A84B;--rust:#B85A2A;--orange:#D4621A;--ink:#1A1208;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:#0F0A06;color:var(--cream);font-family:'Instrument Sans',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;}
+
+  .admin-nav{background:#1A0E06;border-bottom:1px solid rgba(212,98,26,0.25);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:200;}
+  .an-left{display:flex;align-items:center;gap:24px;}
+  .an-logo{font-family:'DM Serif Display',serif;font-size:18px;color:var(--cream);}
+  .an-logo span{color:var(--orange);font-style:italic;}
+  .an-badge{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;background:rgba(212,98,26,0.15);border:1px solid rgba(212,98,26,0.3);color:var(--orange);padding:3px 10px;border-radius:2px;}
+  .an-links{display:flex;}
+  .an-links a{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:rgba(200,217,176,0.45);text-decoration:none;padding:0 14px;height:52px;display:flex;align-items:center;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .2s,border-color .2s;white-space:nowrap;}
+  .an-links a:hover{color:var(--cream);border-bottom-color:var(--sage);}
+  .an-links a.active{color:var(--cream);border-bottom-color:var(--orange);}
+  .an-right{display:flex;align-items:center;gap:12px;}
+  .an-time{font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.35);}
+  .an-site{font-family:'DM Mono',monospace;font-size:10px;color:var(--sage);text-decoration:none;border:1px solid rgba(143,175,106,0.2);padding:5px 12px;border-radius:2px;transition:background .2s;}
+  .an-site:hover{background:rgba(143,175,106,0.1);}
+
+  .admin-wrap{max-width:1200px;margin:0 auto;padding:32px 32px 80px;}
+
+  /* PAGE HEADER */
+  .page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:16px;}
+  .ph-eyebrow{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);margin-bottom:6px;}
+  .ph-title{font-family:'DM Serif Display',serif;font-size:26px;color:var(--cream);}
+  .ph-sub{font-size:12px;color:rgba(200,217,176,0.35);margin-top:3px;font-family:'DM Mono',monospace;}
+  .ph-right{display:flex;gap:10px;flex-wrap:wrap;}
+  .btn{font-family:'Instrument Sans',sans-serif;font-size:12px;font-weight:600;padding:9px 16px;border-radius:4px;border:none;cursor:pointer;transition:background .2s;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+  .btn-orange{background:var(--orange);color:var(--cream);}
+  .btn-orange:hover{background:var(--rust);}
+  .btn-outline{background:transparent;color:var(--sage);border:1px solid rgba(143,175,106,0.3);}
+  .btn-outline:hover{background:rgba(143,175,106,0.08);}
+  .btn-green{background:rgba(42,106,58,0.2);color:#7ADB8A;border:1px solid rgba(42,106,58,0.4);}
+  .btn-green:hover{background:rgba(42,106,58,0.3);}
+
+  /* STATS */
+  .stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px;}
+  .stat-card{background:#1A0E06;border:1px solid rgba(143,175,106,0.1);border-radius:5px;padding:14px 16px;}
+  .stat-card.hl{border-color:rgba(212,98,26,0.25);background:rgba(212,98,26,0.05);}
+  .stat-card.gn{border-color:rgba(42,106,58,0.3);background:rgba(42,106,58,0.06);}
+  .sc-label{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,217,176,0.3);margin-bottom:6px;}
+  .sc-val{font-family:'DM Serif Display',serif;font-size:24px;color:var(--cream);line-height:1;}
+  .sc-val.orange{color:var(--orange);}
+  .sc-val.green{color:#7ADB8A;}
+  .sc-val.gold{color:var(--gold);}
+  .sc-sub{font-size:10px;color:rgba(200,217,176,0.3);margin-top:4px;font-family:'DM Mono',monospace;}
+
+  /* MAIN GRID */
+  .main-grid{display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:start;}
+
+  /* ZONE ASSIGNMENT BOARD */
+  .zone-board{display:flex;flex-direction:column;gap:16px;}
+  .zone-card{background:#1A0E06;border:1px solid rgba(143,175,106,0.12);border-radius:8px;overflow:hidden;}
+  .zc-header{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(143,175,106,0.08);}
+  .zc-header-left{display:flex;align-items:center;gap:12px;}
+  .zone-icon{font-size:18px;}
+  .zone-name{font-family:'DM Serif Display',serif;font-size:17px;color:var(--cream);}
+  .zone-meta{font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.35);margin-top:2px;}
+  .zone-badge{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;padding:4px 10px;border-radius:2px;}
+  .zb-ok{background:rgba(42,106,58,0.15);border:1px solid rgba(42,106,58,0.3);color:#7ADB8A;}
+  .zb-warn{background:rgba(212,98,26,0.12);border:1px solid rgba(212,98,26,0.3);color:var(--orange);}
+  .zb-alert{background:rgba(192,57,43,0.12);border:1px solid rgba(192,57,43,0.3);color:#E57373;}
+  .zc-body{padding:16px 20px;}
+
+  /* Pickup list */
+  .pickup-list{display:flex;flex-direction:column;gap:8px;}
+  .pickup-item{background:rgba(255,255,255,0.03);border:1px solid rgba(143,175,106,0.08);border-radius:4px;padding:12px 14px;display:grid;grid-template-columns:auto 1fr auto auto;gap:12px;align-items:center;}
+  .pi-num{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;color:var(--orange);background:rgba(212,98,26,0.1);border:1px solid rgba(212,98,26,0.2);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .pi-info{}
+  .pi-name{font-size:13px;color:var(--cream);font-weight:600;}
+  .pi-addr{font-size:11px;color:rgba(200,217,176,0.45);font-family:'DM Mono',monospace;margin-top:2px;}
+  .pi-kg{font-family:'DM Serif Display',serif;font-size:16px;color:var(--cream);text-align:right;white-space:nowrap;}
+  .pi-kg span{font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.35);}
+  .pi-status{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1px;padding:3px 8px;border-radius:2px;white-space:nowrap;}
+  .ps-pending{background:rgba(200,168,75,0.1);border:1px solid rgba(200,168,75,0.25);color:var(--gold);}
+  .ps-done{background:rgba(42,106,58,0.1);border:1px solid rgba(42,106,58,0.25);color:#7ADB8A;}
+  .ps-enroute{background:rgba(212,98,26,0.1);border:1px solid rgba(212,98,26,0.25);color:var(--orange);}
+
+  .zc-footer{padding:12px 20px;border-top:1px solid rgba(143,175,106,0.06);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+  .zc-total{font-family:'DM Mono',monospace;font-size:10px;color:rgba(200,217,176,0.4);}
+  .zc-total strong{color:var(--cream);}
+
+  /* RIDER PANEL (right sidebar) */
+  .rider-panel{display:flex;flex-direction:column;gap:16px;}
+  .rider-card{background:#1A0E06;border:1px solid rgba(143,175,106,0.12);border-radius:8px;overflow:hidden;}
+  .rc-header{background:rgba(61,90,42,0.15);border-bottom:1px solid rgba(143,175,106,0.1);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;}
+  .rc-title{font-family:'DM Serif Display',serif;font-size:17px;color:var(--cream);}
+  .rc-sub{font-family:'DM Mono',monospace;font-size:9px;color:rgba(200,217,176,0.4);margin-top:2px;}
+  .rc-body{padding:16px 18px;}
+
+  /* Individual rider row */
+  .rider-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(143,175,106,0.06);}
+  .rider-row:last-child{border-bottom:none;padding-bottom:0;}
+  .rider-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;font-family:'DM Serif Display',serif;font-weight:bold;color:var(--cream);}
+  .av-orange{background:rgba(212,98,26,0.2);border:2px solid rgba(212,98,26,0.4);}
+  .av-green{background:rgba(61,90,42,0.25);border:2px solid rgba(92,140,58,0.4);}
+  .av-gold{background:rgba(200,168,75,0.15);border:2px solid rgba(200,168,75,0.35);}
+  .rider-info{flex:1;}
+  .rider-name{font-size:13px;color:var(--cream);font-weight:600;}
+  .rider-zone{font-family:'DM Mono',monospace;font-size:9px;color:rgba(200,217,176,0.4);margin-top:2px;letter-spacing:0.5px;}
+  .rider-stats{display:flex;gap:8px;margin-top:4px;}
+  .rs-pill{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:0.5px;padding:2px 6px;border-radius:2px;background:rgba(255,255,255,0.04);border:1px solid rgba(143,175,106,0.1);color:rgba(200,217,176,0.5);}
+  .rider-status{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;padding:4px 10px;border-radius:2px;flex-shrink:0;}
+  .rst-active{background:rgba(42,106,58,0.15);border:1px solid rgba(42,106,58,0.3);color:#7ADB8A;}
+  .rst-enroute{background:rgba(212,98,26,0.12);border:1px solid rgba(212,98,26,0.25);color:var(--orange);}
+  .rst-done{background:rgba(200,168,75,0.1);border:1px solid rgba(200,168,75,0.2);color:var(--gold);}
+
+  /* Manifest / Print */
+  .manifest-card{background:#1A0E06;border:1px solid rgba(212,98,26,0.2);border-radius:8px;overflow:hidden;}
+  .manifest-header{background:rgba(212,98,26,0.08);border-bottom:1px solid rgba(212,98,26,0.15);padding:14px 18px;}
+  .manifest-title{font-family:'DM Serif Display',serif;font-size:16px;color:var(--cream);}
+  .manifest-sub{font-family:'DM Mono',monospace;font-size:9px;color:rgba(200,217,176,0.4);margin-top:2px;}
+  .manifest-body{padding:16px 18px;display:flex;flex-direction:column;gap:8px;}
+  .manifest-btn{width:100%;padding:11px;border-radius:4px;border:none;cursor:pointer;font-family:'Instrument Sans',sans-serif;font-size:13px;font-weight:600;transition:background .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+  .mb-print{background:var(--orange);color:var(--cream);}
+  .mb-print:hover{background:var(--rust);}
+  .mb-wa{background:#25D366;color:white;}
+  .mb-wa:hover{background:#1DA851;}
+  .mb-outline{background:rgba(255,255,255,0.04);color:rgba(200,217,176,0.6);border:1px solid rgba(143,175,106,0.15);}
+  .mb-outline:hover{background:rgba(255,255,255,0.08);}
+
+  /* SOP quick ref */
+  .sop-card{background:#1A0E06;border:1px solid rgba(143,175,106,0.1);border-radius:8px;overflow:hidden;}
+  .sop-header{background:rgba(61,90,42,0.1);border-bottom:1px solid rgba(143,175,106,0.08);padding:12px 18px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--sage);}
+  .sop-body{padding:14px 18px;}
+  .sop-step{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid rgba(143,175,106,0.05);font-size:12px;color:rgba(200,217,176,0.6);line-height:1.5;align-items:flex-start;}
+  .sop-step:last-child{border-bottom:none;padding-bottom:0;}
+  .sop-num{font-family:'DM Mono',monospace;font-size:9px;color:var(--orange);background:rgba(212,98,26,0.1);border:1px solid rgba(212,98,26,0.2);width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+  .sop-step strong{color:var(--cream);}
+
+  /* Add rider form */
+  .add-rider-card{background:#1A0E06;border:1px solid rgba(143,175,106,0.12);border-radius:8px;overflow:hidden;}
+  .ar-header{background:rgba(61,90,42,0.12);border-bottom:1px solid rgba(143,175,106,0.08);padding:14px 18px;font-family:'DM Serif Display',serif;font-size:16px;color:var(--cream);}
+  .ar-body{padding:16px 18px;display:flex;flex-direction:column;gap:10px;}
+  .ar-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(200,217,176,0.3);display:block;margin-bottom:5px;}
+  .ar-input,.ar-select{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(143,175,106,0.18);border-radius:4px;padding:9px 12px;font-family:'Instrument Sans',sans-serif;font-size:13px;color:var(--cream);outline:none;transition:border-color .2s;appearance:none;}
+  .ar-input::placeholder{color:rgba(200,217,176,0.2);}
+  .ar-input:focus,.ar-select:focus{border-color:var(--orange);}
+  .ar-select option{background:#1A0E06;}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  .fade{animation:fadeUp .4s ease both;}
+
+  @media(max-width:900px){
+    .admin-wrap{padding:20px 16px 60px;}
+    .stats-grid{grid-template-columns:repeat(3,1fr);}
+    .main-grid{grid-template-columns:1fr;}
+    .an-links{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="admin-nav">
+  <div class="an-left">
+    <div class="an-logo">পাঠান <span>Admin</span></div>
+    <div class="an-badge">Internal Only</div>
+    <div class="an-links">
+      <a href="runs.html">Runs</a>
+      <a href="orders.html">Orders</a>
+      <a href="riders.html" class="active">Riders</a>
+      <a href="payments.html">Payments</a>
+    </div>
+  </div>
+  <div class="an-right">
+    <div class="an-time" id="adminTime">--:--:--</div>
+    <a href="../index.html" class="an-site" target="_blank">↗ Live site</a>
+  </div>
+</nav>
+
+<div class="admin-wrap">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header fade">
+    <div>
+      <div class="ph-eyebrow">Rider Management</div>
+      <div class="ph-title">Assign Pickups — Run #08</div>
+      <div class="ph-sub">Fri 27 Jun 2025 · 14 orders across 4 zones · 5 unassigned</div>
+    </div>
+    <div class="ph-right">
+      <button class="btn btn-outline" onclick="document.getElementById('addRiderSection').scrollIntoView({behavior:'smooth'})">+ Add Rider</button>
+      <button class="btn btn-orange" onclick="printManifest()">🖨 Print All Manifests</button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-grid fade">
+    <div class="stat-card hl">
+      <div class="sc-label">Total Orders</div>
+      <div class="sc-val orange">14</div>
+      <div class="sc-sub">This run</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Assigned</div>
+      <div class="sc-val">9</div>
+      <div class="sc-sub">To riders</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Unassigned</div>
+      <div class="sc-val orange">5</div>
+      <div class="sc-sub">Need assignment</div>
+    </div>
+    <div class="stat-card gn">
+      <div class="sc-label">Active Riders</div>
+      <div class="sc-val green">4</div>
+      <div class="sc-sub">This week</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-label">Pickup Window</div>
+      <div class="sc-val" style="font-size:18px;margin-top:4px;">9AM–6PM</div>
+      <div class="sc-sub">Friday 27 Jun</div>
+    </div>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="main-grid">
+
+    <!-- ZONE ASSIGNMENT BOARD -->
+    <div class="zone-board fade">
+
+      <!-- DHAKA ZONE 1 — Dhanmondi / Mohammadpur -->
+      <div class="zone-card">
+        <div class="zc-header">
+          <div class="zc-header-left">
+            <span class="zone-icon">🗺</span>
+            <div>
+              <div class="zone-name">Dhaka Zone 1 — Dhanmondi / Mohammadpur</div>
+              <div class="zone-meta">Rider: Karim (DH-1) · 3 pickups · Window: 9 AM – 1 PM</div>
+            </div>
+          </div>
+          <span class="zone-badge zb-ok">Assigned ✓</span>
+        </div>
+        <div class="zc-body">
+          <div class="pickup-list">
+            <div class="pickup-item">
+              <div class="pi-num">1</div>
+              <div class="pi-info">
+                <div class="pi-name">Rashed Ahmed</div>
+                <div class="pi-addr">House 5, Rd 3, Dhanmondi · 01712345678</div>
+              </div>
+              <div class="pi-kg">4 <span>kg</span></div>
+              <span class="pi-status ps-done">Picked Up ✓</span>
+            </div>
+            <div class="pickup-item">
+              <div class="pi-num">2</div>
+              <div class="pi-info">
+                <div class="pi-name">Sumaiya Islam</div>
+                <div class="pi-addr">Uttara Sec 7 · 01500001111</div>
+              </div>
+              <div class="pi-kg">2 <span>kg</span></div>
+              <span class="pi-status ps-enroute">En Route</span>
+            </div>
+            <div class="pickup-item">
+              <div class="pi-num">3</div>
+              <div class="pi-info">
+                <div class="pi-name">Tahmina Akter</div>
+                <div class="pi-addr">Rayer Bazar · 01344445555</div>
+              </div>
+              <div class="pi-kg">2.5 <span>kg</span></div>
+              <span class="pi-status ps-pending">Pending</span>
+            </div>
+          </div>
+        </div>
+        <div class="zc-footer">
+          <div class="zc-total">Zone total: <strong>8.5 kg</strong> · 3 pickups</div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-outline" style="font-size:11px;padding:6px 12px;" onclick="waRider('01833334444','Karim','DH-1')">💬 WhatsApp Karim</button>
+            <button class="btn btn-outline" style="font-size:11px;padding:6px 12px;" onclick="printZone('DH-1')">🖨 Print manifest</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- DHAKA ZONE 2 — Bashundhara / Khilgaon -->
+      <div class="zone-card">
+        <div class="zc-header">
+          <div class="zc-header-left">
+            <span class="zone-icon">🗺</span>
+            <div>
+              <div class="zone-name">Dhaka Zone 2 — Bashundhara / Khilgaon / Shyamoli</div>
+              <div class="zone-meta">Rider: Sajal (DH-2) · 4 pickups · Window: 9 AM – 3 PM</div>
+            </div>
+          </div>
+          <span class="zone-badge zb-ok">Assigned ✓</span>
+        </div>
+        <div class="zc-body">
+          <div class="pickup-list">
+            <div class="pickup-item">
+              <div class="pi-num">1</div>
+              <div class="pi-info">
+                <div class="pi-name">Fatema Khanom</div>
+                <div class="pi-addr">Bashundhara R/A · 01188889999</div>
+              </div>
+              <div class="pi-kg">4 <span>kg</span></div>
+              <span class="pi-status ps-done">Picked Up ✓</span>
+            </div>
+            <div class="pickup-item">
+              <div class="pi-num">2</div>
+              <div class="pi-info">
+                <div class="pi-name">Sakib Hassan</div>
+                <div class="pi-addr">Dhanmondi 27 · 01900001111</div>
+              </div>
+              <div class="pi-kg">1.5 <span>kg</span></div>
+              <span class="pi-status ps-done">Picked Up ✓</span>
+            </div>
+            <div class="pickup-item">
+              <div class="pi-num">3</div>
+              <div class="pi-info">
+                <div class="pi-name">Momtaz Cooking</div>
+                <div class="pi-addr">Shyamoli · 01622223333</div>
+              </div>
+              <div class="pi-kg">3 <span>kg</span></div>
+              <span class="pi-status ps-pending">Pending</span>
+            </div>
+            <div class="pickup-item">
+              <div class="pi-num">4</div>
+              <div class="pi-info">
+                <div class="pi-name">Rima Akter</div>
+                <div class="pi-addr">Khilgaon · 01555556666</div>
+              </div>
+              <div class="pi-kg">2 <span>kg</span></div>
+              <span class="pi-status ps-pending">Pending</span>
+            </div>
+          </div>
+        </div>
+        <div class="zc-footer">
+          <div class="zc-total">Zone total: <strong>10.5 kg</strong> · 4 pickups</div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-outline" style="font-size:11px;padding:6px 12px;" onclick="waRider('01955556666','Sajal','DH-2')">💬 WhatsApp Sajal</button>
+            <button class="btn btn-outline" style="font-size:11px;padding:6px 12px;" onclick="printZone('DH-2')">🖨 Print manifest</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- DHAKA ZONE 3 — New Market / SUST group -->
+      <div class="zone-card">
+        <div class="zc-header">
+          <div class="zc-header-left">
+            <span class="zone-icon">🗺</span>
+            <div>
+              <div class="zone-name">Dhaka Zone 3 — New Market / Central</div>
+              <div class="zone-meta">Rider: UNASSIGNED · 2 pickups · Window: 10 AM – 2 PM</div>
+            </div>
+          </div>
+          <span class="zone-badge zb-alert">Unassigned !</span>
+        </div>
+        <div class="zc-body">
+          <div class="pickup-list">
+            <div class="pickup-item">
+              <div class="pi-num">1</div>
+              <div class="pi-info">
+                <div class="pi-name">SUST Student Hub</div>
+                <div class="pi-addr">New Market · 01877778888</div>
+              </div>
+              <div class="pi-kg">5 <span>kg</span></div>
+              <span class="pi-status ps-pending">Pending</span>
+            </div>
+            <div class="pickup-item">
+              <div class="pi-num">2</div>
+              <div class="pi-info">
+                <div class="pi-name">Nasrin Khanam</div>
+                <div class="pi-addr">Mohammadpur · 01611112222</div>
+              </div>
+              <div class="pi-kg">3 <span>kg</span></div>
+              <span class="pi-status ps-pending">Pending</span>
+            </div>
+          </div>
+          <div style="margin-top:12px;padding:10px 12px;background:rgba(192,57,43,0.08);border:1px solid rgba(192,57,43,0.2);border-radius:4px;font-size:12px;color:#E57373;font-family:'DM Mono',monospace;">
+            ⚠ No rider assigned — assign before Thursday 10 PM or these pickups will be missed.
+          </div>
+        </div>
+        <div class="zc-footer">
+          <div class="zc-total">Zone total: <strong>8 kg</strong> · 2 pickups</div>
+          <div>
+            <button class="btn btn-orange" style="font-size:11px;padding:6px 14px;" onclick="assignRider('DH-3')">Assign Rider →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SYLHET ZONE -->
+      <div class="zone-card">
+        <div class="zc-header">
+          <div class="zc-header-left">
+            <span class="zone-icon">🗺</span>
+            <div>
+              <div class="zone-name">Sylhet Zone — Zindabazar / Lamabazar / Ambarkhana</div>
+              <div class="zone-meta">Rider: Rina (SY-2) · 3 pickups (reverse route) · Window: 9 AM – 4 PM</div>
+            </div>
+          </div>
+          <span class="zone-badge zb-ok">Assigned ✓</span>
+        </div>
+        <div class="zc-body">
+          <div class="pickup-list">
+            <div class="pickup-item">
+              <div class="pi-num">1</div>
+              <div class="pi-info">
+                <div class="pi-name">Pitha Ghar BD (B2B)</div>
+                <div class="pi-addr">Zindabazar · 01755556666</div>
+              </div>
+              <div class="pi-kg">10 <span>kg</span></div>
+              <span class="pi-status ps-pending">Pending</span>
+            </div>
+            <div class="pickup-item">
+              <div class="pi-num">2</div>
+              <div class="pi-info">
+                <div class="pi-name">Karim Frozen (B2B)</div>
+                <div class="pi-addr">Lamabazar · 01933334444</div>
+              </div>
+              <div class="pi-kg">8 <span>kg</span></div>
+              <span class="pi-status ps-pending">Pending</span>
+            </div>
+            <div class="pickup-item">
+              <div class="pi-num">3</div>
+              <div class="pi-info">
+                <div class="pi-name">Touhid Frozen (B2B)</div>
+                <div class="pi-addr">Sunamganj Road · 01666667777</div>
+              </div>
+              <div class="pi-kg">6 <span>kg</span></div>
+              <span class="pi-status ps-pending">Pending</span>
+            </div>
+          </div>
+        </div>
+        <div class="zc-footer">
+          <div class="zc-total">Zone total: <strong>24 kg</strong> · 3 pickups (Sylhet → Dhaka)</div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-outline" style="font-size:11px;padding:6px 12px;" onclick="waRider('01988889999','Rina','SY-2')">💬 WhatsApp Rina</button>
+            <button class="btn btn-outline" style="font-size:11px;padding:6px 12px;" onclick="printZone('SY-2')">🖨 Print manifest</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end zone-board -->
+
+    <!-- RIGHT SIDEBAR -->
+    <div class="rider-panel fade">
+
+      <!-- Active riders -->
+      <div class="rider-card">
+        <div class="rc-header">
+          <div>
+            <div class="rc-title">Active Riders</div>
+            <div class="rc-sub">Run #08 · 27 Jun 2025</div>
+          </div>
+        </div>
+        <div class="rc-body">
+          <div class="rider-row">
+            <div class="rider-avatar av-orange">K</div>
+            <div class="rider-info">
+              <div class="rider-name">Karim</div>
+              <div class="rider-zone">DH-1 · Dhanmondi / Mohammadpur</div>
+              <div class="rider-stats">
+                <span class="rs-pill">3 pickups</span>
+                <span class="rs-pill">8.5 kg</span>
+                <span class="rs-pill">01833334444</span>
+              </div>
+            </div>
+            <span class="rider-status rst-enroute">En Route</span>
+          </div>
+          <div class="rider-row">
+            <div class="rider-avatar av-green">S</div>
+            <div class="rider-info">
+              <div class="rider-name">Sajal</div>
+              <div class="rider-zone">DH-2 · Bashundhara / Khilgaon</div>
+              <div class="rider-stats">
+                <span class="rs-pill">4 pickups</span>
+                <span class="rs-pill">10.5 kg</span>
+                <span class="rs-pill">01955556666</span>
+              </div>
+            </div>
+            <span class="rider-status rst-active">Active</span>
+          </div>
+          <div class="rider-row">
+            <div class="rider-avatar av-gold">R</div>
+            <div class="rider-info">
+              <div class="rider-name">Rina</div>
+              <div class="rider-zone">SY-2 · Sylhet zones</div>
+              <div class="rider-stats">
+                <span class="rs-pill">3 pickups</span>
+                <span class="rs-pill">24 kg</span>
+                <span class="rs-pill">01988889999</span>
+              </div>
+            </div>
+            <span class="rider-status rst-active">Active</span>
+          </div>
+          <div class="rider-row" style="opacity:0.4;">
+            <div class="rider-avatar" style="background:rgba(255,255,255,0.04);border:2px dashed rgba(143,175,106,0.2);color:rgba(200,217,176,0.3);">?</div>
+            <div class="rider-info">
+              <div class="rider-name" style="color:rgba(200,217,176,0.3);">DH-3 — Unassigned</div>
+              <div class="rider-zone">New Market / Central Dhaka</div>
+              <div class="rider-stats"><span class="rs-pill">2 pickups waiting</span><span class="rs-pill">8 kg</span></div>
+            </div>
+            <span class="rider-status" style="background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.2);color:#E57373;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1px;padding:4px 10px;border-radius:2px;">Needed</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Manifest actions -->
+      <div class="manifest-card">
+        <div class="manifest-header">
+          <div class="manifest-title">📋 Manifests & Briefing</div>
+          <div class="manifest-sub">Run #08 · Print before Friday 8 PM</div>
+        </div>
+        <div class="manifest-body">
+          <button class="manifest-btn mb-print" onclick="printManifest()">🖨 Print All Zone Manifests</button>
+          <button class="manifest-btn mb-wa" onclick="broadcastRiders()">💬 Broadcast to All Riders</button>
+          <button class="manifest-btn mb-outline" onclick="exportManifest()">↓ Export as CSV</button>
+        </div>
+      </div>
+
+      <!-- Rider SOP quick ref -->
+      <div class="sop-card">
+        <div class="sop-header">📋 &nbsp; Rider SOP — Quick Reference</div>
+        <div class="sop-body">
+          <div class="sop-step"><div class="sop-num">1</div><div><strong>Call sender 30 min before arrival.</strong> Confirm they are home and food is frozen.</div></div>
+          <div class="sop-step"><div class="sop-num">2</div><div><strong>Firmness check at door.</strong> Press firmly — must be rock-solid. Refuse if soft or partially thawed.</div></div>
+          <div class="sop-step"><div class="sop-num">3</div><div><strong>Check label.</strong> Sender name, recipient name, phone must be visible on package.</div></div>
+          <div class="sop-step"><div class="sop-num">4</div><div><strong>Mark picked up</strong> on WhatsApp to admin immediately after each collection.</div></div>
+          <div class="sop-step"><div class="sop-num">5</div><div><strong>Van rendezvous: Dhaka hub by 7:30 PM.</strong> No exceptions — van departs 10 PM sharp.</div></div>
+          <div class="sop-step"><div class="sop-num">6</div><div><strong>If sender not home:</strong> call twice, wait 10 min, then message admin before leaving.</div></div>
+        </div>
+      </div>
+
+      <!-- Add rider form -->
+      <div class="add-rider-card" id="addRiderSection">
+        <div class="ar-header">+ Add / Register Rider</div>
+        <div class="ar-body">
+          <div>
+            <label class="ar-label">Full Name</label>
+            <input type="text" class="ar-input" placeholder="Rider's full name"/>
+          </div>
+          <div>
+            <label class="ar-label">WhatsApp Number</label>
+            <input type="tel" class="ar-input" placeholder="01XXXXXXXXX"/>
+          </div>
+          <div>
+            <label class="ar-label">Assign Zone</label>
+            <select class="ar-select">
+              <option value="">— Select zone —</option>
+              <option>DH-3 · New Market / Central Dhaka</option>
+              <option>DH-1 · Dhanmondi / Mohammadpur (backup)</option>
+              <option>DH-2 · Bashundhara / Khilgaon (backup)</option>
+              <option>SY-1 · Sylhet Sadar</option>
+              <option>SY-2 · Ambarkhana / Upashahar</option>
+            </select>
+          </div>
+          <div>
+            <label class="ar-label">Rate per pickup (BDT)</label>
+            <input type="number" class="ar-input" placeholder="e.g. 80" value="80"/>
+          </div>
+          <button class="btn btn-orange" style="width:100%;justify-content:center;padding:11px;" onclick="addRider()">Add Rider to Run #08 →</button>
+        </div>
+      </div>
+
+    </div><!-- end rider-panel -->
+  </div><!-- end main-grid -->
+
+</div>
+
+<script>
+  function updateTime(){document.getElementById('adminTime').textContent=new Date().toLocaleTimeString('en-BD',{hour:'2-digit',minute:'2-digit',second:'2-digit'});}
+  updateTime();setInterval(updateTime,1000);
+
+  function waRider(phone, name, zone){
+    const msg = `Hi ${name}, this is Pathan Admin. Your pickup manifest for Run #08 (${zone}) is ready. Please confirm you are available for Friday 27 Jun pickups. Van departs 10 PM sharp — all packages must be at the hub by 7:30 PM. Reply CONFIRMED to this message.`;
+    window.open(`https://wa.me/880${phone.substring(1)}?text=${encodeURIComponent(msg)}`,'_blank');
+  }
+
+  function broadcastRiders(){
+    alert('Broadcast sent to: Karim (DH-1), Sajal (DH-2), Rina (SY-2) via WhatsApp.\n\nMessage: "Run #08 confirmed. Your pickup windows are set. Check your zone manifest. Van departs Friday 27 Jun at 10 PM sharp. All packages at hub by 7:30 PM."');
+  }
+
+  function assignRider(zone){
+    const name = prompt('Enter rider name for zone ' + zone + ':');
+    if(name) alert(`${name} assigned to ${zone}. Send them their manifest via WhatsApp.`);
+  }
+
+  function printZone(zone){
+    alert(`Printing manifest for zone ${zone}...\n\nIn live version this generates a printable PDF with all pickup addresses, contact numbers, and order weights for that rider.`);
+  }
+
+  function printManifest(){
+    window.print();
+  }
+
+  function exportManifest(){
+    const csv = `Zone,Rider,Order,Sender,Phone,Address,KG,Status\nDH-1,Karim,PTH-08-001,Rashed Ahmed,01712345678,"House 5 Rd 3 Dhanmondi",4,Picked Up\nDH-1,Karim,PTH-08-005,Sumaiya Islam,01500001111,"Uttara Sec 7",2,En Route\nDH-1,Karim,PTH-08-007,Tahmina Akter,01344445555,"Rayer Bazar",2.5,Pending\nDH-2,Sajal,PTH-08-009,Fatema Khanom,01188889999,"Bashundhara R/A",4,Picked Up\nDH-2,Sajal,PTH-08-010,Sakib Hassan,01900001111,"Dhanmondi 27",1.5,Picked Up\nDH-2,Sajal,PTH-08-011,Momtaz Cooking,01622223333,"Shyamoli",3,Pending\nDH-2,Sajal,PTH-08-013,Rima Akter,01555556666,"Khilgaon",2,Pending\nDH-3,UNASSIGNED,PTH-08-006,SUST Student Hub,01877778888,"New Market",5,Pending\nDH-3,UNASSIGNED,PTH-08-002,Nasrin Khanam,01611112222,"Mohammadpur",3,Pending\nSY-2,Rina,PTH-08-003,Pitha Ghar BD,01755556666,"Zindabazar",10,Pending\nSY-2,Rina,PTH-08-004,Karim Frozen,01933334444,"Lamabazar",8,Pending\nSY-2,Rina,PTH-08-014,Touhid Frozen,01666667777,"Sunamganj Road",6,Pending`;
+    const a=document.createElement('a');
+    a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+    a.download='pathan-run-08-rider-manifest.csv';
+    a.click();
+  }
+
+  function addRider(){
+    const name = document.querySelector('.ar-input').value.trim();
+    if(!name){alert('Please enter rider name.');return;}
+    alert(`${name} added to Run #08. Send them their zone manifest and the Rider SOP via WhatsApp before Friday.`);
+  }
+</script>
+</body>
+</html>
